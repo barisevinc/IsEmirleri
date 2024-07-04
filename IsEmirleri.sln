@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Web", "IsEmirleri.Web\IsEmirleri.Web.csproj", "{124D971F-BBBE-4695-BB37-E3FD0A145765}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IsEmirleri.Web", "IsEmirleri.Web\IsEmirleri.Web.csproj", "{124D971F-BBBE-4695-BB37-E3FD0A145765}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Utility", "IsEmirleri.Utility\IsEmirleri.Utility.csproj", "{E797A2C2-5405-4859-A16B-A3C1EF8EA963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Data", "IsEmirleri.Data\IsEmirleri.Data.csproj", "{EB48777E-569C-4362-A8EE-E8C0363D299E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Repository", "IsEmirleri.Repository\IsEmirleri.Repository.csproj", "{9F223881-700C-452E-B635-4232D1AC5C93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Business", "IsEmirleri.Business\IsEmirleri.Business.csproj", "{FE7A304A-29D2-4228-B35B-0AE7A7B5FE98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Models", "IsEmirleri.Models\IsEmirleri.Models.csproj", "{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{124D971F-BBBE-4695-BB37-E3FD0A145765}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{124D971F-BBBE-4695-BB37-E3FD0A145765}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{124D971F-BBBE-4695-BB37-E3FD0A145765}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E797A2C2-5405-4859-A16B-A3C1EF8EA963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E797A2C2-5405-4859-A16B-A3C1EF8EA963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E797A2C2-5405-4859-A16B-A3C1EF8EA963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E797A2C2-5405-4859-A16B-A3C1EF8EA963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB48777E-569C-4362-A8EE-E8C0363D299E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB48777E-569C-4362-A8EE-E8C0363D299E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB48777E-569C-4362-A8EE-E8C0363D299E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB48777E-569C-4362-A8EE-E8C0363D299E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F223881-700C-452E-B635-4232D1AC5C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F223881-700C-452E-B635-4232D1AC5C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F223881-700C-452E-B635-4232D1AC5C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F223881-700C-452E-B635-4232D1AC5C93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7A304A-29D2-4228-B35B-0AE7A7B5FE98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7A304A-29D2-4228-B35B-0AE7A7B5FE98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7A304A-29D2-4228-B35B-0AE7A7B5FE98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7A304A-29D2-4228-B35B-0AE7A7B5FE98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
