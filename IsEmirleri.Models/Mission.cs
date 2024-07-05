@@ -20,7 +20,7 @@ namespace IsEmirleri.Models
         public bool EmailNotification { get; set; } = false;
         public bool SmsNotification {  get; set; } = false; 
         public int StatusId {  get; set; }
-        public virtual TaskStatus Status { get; set; }
+        public virtual MissionStatus Status { get; set; }
         public int ProjectId {  get; set; }
         public virtual Project Project { get; set; }
         public virtual ICollection<Comment> Comments { get; set; } = [];

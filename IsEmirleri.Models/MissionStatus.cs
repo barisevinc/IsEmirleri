@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Models
 {
-    public class TaskStatus:BaseModel
+    public class MissionStatus:BaseModel
     {
         public string Name {  get; set; }
         public int CustomerId {  get; set; }
