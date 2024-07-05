@@ -9,5 +9,7 @@ namespace IsEmirleri.Models
     public class Priority:BaseModel
     {
         public string Name { get; set; }
+        public int CustomerId {  get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

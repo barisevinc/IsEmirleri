@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace IsEmirleri.Models
 {
     [Table("Users")]
-    public class AppUser
+    public class AppUser:BaseModel
     {
         public string Email { get; set; }
         public string Password { get; set; }
