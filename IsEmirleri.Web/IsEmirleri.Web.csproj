@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IsEmirleri.Business\IsEmirleri.Business.csproj" />
     <ProjectReference Include="..\IsEmirleri.Data\IsEmirleri.Data.csproj" />
   </ItemGroup>
 

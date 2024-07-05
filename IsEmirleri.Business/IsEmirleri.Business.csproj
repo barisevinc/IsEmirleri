@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IsEmirleri.Models\IsEmirleri.Models.csproj" />
+    <ProjectReference Include="..\IsEmirleri.Repository\IsEmirleri.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
