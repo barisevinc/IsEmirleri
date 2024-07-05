@@ -14,6 +14,10 @@ namespace IsEmirleri.Data
         {
 
         }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) 
+        {
+            
+        }
         public virtual DbSet<AppUser> Users { get; set; }
         public virtual DbSet<AppUserType> UserTypes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
