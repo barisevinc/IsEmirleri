@@ -18,8 +18,8 @@ namespace IsEmirleri.Repository.Shared.Abstract
         bool HardDelete(int id);
         T GetById(int id);
         T GetByGuid(Guid guid);
-        void Save();
         T GetFirstOrDefault(Expression<Func<T,bool>> predicate);
+        void Save();
 
     }
 }
