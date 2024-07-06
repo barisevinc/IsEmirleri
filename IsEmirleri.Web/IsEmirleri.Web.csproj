@@ -20,8 +20,4 @@
     <ProjectReference Include="..\IsEmirleri.Data\IsEmirleri.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
 </Project>
