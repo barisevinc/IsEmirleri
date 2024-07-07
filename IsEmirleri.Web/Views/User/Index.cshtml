@@ -66,9 +66,10 @@
                 $("#btnSave").text("Kaydet").off().click(function () {
 
                     let data = {
-                        appUser: {
+                        user: {
                             email: $("#txtEmail").val(),
-                            password: $("#txtPassword").val()
+                            password: $("#txtPassword").val(),
+                           
                             
 
                         }
@@ -121,7 +122,7 @@
             if (confirm("Silmek istediginizden emin misiniz ?")) {
 
                 $.ajax({
-                    url: '/User/SoftDelete',
+                    url: '/User/Delete',
                     type: 'POST',
                     data: {
                         id: userId
@@ -161,7 +162,7 @@
                             url: '/User/Update',
                             type: 'POST',
                             data: {
-                                appUser: res
+                                user: res
                             },
                             success: function (updatedUser) {
                                 $("#modalAdd").modal("hide");
