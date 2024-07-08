@@ -1,4 +1,6 @@
-﻿using IsEmirleri.Business.Shared.Abstract;
+﻿using IsEmirleri.Business.Abstract;
+using IsEmirleri.Business.Concrete;
+using IsEmirleri.Business.Shared.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.Repository.Shared.Abstract;
 using IsEmirleri.Repository.Shared.Concrete;
@@ -16,6 +18,8 @@ namespace IsEmirleri.Business
         public static void AddBusinessDI(this IServiceCollection services)
         {
             services.AddScoped(typeof (IService<> ), typeof (Service<>));
+            services.AddScoped<IUserService, UserService>();
+
         }
         public static void AddRepositoryDI(this IServiceCollection services)
         {

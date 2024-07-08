@@ -1,12 +1,27 @@
 using IsEmirleri.Data;
 using Microsoft.EntityFrameworkCore;
 using IsEmirleri.Business;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.AccessDeniedPath = "/User/Login";
+    options.LoginPath = "/User/Login";
+    options.SlidingExpiration = true;
+    options.Cookie = new CookieBuilder
+    {
+        Name = "IsEmriCookie",
+        SameSite = SameSiteMode.Unspecified
+
+
+    };
+
+});
 builder.Services.AddBusinessDI();
 builder.Services.AddRepositoryDI();
 var app = builder.Build();
@@ -23,6 +38,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 
