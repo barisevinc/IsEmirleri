@@ -12,7 +12,7 @@ namespace IsEmirleri.Business.Abstract
     public interface IUserService:IService<AppUser>
     {
        
-        IQueryable<AppUser> GetAll(int userId);
+        IQueryable<AppUser> GetAll();
         AppUser CheckLogin(AppUser user);
 
     }
