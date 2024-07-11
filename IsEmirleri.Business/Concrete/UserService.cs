@@ -29,17 +29,19 @@ namespace IsEmirleri.Business.Concrete
         {
             
             user.UserTypeId = 3;
+            user.CustomerId=1;
             return _repository.Add(user);
         }
         public IQueryable<AppUser> GetAll(int userId)
         {
-            return _repository.GetAll(u => u.Id == userId && u.IsDeleted==false && u.UserTypeId==3).Select(x => new AppUser
+            return _repository.GetAll(u => u.CustomerId == userId && u.IsDeleted==false&& u.UserTypeId==3).Select(x => new AppUser
             {
                 Id = x.Id,
                 Email = x.Email,
                 Password = x.Password,
                 UserType = x.UserType,
                 Projects = x.Projects,
+                CustomerId=x.CustomerId,
                 Tasks = x.Tasks
 
             });
