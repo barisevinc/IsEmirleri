@@ -34,7 +34,7 @@
                     <input type="text" class="form-control" id="txtStatusname" placeholder="Durum adı giriniz">
 
                 </div>
-                <input type="text" id="txtCustomerId" value="@ViewBag.UserId">
+                
 
 
 
@@ -71,7 +71,7 @@
                     let data = {
                         missionStatus: {
                             name: $("#txtStatusname").val(),
-                            customerId: @ViewBag.UserId
+                            
                         }
                     }
 
@@ -139,25 +139,21 @@
                 success: function (res) {
 
                     $("#modalAdd").modal("show");
-                    $("#modalTitle").text("Kullanıcı Düzenle");
+                    $("#modalTitle").text("Durum Düzenle");
                     $("#txtStatusname").val(res.name);
-                    $("#txtCustomerId").val(@ViewBag.UserId);
+                
 
                     $("#btnSave").text("Düzenle").off().click(function () {
 
                         res.name = $("#txtStatusname").val();
-                        res.customerId = @ViewBag.UserId;
+                     
 
 
                         $.ajax({
                             url: '/Status/Update',
                             type: 'POST',
                             data: {
-                                missionStatus: {
-                                    id: res.id,
-                                    name: $("#txtStatusname").val(),
-                                    customerId: $("#txtCustomerId").val(),
-                                }
+                                missionStatus:res
                             },
                             success: function (updatedStatus) {
                                 $("#modalAdd").modal("hide");

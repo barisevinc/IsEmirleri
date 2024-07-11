@@ -36,10 +36,13 @@ namespace IsEmirleri.Web.Controllers
                 AppUser appUser = _userService.CheckLogin(user);
                 if (appUser != null)
                 {
+              
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
+                    claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
+                   
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

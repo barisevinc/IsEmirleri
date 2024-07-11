@@ -12,15 +12,17 @@ namespace IsEmirleri.Web.Controllers
     public class StatusController : Controller
     {
         private readonly IStatusService _status;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public StatusController(IStatusService statusService)
+        public StatusController(IStatusService statusService, IHttpContextAccessor httpContextAccessor)
         {
             _status = statusService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
         {
-            ViewBag.UserId = 3;
+    
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim != null)
             {
@@ -45,6 +47,7 @@ namespace IsEmirleri.Web.Controllers
         [HttpPost]
         public IActionResult Add(MissionStatus missionStatus)
         {
+         
 
             return Ok(_status.Add(missionStatus));
         }

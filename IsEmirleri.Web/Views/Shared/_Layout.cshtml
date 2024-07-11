@@ -355,8 +355,10 @@
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="maps-google.html">Öncelikler</a></li>
-                                <li><a href="maps-vector.html">Durumlar</a></li>
-
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a href="@Url.Action("Index","Status")">Durumlar</a></li>
+                                }
                             </ul>
                         </li>
 

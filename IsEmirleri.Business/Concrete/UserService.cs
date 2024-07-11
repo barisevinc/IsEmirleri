@@ -35,19 +35,17 @@ namespace IsEmirleri.Business.Concrete
         }
         public AppUser Add(AppUser user)
         {
-           var userId= int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var appUser = _repository.GetFirstOrDefault(i => i.Id == userId);
-            user.CustomerId = appUser.CustomerId;
+           
+            user.CustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
             user.UserTypeId = 3;
            
             return _repository.Add(user);
         }
         public IQueryable<AppUser> GetAll()
         {
-            var id = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var appUser = _repository.GetFirstOrDefault(i => i.Id == id);
+           
 
-            return _repository.GetAll(u => u.CustomerId == appUser.CustomerId && u.IsDeleted==false&& u.UserTypeId==3).Select(x => new AppUser
+            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value) && u.IsDeleted==false&& u.UserTypeId==3).Select(x => new AppUser
             {
                 Id = x.Id,
                 Email = x.Email,
