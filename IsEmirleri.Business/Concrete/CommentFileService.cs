@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Concrete
 {
-    public class CommentFileService : Service<CommentFile>, ICommentFile
+    public class CommentFileService : Service<CommentFile>, ICommentFileService
     {
         private readonly IRepository<CommentFile> _repository;
 
