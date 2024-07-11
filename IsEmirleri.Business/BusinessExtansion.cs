@@ -19,7 +19,15 @@ namespace IsEmirleri.Business
         {
             services.AddScoped(typeof (IService<> ), typeof (Service<>));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IMissionService, MissionService>();
+            services.AddScoped<IPriorityService, PriorityService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<ITaskFileService, TaskFileService>();
+            services.AddScoped<ITaskHistoryService, TaskHistoryService>();
             services.AddScoped<IStatusService, StatusService>();
+            services.AddScoped<ICommentFileService, CommentFileService>();
 
         }
         public static void AddRepositoryDI(this IServiceCollection services)
