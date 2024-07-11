@@ -1,4 +1,5 @@
 ﻿using IsEmirleri.Business.Shared.Abstract;
+using IsEmirleri.DTO.MissionStatusDTOs;
 using IsEmirleri.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IStatusService : IService<MissionStatus>
     {
-        IQueryable<MissionStatus> GetAllStatus();
+        List<MissionStatusGetAllDto> GetAllByStatus();
     }
 }

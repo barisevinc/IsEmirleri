@@ -1,5 +1,6 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
+using IsEmirleri.DTO.MissionStatusDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using IsEmirleri.Repository.Shared.Concrete;
@@ -17,18 +18,19 @@ namespace IsEmirleri.Business.Concrete
     public class StatusService : Service<MissionStatus>, IStatusService
     {
         private readonly IRepository<MissionStatus> _repository;
+        private readonly IRepository<Mission>  _repositoryMission;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public StatusService(IRepository<MissionStatus> repo, IHttpContextAccessor httpContextAccessor) : base(repo)
+
+
+        public StatusService(IRepository<MissionStatus> repo, IHttpContextAccessor httpContextAccessor, IRepository<Mission> repositoryMission) : base(repo)
         {
             _repository = repo;
             _httpContextAccessor = httpContextAccessor;
+            _repositoryMission = repositoryMission;
         }
 
-        public IQueryable<MissionStatus> GetAllStatus()
-        {
-            return _repository.GetAll();
-        }
+
 
 
 
@@ -40,20 +42,15 @@ namespace IsEmirleri.Business.Concrete
 
             return _repository.Add(status);
         }
-        public IQueryable<MissionStatus> GetAll(int statusId)
+
+        public List<MissionStatusGetAllDto> GetAllByStatus()
         {
-            return _repository.GetAll().Select(x => new MissionStatus
+          return  _repository.GetAll().Select(s => new MissionStatusGetAllDto
             {
-                Id = x.Id,
-                Name = x.Name,
-                CustomerId = x.CustomerId,
-            });
+                Id = s.Id,
+                Name = s.Name,
+                TaskCount = _repositoryMission.GetAll().Where(x => x.StatusId == s.Id).Count()
+            }).ToList();
         }
-
-
-
-
-
-
     }
 }

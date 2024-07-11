@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IsEmirleri.DTO\IsEmirleri.DTO.csproj" />
     <ProjectReference Include="..\IsEmirleri.Models\IsEmirleri.Models.csproj" />
     <ProjectReference Include="..\IsEmirleri.Repository\IsEmirleri.Repository.csproj" />
   </ItemGroup>

@@ -41,7 +41,7 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetAll()
         {
-            return Json(new { data = _status.GetAllStatus() });
+            return Json(new { data = _status.GetAllByStatus() });
         }
 
         [HttpPost]
