@@ -62,14 +62,13 @@ namespace IsEmirleri.Web.Controllers
             return RedirectToAction("Login");
         }
         public IActionResult GetAll()
-        {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return Json(new {data=_userService.GetAll(userId) });
+        {      
+
+            return Json(new {data=_userService.GetAll() });
         }
         [HttpPost]
         public IActionResult Add(AppUser user)
         {
-
             return Ok(_userService.Add(user));
         }
         [HttpPost]
