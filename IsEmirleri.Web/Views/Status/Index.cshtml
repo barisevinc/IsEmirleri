@@ -1,5 +1,4 @@
-﻿<div class="row">
-    <div class="col-12">
+﻿
 
         <div class="card">
             <div class="card-header bg-soft-success text-dark text-center d-flex">
@@ -16,8 +15,7 @@
         </div>
 
 
-    </div>
-</div>
+
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -61,6 +59,8 @@
     <script>
         let DataTable = "";
         $(document).ready(function () {
+
+
             $("#btnAdd").click(function () {
                 $("#modalAdd").modal("show");
                 $("#modalAdd .form-control").val('');
@@ -111,8 +111,10 @@
 
 
         function deleteStatus(statusId, button) {
+            toastr.success("İşlem Başarılı", "Kullanıcı Silindi !");
 
             if (confirm("Silmek istediğinize emin misiniz ?")) {
+
                 let satir = $(button).parent().parent();
                 $.ajax({
                     url: '/Status/Delete',
@@ -160,6 +162,7 @@
 
                                 let satir = $(button).parent().parent();
                                 DataTable.row(satir).data(updatedStatus).draw();
+                               
 
                             }
                         });
