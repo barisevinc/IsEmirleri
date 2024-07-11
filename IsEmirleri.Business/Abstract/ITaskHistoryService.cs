@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Abstract
 {
-    public interface ITaskHistory:IService<TaskHistory>
+    public interface ITaskHistoryService:IService<TaskHistory>
     {
     }
 }

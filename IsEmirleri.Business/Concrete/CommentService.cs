@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Concrete
 {
-    public class CommentService : Service<Comment>, IComment
+    public class CommentService : Service<Comment>, ICommentService
     {
         private readonly IRepository<Comment> _repository;
 

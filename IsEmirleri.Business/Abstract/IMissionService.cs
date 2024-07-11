@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Abstract
 {
-    public interface IPriority:IService<Priority>
+    public interface IMissionService:IService<Mission>
     {
     }
 }

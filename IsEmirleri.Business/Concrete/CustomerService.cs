@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Concrete
 {
-    public class CustomerService : Service<Customer>, ICustomer
+    public class CustomerService : Service<Customer>, ICustomerService
     {
         private readonly IRepository<Customer> _repository;
 

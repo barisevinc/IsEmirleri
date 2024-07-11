@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Abstract
 {
-    public interface IProject:IService<Project>
+    public interface ITaskFileService : IService<TaskFile>
     {
     }
 }

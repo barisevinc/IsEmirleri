@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Concrete
 {
-    public class TaskFileService : Service<TaskFile>, ITaskFile
+    public class TaskFileService : Service<TaskFile>, ITaskFileService
     {
         private readonly IRepository<TaskFile> _repository;
 

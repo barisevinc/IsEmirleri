@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Concrete
 {
-    public class PriorityService : Service<Priority>, IPriority
+    public class PriorityService : Service<Priority>, IPriorityService
     {
         private readonly IRepository<Priority> _repository;
 
