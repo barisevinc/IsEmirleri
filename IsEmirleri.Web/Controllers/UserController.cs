@@ -63,7 +63,9 @@ namespace IsEmirleri.Web.Controllers
         }
         public IActionResult GetAll()
         {
+            
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             return Json(new {data=_userService.GetAll(userId) });
         }
         [HttpPost]
