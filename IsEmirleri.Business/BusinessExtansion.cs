@@ -19,6 +19,7 @@ namespace IsEmirleri.Business
         {
             services.AddScoped(typeof (IService<> ), typeof (Service<>));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStatusService, StatusService>();
 
         }
         public static void AddRepositoryDI(this IServiceCollection services)
