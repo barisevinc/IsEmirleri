@@ -16,7 +16,7 @@ namespace IsEmirleri.Business.Abstract
         IQueryable<Customer> GetAll(Expression<Func<Customer, bool>> predicate);
         Customer GetById(int id);
         Customer Add(Customer customer);
-        Customer Update(Customer customer);
+        CustomerGetAllDto UpdateCustomer(Customer customer);
         bool Delete(int id);
     }
 }

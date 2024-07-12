@@ -73,17 +73,26 @@
                 $("#modalTitle").text("Yeni Müşteri Ekle");
 
                 $("#btnSave").text("Kaydet").off().click(() => {
+
+                    let customer={
+                                name: $("#txtName").val(),
+                                userLimit: $("#txtLimit").val(),
+                                userCount:"0",
+                                id:"0"
+                    }
                     $.ajax({
                         url: '/Customer/Add',
                         type: 'POST',
                         data: {
-                            customer: {
-                                name: $("#txtName").val(),
-                                userLimit: $("#txtLimit").val()
-                            }
+                            customer
                         },
                         success: (res) => {
-                            DataTable.row.add(res).draw();
+                           
+
+                            customer.id=res.id;
+                            DataTable.row.add(customer).draw();
+                                toastr.success("Müşteri Kaydı Başarılı");
+
                             $("#modalAdd").modal("hide");
 
                         }
@@ -134,7 +143,7 @@
 
                             res.name = $("#txtName").val();
                             res.userLimit = $("#txtLimit").val();
-
+                           
 
                             $.ajax({
                                 url: '/Customer/Update',
@@ -142,9 +151,10 @@
                                 data: {
                                     customer: res
                                 },
-                                success: () => {
+                                success: (res1) => {
+                                  
                                     let satir = $(button).parent().parent();
-                                    DataTable.row(satir).data(res).draw();
+                                    DataTable.row(satir).data(res1).draw();
                                     $("#modalAdd").modal("hide");
                                     toastr.success("Müşteri Güncelleme Başarılı");
                                 }

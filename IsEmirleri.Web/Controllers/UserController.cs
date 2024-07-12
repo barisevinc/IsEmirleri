@@ -8,7 +8,8 @@ using System.Security.Claims;
 
 namespace IsEmirleri.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Superadmin")]
+
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -48,7 +49,7 @@ namespace IsEmirleri.Web.Controllers
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties { IsPersistent = true });
 
-                    if (appUser.UserType.Name == "Admin")
+                    if (appUser.UserType.Name == "Admin"|| appUser.UserType.Name == "Superadmin")
                         return RedirectToAction("Index", "User");
                     else
                         return RedirectToAction("Index", "Home");

@@ -44,10 +44,11 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Customer Customer)
+        public IActionResult Update(Customer customer)
         {
 
-            return Ok(_customerService.Update(Customer));
+           var item= _customerService.UpdateCustomer(customer);
+            return Ok(item);
 
         }
     }

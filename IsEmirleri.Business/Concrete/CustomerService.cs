@@ -39,7 +39,7 @@ namespace IsEmirleri.Business.Concrete
                 Id = c.Id,
                 Name = c.Name,
                 UserLimit = c.UserLimit,
-                UserCount = c.AppUsers.Count
+                UserCount = c.AppUsers.Where(i=>i.IsDeleted==false&&i.UserTypeId==3).Count()
             });
             return result;
         }
@@ -53,9 +53,11 @@ namespace IsEmirleri.Business.Concrete
             return _repository.GetAll().Where(predicate);
         }
 
-        public Customer Update(Customer Customer)
+        public CustomerGetAllDto UpdateCustomer(Customer Customer)
         {
-            return _repository.Update(Customer);
+            _repository.Update(Customer);
+
+            return GetAllWithUserCount().FirstOrDefault(i => i.Id == Customer.Id);
         }
     }
 }
