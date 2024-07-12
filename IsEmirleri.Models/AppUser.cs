@@ -13,7 +13,7 @@ namespace IsEmirleri.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public int UserTypeId { get; set; }
-
+        public string? Picture { get; set; }
         public virtual AppUserType UserType { get; set; }
         public int? CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
