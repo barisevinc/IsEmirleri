@@ -18,27 +18,37 @@ namespace IsEmirleri.Business.Concrete
     public class UserService : Service<AppUser>, IUserService
     {
         private readonly IRepository<AppUser> _repository;
+        private readonly IRepository<Customer> _customerRepository; 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-
-        public UserService(IRepository<AppUser> repo, IHttpContextAccessor httpContextAccessor) : base(repo)
+        public UserService(IRepository<AppUser> repo, IRepository<Customer> customerRepo, IHttpContextAccessor httpContextAccessor) : base(repo)
         {
             _repository = repo;
+            _customerRepository = customerRepo; 
             _httpContextAccessor = httpContextAccessor;
         }
+
         public AppUser CheckLogin(AppUser user)
         {
-   
             return _repository.GetAll().Include(p => p.UserType).Where(p => p.Email == user.Email && p.Password == user.Password).FirstOrDefault();
-
         }
+
         public AppUser Add(AppUser user)
         {
-           
-            user.CustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            var customer = _customerRepository.GetById(customerId);
+
+            //limit kontrol usertype vermezsek admin dahil limit tutuyor
+            int userCount = _repository.GetAll(u => u.CustomerId == customerId && !u.IsDeleted &&u.UserTypeId==3).Count();
+
+            if (userCount >= customer.UserLimit)
+            {
+                throw new InvalidOperationException("Kullanıcı limiti dolmuştur.");
+            }
+
+            user.CustomerId = customerId;
             user.UserTypeId = 3;
-           
+
             return _repository.Add(user);
         }
         public IQueryable<AppUser> GetAll()
