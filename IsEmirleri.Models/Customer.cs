@@ -10,7 +10,7 @@ namespace IsEmirleri.Models
     {
         public string Name {  get; set; }
         public int UserLimit {  get; set; }
-        public virtual ICollection<AppUser> appUsers { get; set; } = [];
+        public virtual ICollection<AppUser> AppUsers { get; set; } = [];
 
     }
 }
