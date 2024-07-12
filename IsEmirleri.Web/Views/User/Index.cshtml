@@ -1,21 +1,17 @@
-﻿﻿<div class="row">
+﻿<div class="row">
     <div class="col-12">
-
         <div class="card">
             <div class="card-header bg-soft-success text-dark text-center d-flex">
-
-                <div class="col-11 text-center fs-3 text-dark">Kullanıcı Listesi</div>
-                <div class="col-1 fs-3">
-                    <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</a>
+                <div class="col-10 text-center fs-3 text-dark"><i class="fas fa-user-friends"></i>Kullanıcı Listesi</div>
+                <div class="col-2 fs-3">
+                    <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
                 </div>
-
             </div>
             <div class="card-body">
-                <table id="tblUsers" class="table table-bordered table-striped table-hover"></table>
+                <table id="tblUsers" class="table table-bordered table-striped table-hover">
+                </table>
             </div>
         </div>
-
-
     </div>
 </div>
 
@@ -23,83 +19,34 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">
-                </h5>
+                <h5 class="modal-title" id="modalTitle"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3 row">
-                    <input type="text" class="form-control" id="txtEmail" placeholder="Kişinin maili giriniz">
-
+                    <input type="text" class="form-control" id="txtEmail" placeholder="Kullanıcı maili giriniz">
                 </div>
                 <div class="mb-3 row">
                     <input type="text" class="form-control" id="txtPassword" placeholder="Kullanıcı şifre giriniz">
-
                 </div>
-              
-              
-
-
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Kapat
-                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                 <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
             </div>
         </div>
     </div>
 </div>
 
-
-
-
 @section Scripts {
+
     <script>
-        let DataTable = "";
         $(document).ready(function () {
-            $("#btnAdd").click(function () {
-                $("#modalAdd").modal("show");
-                $("#modalAdd .form-control").val('');
-                $("#modalTitle").text("Yeni Kullanıcı Kaydı");
-
-                $("#btnSave").text("Kaydet").off().click(function () {
-
-                    let data = {
-                        user: {
-                            email: $("#txtEmail").val(),
-                            password: $("#txtPassword").val(),
-                           
-                            
-
-                        }
-                    }
-
-                    $.ajax({
-                        url: '/User/Add',
-                        type: 'POST',
-                        data: data,
-                        success: function (res) {
-
-                            $("#modalAdd").modal("hide");
-                            DataTable.row.add(res).draw();
-                        }
-                    })
-
-
-
-
-
-                })
-
-
-
-
-            })
-
-
-            DataTable = $("#tblUsers").DataTable({
-                ajax: '/User/GetAll',
+            let DataTable = $("#tblUsers").DataTable({
+                ajax: {
+                    url: '/User/GetAll',
+                    dataSrc: 'data'
+                },
                 columns: [
                     { data: 'id', title: 'Sıra No' },
                     { data: 'email', title: 'Kullanıcı Maili' },
@@ -112,79 +59,97 @@
                     },
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
-                            return `<a onclick="deleteUser(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateUser(${data},this)" class="btn uil-pen fs-6 btn-success"></a>`;
+                            return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>
+                                                    <button onclick="updateUser(${data}, this)" class="btn btn-success"><i class="uil uil-pen"></i></button>`;
                         }
                     }
                 ]
             });
-        });
-        function deleteUser(userId, button) {
 
-            if (confirm("Silmek istediginizden emin misiniz ?")) {
+            $("#btnAdd").click(function () {
+                $("#modalAdd").modal("show");
+                $("#modalAdd .form-control").val('');
+                $("#modalTitle").text("Yeni Kullanıcı Kaydı");
 
-                $.ajax({
-                    url: '/User/Delete',
-                    type: 'POST',
-                    data: {
-                        id: userId
-                    },
-                    success: function () {
-                        let satir = $(button).parent().parent();
-                        DataTable.row(satir).remove().draw();
+                $("#btnSave").text("Kaydet").off().click(function () {
+                    let data = {
+                        user: {
+                            email: $("#txtEmail").val(),
+                            password: $("#txtPassword").val()
+                        }
+                    };
 
-                    }
-                });
-            }
-
-
-        }
-
-        function updateUser(userId, button) {
-
-            $.ajax({
-                url: '/User/GetById',
-                type: 'POST',
-                data: { id: userId },
-                success: function (res) {
-
-                    $("#modalAdd").modal("show");
-                    $("#modalTitle").text("Kullanıcı Düzenle");
-                    $("#txtEmail").val(res.email);
-                   
-                    $("#txtPassword").val(res.password);
-
-                    $("#btnSave").text("Düzenle").off().click(function () {
-
-                        res.email = $("#txtEmail").val();
-                        res.password = $("#txtPassword").val();
-
-
-                        $.ajax({
-                            url: '/User/Update',
-                            type: 'POST',
-                            data: {
-                                user: res
-                            },
-                            success: function (updatedUser) {
-                                $("#modalAdd").modal("hide");
-
-                                let satir = $(button).parent().parent();
-                                DataTable.row(satir).data(updatedUser).draw();
-
-                            }
-                        });
-
-
+                    $.ajax({
+                        url: '/User/Add',
+                        type: 'POST',
+                        data: data,
+                        success: function (res) {
+                            $("#modalAdd").modal("hide");
+                            DataTable.row.add(res).draw();
+                            toastr.success('Kullanıcı başarıyla eklendi.');
+                        },
+                        error: function (err) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'Kullanıcı eklenirken bir hata oluştu: ' + err.responseJSON.message,
+                            });
+                        }
                     });
-
-                }
-
+                });
             });
 
-        }
+            window.deleteUser = function (userId, button) {
+                if (confirm("Silmek istediğinizden emin misiniz?")) {
+                    $.ajax({
+                        url: '/User/Delete',
+                        type: 'POST',
+                        data: { id: userId },
+                        success: function () {
+                            let row = $(button).closest('tr');
+                            DataTable.row(row).remove().draw();
+                            toastr.success('Kullanıcı başarıyla silindi.');
+                        },
+                        error: function (err) {
+                            toastr.error('Kullanıcı silinirken bir hata oluştu: ');
+                        }
+                    });
+                }
+            };
 
+            window.updateUser = function (userId, button) {
+                $.ajax({
+                    url: '/User/GetById',
+                    type: 'POST',
+                    data: { id: userId },
+                    success: function (res) {
+                        $("#modalAdd").modal("show");
+                        $("#modalTitle").text("Kullanıcı Düzenle");
+                        $("#txtEmail").val(res.email);
+                        $("#txtPassword").val(res.password);
 
+                        $("#btnSave").text("Düzenle").off().click(function () {
+                            res.email = $("#txtEmail").val();
+                            res.password = $("#txtPassword").val();
+
+                            $.ajax({
+                                url: '/User/Update',
+                                type: 'POST',
+                                data: { user: res },
+                                success: function (updatedUser) {
+                                    $("#modalAdd").modal("hide");
+                                    let row = $(button).closest('tr');
+                                    DataTable.row(row).data(updatedUser).draw();
+                                    toastr.success('Kullanıcı başarıyla güncellendi.');
+                                },
+                                error: function (err) {
+                                    toastr.error('Kullanıcı güncellenirken bir hata oluştu: ');
+                                }
+                            });
+                        });
+                    }
+                });
+            };
+        });
     </script>
 }
-
-    
