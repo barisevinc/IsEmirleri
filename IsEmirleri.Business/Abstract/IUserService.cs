@@ -14,6 +14,7 @@ namespace IsEmirleri.Business.Abstract
        
         IQueryable<AppUser> GetAll();
         AppUser CheckLogin(AppUser user);
+        AppUser? Add(AppUser user);
 
     }
 }

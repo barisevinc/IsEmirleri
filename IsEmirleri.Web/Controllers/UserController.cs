@@ -73,14 +73,12 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult Add(AppUser user)
         {
 
-            try
-            {
-                return Ok(_userService.Add(user));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+
+            if (_userService.Add(user)!=null)
+                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur." ,userId=user.Id});
+       
+                return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
+           
         }
 
         [HttpPost]

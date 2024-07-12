@@ -1,4 +1,10 @@
-﻿<div class="row">
+﻿
+@{
+    int count = 0;
+}
+
+@using System.Security.Claims
+<div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-soft-success text-dark text-center d-flex">
@@ -53,9 +59,7 @@
                     { data: 'password', title: 'Kullanıcı Şifre' },
                     { data: 'customerId', title: 'Customer Id' },
                     {
-                        data: 'tasks', title: 'Task Sayısı', render: (data) => {
-                            return data.length;
-                        }
+                        data: 'id', title: 'Task Sayısı'
                     },
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
@@ -75,7 +79,10 @@
                     let data = {
                         user: {
                             email: $("#txtEmail").val(),
-                            password: $("#txtPassword").val()
+                            password: $("#txtPassword").val(),
+                            customerId: @User.FindFirst(ClaimTypes.UserData).Value,
+                            tasks:"0",
+                            id:"0"
                         }
                     };
 
@@ -84,37 +91,66 @@
                         type: 'POST',
                         data: data,
                         success: function (res) {
-                            $("#modalAdd").modal("hide");
-                            DataTable.row.add(res).draw();
-                            toastr.success('Kullanıcı başarıyla eklendi.');
-                        },
-                        error: function (err) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Hata',
-                                text: 'Kullanıcı eklenirken bir hata oluştu: ' + err.responseJSON.message,
-                            });
+                            if (res.result) {
+                                $("#modalAdd").modal("hide");
+                                data.user.id = res.userId;
+                                DataTable.row.add(data.user).draw();
+                                toastr.success(res.message);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: res.message,
+                                    
+
+                                });
+                                $("#modalAdd").modal("hide");
+                            }
+                          
                         }
                     });
                 });
             });
 
             window.deleteUser = function (userId, button) {
-                if (confirm("Silmek istediğinizden emin misiniz?")) {
-                    $.ajax({
-                        url: '/User/Delete',
-                        type: 'POST',
-                        data: { id: userId },
-                        success: function () {
-                            let row = $(button).closest('tr');
-                            DataTable.row(row).remove().draw();
-                            toastr.success('Kullanıcı başarıyla silindi.');
-                        },
-                        error: function (err) {
-                            toastr.error('Kullanıcı silinirken bir hata oluştu: ');
-                        }
-                    });
-                }
+                Swal.fire({
+                    title: "Silmek İstediğinize Emin Misiniz?",
+                    text: "Bu işlem geri alınamayacaktır.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Evet!",
+                    cancelButtonText: "Hayır!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/User/Delete',
+                            type: 'POST',
+                            data: { id: userId },
+                            success: function () {
+                                let row = $(button).closest('tr');
+                                DataTable.row(row).remove().draw();
+                                toastr.success('Kullanıcı başarıyla silindi.');
+                            },
+                            error: function (err) {
+                                toastr.error('Kullanıcı silinirken bir hata oluştu: ');
+                            }
+                        });
+
+                        Swal.fire({
+                            title: "Silindi!",
+                            text: "Kullanıcı Başarılı Bir Şekilde Silinmiştir.",
+                            icon: "success",
+                            confirmButtonText: "Tamam",
+
+                        });
+                    }
+                });
+
+
+
+
             };
 
             window.updateUser = function (userId, button) {

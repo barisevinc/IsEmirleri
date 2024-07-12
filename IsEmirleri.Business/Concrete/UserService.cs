@@ -35,21 +35,21 @@ namespace IsEmirleri.Business.Concrete
 
         public AppUser Add(AppUser user)
         {
-            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
-            var customer = _customerRepository.GetById(customerId);
-
+            //int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            var customer = _customerRepository.GetById(user.CustomerId.Value);
+           
             //limit kontrol usertype vermezsek admin dahil limit tutuyor
-            int userCount = _repository.GetAll(u => u.CustomerId == customerId && !u.IsDeleted &&u.UserTypeId==3).Count();
+            int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted &&u.UserTypeId==3).Count();
 
             if (userCount >= customer.UserLimit)
             {
-                throw new InvalidOperationException("Kullanıcı limiti dolmuştur.");
+                return null;
             }
 
-            user.CustomerId = customerId;
+            user.CustomerId = customer.Id;
             user.UserTypeId = 3;
-
-            return _repository.Add(user);
+            _repository.Add(user);
+            return user;
         }
         public IQueryable<AppUser> GetAll()
         {
