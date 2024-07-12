@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IsEmirleri.Web.Controllers
 {
-    [Authorize]
+    [Authorize (Roles="Superadmin")]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

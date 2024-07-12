@@ -1,11 +1,13 @@
 ﻿﻿<div class="row">
-    <div>
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <div class="col-11 text-center fs-3 text-dark">Müşteriler</div>
-                <div class="col-1 fs-3">
-                    <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2">Yeni Kayıt</a>
-                </div>
+             
+                    <div class="col-12 fs-3 text-end">
+                        <a href="#" id="btnAdd" class="btn btn-success ">Yeni Kayıt</a>
+                    </div>
+               
 
             </div>
             <div class="card-body">
@@ -46,45 +48,52 @@
     </div>
 </div>
 
-@section Scripts {
+@section Scripts{
     <script>
         var DataTable = "";
         $(document).ready(() => {
-            DataTable = $("#tblCostumer").DataTable({
-                ajax: '/Customer/GetAllWithUserCount'
-                        columns: [
+            DataTable = $("#tblCustomer").DataTable({
+                ajax: '/Customer/GetAll',
+                columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'name', title: 'Müşteri Adı' },
                     { data: 'userCount', title: 'Aktif Kullanıcı Sayısı' },
                     { data: 'userLimit', title: 'Kullanıcı Limiti' },
-                                {
+                    {
                         data: 'id', title: 'İşlemler', render: (data) => {
                             return `<a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`
-                                }
                         }
+                    }
                 ]
             });
-            $("#btnAdd").click(() => {
-                $("#modalAdd").modal.("show");
+
+            $("#btnAdd").off().click(() => {
+                $("#modalAdd").modal("show");
                 $("#modalAdd .form-control").val('');
-                $("#modalTitle").text("Yeni Müşteri İsmi Ekle");
+                $("#modalTitle").text("Yeni Müşteri Ekle");
+
                 $("#btnSave").text("Kaydet").off().click(() => {
                     $.ajax({
                         url: '/Customer/Add',
                         type: 'POST',
                         data: {
-                            name: $("#txtName").val(),
-                            userLimit: $("#txtLimit").val()
+                            customer: {
+                                name: $("#txtName").val(),
+                                userLimit: $("#txtLimit").val()
+                            }
                         },
-                        success: => (res) {
-                            $("#modalEkle").modal('hide');
-                            DataTable.row.add({ id: res, name: $("#txtName").val(), userLimit: $("#txtLimit").val() }).draw();
-                            toastr.success("Müşteri Ekleme Başarılı");
+                        success: (res) => {
+                            DataTable.row.add(res).draw();
+                            $("#modalAdd").modal("hide");
+
                         }
                     });
                 });
 
+
             });
+          
+        });
             function deleteCustomer(customerId, button) {
                 swal.fire({
                     title: 'Silmek İstedğinize emin misiniz ?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Evet', cancelButtonText: 'Vazgeç'
@@ -104,7 +113,7 @@
                     }
                 });
 
-            };
+            }
             function updateCustomer(customerId, button) {
 
 
