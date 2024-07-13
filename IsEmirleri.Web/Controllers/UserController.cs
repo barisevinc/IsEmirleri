@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using IsEmirleri.Utility;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -100,6 +101,18 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult GetById(int id)
         {
             return Json(_userService.GetById(id));
+        }
+        [AllowAnonymous]
+        public IActionResult Password()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult Password(string email)
+        {
+            var newPassword =Helper.RandomPassword();
+            return Ok(newPassword);
         }
     }
 }
