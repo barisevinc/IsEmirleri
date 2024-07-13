@@ -114,5 +114,9 @@ namespace IsEmirleri.Web.Controllers
             var newPassword =Helper.RandomPassword();
             return Ok(newPassword);
         }
+        public IActionResult Profile()
+        {
+            return View(_userService.Profile());
+        }
     }
 }

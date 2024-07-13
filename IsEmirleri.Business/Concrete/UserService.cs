@@ -68,7 +68,11 @@ namespace IsEmirleri.Business.Concrete
             });
         }
 
+        public AppUser Profile()
+        {
+             
+            return _repository.GetById(int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
 
-
+        }
     }
 }
