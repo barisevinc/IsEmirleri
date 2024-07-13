@@ -118,5 +118,21 @@ namespace IsEmirleri.Web.Controllers
         {
             return View(_userService.Profile());
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(AppUser user)
+        {
+            var test = await _userService.UpdateWithPhoto(user, HttpContext.Request.Form.Files[0], int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            if (test.Result != null)
+            {
+                return RedirectToAction("Profile", "User");
+            }
+            else
+            {
+                return BadRequest("Hata");
+            }
+
+
+
+        }
     }
 }
