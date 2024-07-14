@@ -3,10 +3,12 @@ using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.DTO.CustomerDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,11 +16,14 @@ namespace IsEmirleri.Business.Concrete
 {
     public class CustomerService : Service<Customer>, ICustomerService
     {
+
+        private readonly IRepository<AppUser> _appUserRepository;
         private readonly IRepository<Customer> _repository;
 
-        public CustomerService(IRepository<Customer> repository):base(repository)
+        public CustomerService(IRepository<Customer> repository, IRepository<AppUser> appUserRepository) : base(repository)
         {
             _repository = repository;
+            _appUserRepository = appUserRepository;
         }
         public Customer Add(Customer Customer)
         {
@@ -58,6 +63,21 @@ namespace IsEmirleri.Business.Concrete
             _repository.Update(Customer);
 
             return GetAllWithUserCount().FirstOrDefault(i => i.Id == Customer.Id);
+        }
+
+        public IQueryable<AppUser> GetAllUsersById(int customerId)
+        {
+            return _appUserRepository.GetAll(u => u.CustomerId == customerId && u.IsDeleted == false ).Select(x => new AppUser
+            {
+                Id = x.Id,
+                Email = x.Email,
+                Password = x.Password,
+                UserType = x.UserType,
+                Projects = x.Projects,
+                CustomerId = x.CustomerId,
+                Tasks = x.Tasks
+
+            });
         }
     }
 }
