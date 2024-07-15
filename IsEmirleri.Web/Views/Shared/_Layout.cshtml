@@ -21,6 +21,7 @@
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", false);
 
 </head>
@@ -352,6 +353,14 @@
                                 </a>
                             </li>
                         }
+
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a asp-controller="Project" asp-action="Index"> <i class="fas fa-project-diagram"></i><span>Projeler</span></a>
+                            </li>
+                        }
+
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="uil-location-point"></i>
@@ -365,6 +374,10 @@
                                 }
                             </ul>
                         </li>
+
+
+                      
+
 
 
                     </ul>
@@ -384,32 +397,32 @@
                         <div class="col-12">
 
                             @RenderBody()
-                     
-                            </div>
+
                         </div>
-                    </div> <!-- container-fluid -->
-                </div>
-                <!-- End Page-content -->
+                    </div>
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
 
 
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <script>document.write(new Date().getFullYear())</script> © Minible.
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-sm-end d-none d-sm-block">
-                                    Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
-                                </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> © Minible.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
                             </div>
                         </div>
                     </div>
-                </footer>
-            </div>
-            <!-- end main content-->
+                </div>
+            </footer>
         </div>
-        <!-- END layout-wrapper -->
+        <!-- end main content-->
+    </div>
+    <!-- END layout-wrapper -->
 
 
 </body>

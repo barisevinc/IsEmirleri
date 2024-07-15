@@ -1,0 +1,162 @@
+﻿<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-11 text-center fs-3 text-dark">Projeler</div>
+                <div class="col-12 fs-3 text-end">
+                    <a href="#" id="btnAdd" class="btn btn-success">Yeni Kayıt</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="tblProject" class="table table-bordered table-striped table-hover"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Proje Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <input type="text" class="form-control" id="txtName" placeholder="Proje Adını Giriniz">
+                </div>
+                <div class="mb-3 row">
+                    <input type="text" class="form-control" id="txtDescription" placeholder="Bir Açıklama Giriniz">
+                </div>
+                <div class="mb-3 row">
+                    <select id="txtUserSelect" class="js-example-basic-multiple" name="users[]" multiple="multiple"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .select2-container--open {
+        z-index: 9999 !important; /* Select2 penceresi modal penceresi arkasında kalmasın diye eklendi */
+    }
+
+    .select2-selection--multiple {
+        cursor: pointer !important; /* Pointer */
+    }
+
+        .select2-selection--multiple .select2-selection__placeholder {
+            cursor: default !important; /* Pointer */
+        }
+
+</style>
+
+@section Scripts {
+    <script>
+        var DataTable = "";
+
+        $(document).ready(() => {
+            var DataTable = $("#tblProject").DataTable({
+                ajax: '/Project/GetAll',
+                columns: [
+                    { data: 'id', title: 'ID' },
+                    { data: 'name', title: 'Proje Adı' },
+                    { data: 'description', title: 'Açıklama' },
+                    { data: 'customerId', title: 'Müşteri ID' },
+                    { data: 'userEmails', title: 'Tanımlanmış Kullanıcılar', render: data => data.join(', ') },
+                    {
+                        data: 'id', title: 'İşlemler', render: (data) => {
+                            return `<a title="Sil" onclick="deleteProject(${data}, this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateProject(${data}, this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
+                        }
+                    }
+                ]
+            });
+
+            $("#btnAdd").click(() => {
+                $("#modalAdd").modal("show");
+                $("#modalAdd .form-control").val('');
+                $("#modalTitle").text("Yeni Proje Ekle");
+
+                if (!$("#txtUserSelect").data('select2')) {
+                    $("#txtUserSelect").select2({
+                        width: 'resolve',
+                        ajax: {
+                            url: '/Project/FillUsers',
+                            dataType: 'json',
+                            processResults: function (data) {
+
+                                return {
+                                    results: data.data.map(user => ({ id: user.email, text: user.email }))
+                                };
+                            }
+                        },
+                        placeholder: "Kullanıcı Seçin",
+                        allowClear: true,
+                        dropdownAutoWidth: true,
+                        minimumResultsForSearch: 0,
+                        maximumInputLength: 0 // Yazı girişi engelleme
+
+                    });
+
+                } else {
+                    $("#txtUserSelect").val(null).trigger('change');
+                }
+            });
+
+            // customerId=1'in düzeltilmesi gerekiyor'
+
+            $("#btnSave").off().click(() => {
+                let selectedUserEmails = $("#txtUserSelect").val();
+                console.log(selectedUserEmails);
+
+                let project = {
+                    name: $("#txtName").val(),
+                    description: $("#txtDescription").val(),
+                    customerId: 1,
+                    userEmails: selectedUserEmails
+                    // userEmails burada yok
+                };
+
+                $.ajax({
+                    url: '/Project/Add',
+                    type: 'POST',
+                    data: {
+                        project: project
+                         // E-posta listesini burada gönderiyoruz
+                    },
+                    success: (res) => {
+                        DataTable.ajax.reload();
+                        toastr.success("Proje Kaydı Başarılı");
+                        $("#modalAdd").modal("hide");
+                    }
+                });
+            });
+
+        });
+
+       
+
+        function deleteProject(projectId, button) {
+            swal.fire({
+                title: 'Silmek İstediğinize emin misiniz?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Evet', cancelButtonText: 'Vazgeç'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    $.ajax({
+                        url: '/Project/Delete',
+                        type: 'POST',
+                        data: { id: projectId },
+                        success: () => {
+                            let satir = $(button).parent().parent();
+                            DataTable.row(satir).remove().draw();
+                            toastr.success("Proje Başarıyla Silindi");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
