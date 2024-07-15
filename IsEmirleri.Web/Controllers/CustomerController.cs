@@ -51,8 +51,13 @@ namespace IsEmirleri.Web.Controllers
             return Ok(item);
 
         }
-
         [HttpGet]
+        public IActionResult GetAllUsersById() 
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult GetAllUsersById (int customerId)
         {
             return Json(new { data = _customerService.GetAllUsersById(customerId) });

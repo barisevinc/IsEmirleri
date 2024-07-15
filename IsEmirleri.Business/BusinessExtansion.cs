@@ -33,6 +33,7 @@ namespace IsEmirleri.Business
         public static void AddRepositoryDI(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            
         }
     }
 }
