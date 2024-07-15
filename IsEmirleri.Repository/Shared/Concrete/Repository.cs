@@ -80,5 +80,10 @@ namespace IsEmirleri.Repository.Shared.Concrete
         {
             _context.SaveChanges();
         }
+
+        public IQueryable<T> GetAllWithIsDeleted(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.Where(predicate);
+        }
     }
 }

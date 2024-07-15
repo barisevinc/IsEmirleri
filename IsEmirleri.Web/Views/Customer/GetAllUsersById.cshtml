@@ -4,6 +4,11 @@
             <div class="card-header">
                 <div class="col-11 text-center fs-3 text-dark">Kullanıcılar</div>
             </div>
+
+            <div class="col-12 fs-3 text-end">
+                <a href="#" id="btnAdd" class="btn btn-success ">Yeni Kayıt</a>
+            </div>
+
             <div class="card-body">
                 <table id="tblUsers" class="table table-bordered table-striped table-hover">
                     <thead>
@@ -34,7 +39,12 @@
                                 { data: 'picture', title: 'Fotoğraf' },
                                 { data: 'id', title: 'ID' },
                                 { data: 'email', title: 'Email' },
-                                { data: 'isDeleted', title: 'Aktif' },
+                                {data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
+
+
+                                        return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`
+                              }
+                            },
 
                                 {
                                     data: 'id', title: 'İşlemler', render: (data) => {

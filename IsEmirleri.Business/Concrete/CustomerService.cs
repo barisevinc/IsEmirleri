@@ -67,7 +67,7 @@ namespace IsEmirleri.Business.Concrete
 
         public IQueryable<AppUser> GetAllUsersById(int customerId)
         {
-            return _appUserRepository.GetAll(u => u.CustomerId == customerId ).Select(x => new AppUser
+            return _appUserRepository.GetAllWithIsDeleted(u => u.CustomerId == customerId).OrderBy(u => u.IsDeleted).Select(x => new AppUser
             {
                 Id = x.Id,
                 Email = x.Email,
