@@ -21,7 +21,7 @@ namespace IsEmirleri.Business.Abstract
 
         //IQueryable<Project> AddProject(Project project, List<int> userIds)
 
-        IQueryable<Project> AddProject(Project project, List<int> userIds);
+        IQueryable<Project> AddProject(Project project, List<string> userIds);
 
         bool Delete(int id);
 

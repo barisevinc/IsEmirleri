@@ -77,10 +77,11 @@ namespace IsEmirleri.Business.Concrete
 
 
 
-        public IQueryable<Project> AddProject(Project project, List<int> userIds)
+        public IQueryable<Project> AddProject(Project project, List<string> userIds)
         {
             //burada eklenenler sql e geliyor ama webde görünmüyor
-
+            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            project.CustomerId = currentCustomerId;
             var addedProject = _repository.Add(project);
             Console.WriteLine(userIds.Count);
 
@@ -88,7 +89,7 @@ namespace IsEmirleri.Business.Concrete
             {
 
                 var users = _userRepository.GetAll()
-                    .Where(u => userIds.Contains(u.Id))
+                    .Where(u => userIds.Contains(u.Email))
                     .ToList();
 
                 foreach (var user in users)

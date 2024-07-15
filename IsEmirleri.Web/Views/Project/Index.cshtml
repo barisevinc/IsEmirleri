@@ -111,25 +111,27 @@
 
             $("#btnSave").off().click(() => {
                 let selectedUserEmails = $("#txtUserSelect").val();
-                console.log(selectedUserEmails);
+          
 
                 let project = {
                     name: $("#txtName").val(),
                     description: $("#txtDescription").val(),
-                    customerId: 1,
-                    userEmails: selectedUserEmails
+                   
+                  //  userEmails: selectedUserEmails
                     // userEmails burada yok
                 };
+                
 
                 $.ajax({
                     url: '/Project/Add',
                     type: 'POST',
                     data: {
-                        project: project
+                        project: project,
+                        usersEmails: selectedUserEmails
                          // E-posta listesini burada gönderiyoruz
                     },
-                    success: (res) => {
-                        DataTable.ajax.reload();
+                    success: () => {
+                        $('#tblProject').DataTable().ajax.reload()
                         toastr.success("Proje Kaydı Başarılı");
                         $("#modalAdd").modal("hide");
                     }

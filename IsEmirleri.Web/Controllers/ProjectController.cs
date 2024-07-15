@@ -34,9 +34,10 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(ProjectAddDto project)
-        {                     
-            return Ok(_projectService.AddProject(project));
+        public IActionResult Add(Project project,List<string> usersEmails)
+        {
+            _projectService.AddProject(project, usersEmails);
+            return Ok();
         }
 
 
