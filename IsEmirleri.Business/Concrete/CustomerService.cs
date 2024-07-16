@@ -30,21 +30,38 @@ namespace IsEmirleri.Business.Concrete
             return _repository.Add(Customer);
         }
 
+       
         public bool Delete(int id)
         {
-            _repository.Delete(id);
+            var users = _appUserRepository.GetAll().Where(u => u.CustomerId == id).ToList();
+            foreach (var item in users)
+            {
+                item.IsDeleted = true;
+                _appUserRepository.Update(item);
+            }
+            var customer = _repository.GetById(id);
+            if (customer == null)
+            {
+                return false; 
+            }
+            customer.IsDeleted = true;
+            _repository.Update(customer);
+
             return true;
+
         }
 
 
         public IQueryable<CustomerGetAllDto> GetAllWithUserCount()
         {
-            var result = _repository.GetAll().Select(c => new CustomerGetAllDto
+            var result = _repository.GetAllWithIsDeleted().OrderBy(u => u.IsDeleted).Select(c => new CustomerGetAllDto
             {
                 Id = c.Id,
                 Name = c.Name,
                 UserLimit = c.UserLimit,
+                IsDeleted = c.IsDeleted,
                 UserCount = c.AppUsers.Where(i=>i.IsDeleted==false&&i.UserTypeId==3).Count()
+                
             });
             return result;
         }

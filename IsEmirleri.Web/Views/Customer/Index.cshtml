@@ -60,8 +60,24 @@
                     { data: 'userCount', title: 'Aktif Kullanıcı Sayısı' },
                     { data: 'userLimit', title: 'Kullanıcı Limiti' },
                     {
-                        data: 'id', title: 'İşlemler', render: (data) => {
-                            return `<a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>   <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>`
+                        data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
+
+                            return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`
+                        }
+                    },
+                    {
+                        data: 'id',
+                        title: 'İşlemler',
+                        render: (data, type, row) => {
+                            if (row.isDeleted) {
+                                return ' <a title="Silinmiş öğe, tekrar silinemez!"  class="btn uil-trash-alt fs-6 btn-light"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a> <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>';
+                            } else {
+                                return `
+                        <a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a>
+                        <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>
+                        <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>
+                    `;
+                            }
                         }
                     }
                 ]
