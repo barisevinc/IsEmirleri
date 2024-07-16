@@ -88,8 +88,10 @@ namespace IsEmirleri.Business.Concrete
             {
                 Id = x.Id,
                 Email = x.Email,
+                Picture = x.Picture,
                 Password = x.Password,
                 UserType = x.UserType,
+                UserTypeId = x.UserTypeId,
                 Projects = x.Projects,
                 CustomerId = x.CustomerId,
                 IsDeleted = x.IsDeleted,

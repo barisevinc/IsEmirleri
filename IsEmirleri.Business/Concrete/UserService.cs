@@ -68,7 +68,21 @@ namespace IsEmirleri.Business.Concrete
             });
         }
 
+        public AppUser? AddCustomerUser(AppUser user)
+        {
+            var customer = _customerRepository.GetById(user.CustomerId.Value);
 
+            //limit kontrol usertype vermezsek admin dahil limit tutuyor
+            int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted && u.UserTypeId == 3).Count();
 
+            if (userCount >= customer.UserLimit)
+            {
+                return null;
+            }
+
+            user.CustomerId = customer.Id;
+            _repository.Add(user);
+            return user;
+        }
     }
 }
