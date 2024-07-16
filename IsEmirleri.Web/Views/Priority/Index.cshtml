@@ -32,12 +32,7 @@
                     <input type="text" class="form-control" id="txtPriorityname" placeholder="Öncelik adı giriniz">
 
                 </div>
-                <div class="mb-3 row">
-
-                    <select id="ddlPriority" class="form-select">
-                    </select>
-
-                </div>
+             
 
 
 
@@ -69,7 +64,7 @@
             $("#btnAdd").click(function () {
                 $("#modalAdd").modal("show");
                 $("#modalAdd .form-control").val('');
-                fillCustomers();
+          
                 $("#modalTitle").text("Yeni Öncelik Kaydı");
 
                 $("#btnSave").text("Kaydet").off().click(function () {
@@ -101,7 +96,7 @@
                 columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'name', title: 'Öncelik Adı' },
-                    { data: 'taskCount', title: 'Bağlı Görev Sayısı' },
+                    //{ data: 'taskCount', title: 'Bağlı Görev Sayısı' },
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<a onclick="deletePriority(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updatePriority(${data},this)" class="btn uil-pen fs-6 btn-success"></a>`;
@@ -111,21 +106,21 @@
             });
         });
 
-        function fillCustomers() {
-            $.ajax({
-                url: '/Customer/GetAll',
-                type: 'GET',
-                success: function (res) {
+        // function fillCustomers() {
+        //     $.ajax({
+        //         url: '/Customer/GetAll',
+        //         type: 'GET',
+        //         success: function (res) {
 
-                    $("#ddlPriority").empty().append(new Option("Lütfen seçim yapınız", 0));
-                    for (let item of res.data) {
-                        $("#ddlPriority").append(new Option(item.name, item.id));
+        //             $("#ddlPriority").empty().append(new Option("Lütfen seçim yapınız", 0));
+        //             for (let item of res.data) {
+        //                 $("#ddlPriority").append(new Option(item.name, item.id));
 
-                    }
+        //             }
 
-                }
-            })
-        }
+        //         }
+        //     })
+        // }
         function deletePriority(priorityId, button) {
             toastr.success("İşlem Başarılı", "Öncelik Silindi !");
 
@@ -136,9 +131,9 @@
                     url: '/Priority/Delete',
                     type: 'POST',
                     data: {
-                        Priority: {
+                       
                             id: priorityId
-                        }
+                       
                     },
                     success: function () {
                         DataTable.row(satir).remove().draw();

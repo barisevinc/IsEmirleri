@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IsEmirleri.Web.Controllers
 {
-    [Authorize (Roles ="Admin")]
+    [Authorize (Roles = "Admin,Superadmin")]
     public class PriorityController : Controller
     {
         private readonly IPriorityService _priorityService;

@@ -4,10 +4,12 @@ using IsEmirleri.DTO.MissionStatusDTOs;
 using IsEmirleri.DTO.PriorityDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,14 +18,18 @@ namespace IsEmirleri.Business.Concrete
     public class PriorityService : Service<Priority>, IPriorityService
     {
         private readonly IRepository<Priority> _repository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PriorityService(IRepository<Priority> repository) : base(repository)
+        public PriorityService(IRepository<Priority> repository, IHttpContextAccessor httpContextAccessor) : base(repository)
         {
             _repository = repository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Priority Add(Priority priority)
         {
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            priority.CustomerId = customerId;
             return _repository.Add(priority);
         }
 
