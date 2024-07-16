@@ -353,7 +353,15 @@
                                 </a>
                             </li>
                         }
-
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Priority">
+                                    <i class="fas fa-user-friends"></i>
+                                    <span>Öncelikler</span>
+                                </a>
+                            </li>
+                        }
                         @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                         {
                             <li>
