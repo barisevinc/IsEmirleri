@@ -45,7 +45,6 @@
 </div>
 
 @section Scripts {
-
     <script>
         $(document).ready(function () {
             let DataTable = $("#tblUsers").DataTable({
@@ -64,7 +63,7 @@
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>
-                                                    <button onclick="updateUser(${data}, this)" class="btn btn-success"><i class="uil uil-pen"></i></button>`;
+                                    <button onclick="updateUser(${data}, this)" class="btn btn-success"><i class="uil uil-pen"></i></button>`;
                         }
                     }
                 ]
@@ -76,13 +75,24 @@
                 $("#modalTitle").text("Yeni Kullanıcı Kaydı");
 
                 $("#btnSave").text("Kaydet").off().click(function () {
+                    let email = $("#txtEmail").val().trim();
+                    let password = $("#txtPassword").val().trim();
+                    if (email === '' || password === '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text: 'Kullanıcı maili ve şifre boş olamaz.'
+                        });
+                        return;
+                    }
+
                     let data = {
                         user: {
-                            email: $("#txtEmail").val(),
-                            password: $("#txtPassword").val(),
+                            email: email,
+                            password: password,
                             customerId: @User.FindFirst(ClaimTypes.UserData).Value,
-                            tasks:"0",
-                            id:"0"
+                            tasks: "0",
+                            id: "0"
                         }
                     };
 
@@ -100,19 +110,27 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Hata',
-                                    text: res.message,
-                                    
-
+                                    text: res.message
                                 });
                                 $("#modalAdd").modal("hide");
                             }
-                          
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'İşlem sırasında bir hata oluştu.'
+                            });
+                            $("#modalAdd").modal("hide");
                         }
                     });
                 });
             });
 
-            deleteUser = function (userId, button) {
+
+            window.deleteUser = function (userId, button) {
+
+       
                 Swal.fire({
                     title: "Silmek İstediğinize Emin Misiniz?",
                     text: "Bu işlem geri alınamayacaktır.",
@@ -165,8 +183,19 @@
                         $("#txtPassword").val(res.password);
 
                         $("#btnSave").text("Düzenle").off().click(function () {
-                            res.email = $("#txtEmail").val();
-                            res.password = $("#txtPassword").val();
+                            let email = $("#txtEmail").val().trim();
+                            let password = $("#txtPassword").val().trim();
+                            if (email === '' || password === '') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: 'Kullanıcı maili ve şifre boş olamaz.'
+                                });
+                                return;
+                            }
+
+                            res.email = email;
+                            res.password = password;
 
                             $.ajax({
                                 url: '/User/Update',
@@ -178,8 +207,8 @@
                                     DataTable.row(row).data(updatedUser).draw();
                                     toastr.success('Kullanıcı başarıyla güncellendi.');
                                 },
-                                error: function (err) {
-                                    toastr.error('Kullanıcı güncellenirken bir hata oluştu: ');
+                                error: function () {
+                                    toastr.error('Kullanıcı güncellenirken bir hata oluştu.');
                                 }
                             });
                         });
@@ -189,3 +218,4 @@
         });
     </script>
 }
+
