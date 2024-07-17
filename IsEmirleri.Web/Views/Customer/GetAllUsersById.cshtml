@@ -20,7 +20,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
@@ -30,17 +29,24 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3 row">
+                    <label class="form-label">Kullanıcı Email Adresi</label>
                     <input type="text" class="form-control" id="txtEmail" placeholder="Kullanıcı maili giriniz">
                 </div>
                 <div class="mb-3 row">
+                    <label class="form-label">Kullanıcı Şifresi</label>
                     <input type="text" class="form-control" id="txtPassword" placeholder="Kullanıcı şifre giriniz">
                 </div>
                 <div class="mb-3 row">
                     <label class="form-label">Kullanıcı Tipi</label>
-                    <select class="form-select" id="ddlUserType">
-                    </select>
+                    <select class="form-select" id="ddlUserType"></select>
                 </div>
-
+                <div class="mb-3 row" id="deletedRow" style="display:none;">
+                    <label class="form-label">Aktiflik Durumu</label>
+                    <div class="square-switch">
+                        <input type="checkbox" id="ddlDeleted" switch="none" checked="">
+                        <label for="square-switch1" data-on-label="Aktif" data-off-label="Pasif"></label>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -75,10 +81,10 @@
                                 { data: 'email', title: 'Email' },
                                 {
                                     data: 'userTypeId', title: 'Kullanıcı Tipi', render: function (data) {
-                                        if (data==2) {
+                                        if (data == 2) {
                                             return `<i class="badge bg-info-subtle text-info font-size-12">Müşteri</i>`;
                                         }
-                                        else if (data==3) {
+                                        else if (data == 3) {
                                             return `<i class="badge bg-warning-subtle text-warning font-size-12">Kullanıcı</i>`;
                                         }
 
@@ -88,26 +94,23 @@
                                     data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
 
 
-                                        return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`
+                                        return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`;
                                     }
                                 },
 
                                 {
                                     data: 'id', title: 'İşlemler', render: (data) => {
-                                        return `<a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateUser(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`
+                                        return `<a title="Sil" onclick="deleteUser(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateUser(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
                                     }
                                 }
 
                             ]
                         });
-                    },
-
-                    error: (xhr, status, error) => {
-                        console.error('Veri çekme hatası:', error);
                     }
                 });
                 $("#btnAdd").click(function () {
                     $("#modalAdd").modal("show");
+                    $("#deletedRow").hide();
                     $("#modalAdd .form-control").val('');
                     $("#modalTitle").text("Yeni Kullanıcı Kaydı");
                     fillUserTypes();
@@ -148,7 +151,58 @@
                         });
                     });
                 });
-                
+                updateUser = (userId, button) => {
+                    fillUserTypes();
+                    $("#modalAdd").modal("show");
+                    $("#deletedRow").show(); 
+                    $("#modalTitle").text("Kullanıcı Güncelleme");
+
+                    $.ajax({
+                        url: '/User/GetById',
+                        type: 'POST',
+                        data: { id: userId },
+                        success: (res) => {
+                            $("#txtEmail").val(res.email);
+                            $("#txtPassword").val(res.password);
+                            $("#ddlUserType").val(res.userTypeId);
+                            $("#ddlDeleted").prop('checked', !res.isDeleted);
+                           
+
+                        }
+                    });
+                    $("#btnSave").text("Güncelle").off().click(() => {
+                        let data = {
+                            user: {
+                                id: userId,
+                                email: $("#txtEmail").val(),
+                                password: $("#txtPassword").val(),
+                                customerId: customerId,
+                                userTypeId: $("#ddlUserType").val(),
+                                isDeleted:$("ddlDeleted").val()
+                            }
+                        };
+                        $.ajax({
+                            url: '/User/Update',
+                            type: 'POST',
+                            data: data,
+                            success: (res) => {
+                                if (res.result) {
+                                    $("#modalAdd").modal("hide");
+                                    let row = $(button).closest('tr');
+                                    DataTable.row(row).data(data.user).draw();
+                                    toastr.success(res.message);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Hata',
+                                        text: res.message
+                                    });
+                                    $("#modalAdd").modal("hide");
+                                }
+                            }
+                        });
+                    });
+                };
                 deleteUser = function (userId, button) {
                     Swal.fire({
                         title: "Silmek İstediğinize Emin Misiniz?",
@@ -176,7 +230,7 @@
                                 }
                             });
 
-                         
+
 
                         }
                     });
@@ -196,7 +250,7 @@
                         }
                     });
                 }
-
+                
             }
         });
     </script>
