@@ -98,7 +98,7 @@
                         allowClear: true,
                         dropdownAutoWidth: true,
                         minimumResultsForSearch: 0,
-                        maximumInputLength: 0 // Yazı girişi engelleme
+                        maximumInputLength: 0 
 
                     });
 
@@ -107,7 +107,6 @@
                 }
             });
 
-            // customerId=1'in düzeltilmesi gerekiyor'
 
             $("#btnSave").off().click(() => {
                 let selectedUserEmails = $("#txtUserSelect").val();
@@ -116,9 +115,6 @@
                 let project = {
                     name: $("#txtName").val(),
                     description: $("#txtDescription").val(),
-                   
-                  //  userEmails: selectedUserEmails
-                    // userEmails burada yok
                 };
                 
 
@@ -128,7 +124,6 @@
                     data: {
                         project: project,
                         usersEmails: selectedUserEmails
-                         // E-posta listesini burada gönderiyoruz
                     },
                     success: () => {
                         $('#tblProject').DataTable().ajax.reload()
@@ -152,6 +147,7 @@
                         type: 'POST',
                         data: { id: projectId },
                         success: () => {
+                            $('#tblProject').DataTable().ajax.reload()
                             let satir = $(button).parent().parent();
                             DataTable.row(satir).remove().draw();
                             toastr.success("Proje Başarıyla Silindi");
@@ -159,6 +155,10 @@
                     });
                 }
             });
+
         }
+
+        
+
     </script>
 }

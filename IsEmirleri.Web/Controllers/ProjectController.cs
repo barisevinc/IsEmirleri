@@ -41,12 +41,6 @@ namespace IsEmirleri.Web.Controllers
         }
 
 
-        public IActionResult Update(Project project)
-        {
-            return Ok(_projectService.Update(project));
-        }
-
-
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -54,20 +48,36 @@ namespace IsEmirleri.Web.Controllers
             return Ok(_projectService.Delete(id));
         }
 
+        [HttpPost]
+        public IActionResult Update(ProjectUpdateDto updateDto)
+        {
+            var updatedProject = _projectService.UpdateProject(updateDto);
+            return Ok(updatedProject);
+        }
 
 
-        //[HttpPost]
-        //public IActionResult Add(Project project)
+
+        //[HttpGet]
+        //public IActionResult GetById(int id)
         //{
+        //    var project = _projectService.GetById(id);
+        //    if (project == null)
+        //    {
+        //        return NotFound("Proje bulunamadı.");
+        //    }
 
-        //    return Ok(_projectService.Add(project));
+        //    var projectDto = new ProjectUpdateDto
+        //    {
+        //        Id = project.Id,
+        //        Name = project.Name,
+        //        Description = project.Description,
+        //        UserEmails = project.Users.Select(u => u.Email).ToList()
+        //    };
+
+        //    return Ok(projectDto);
         //}
 
 
-        //public IActionResult GetAll()
-        //{
-        //    var result = _projectService.GetAllWithUsers().ToList();
-        //    return Json(new {data = result});
-        //}
+
     }
 }
