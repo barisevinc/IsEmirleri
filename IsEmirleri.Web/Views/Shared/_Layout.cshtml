@@ -21,6 +21,7 @@
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", false);
 
 </head>
@@ -273,21 +274,24 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="dropdown d-inline-block">
+                        @* assets/images/users/avatar-4.jpg *@
+                       @*  /Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor) *@
+                    </div><div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-4.jpg"
+                            <img class="rounded-circle header-profile-user" src="/Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor)?.Value"
                                  alt="Header Avatar">
                             <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.FindFirst(ClaimTypes.Email).Value</span>
                             <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
-
                             <a class="dropdown-item" asp-controller="User" asp-action="Logout"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Çıkış Yap</span></a>
+                            <a class="dropdown-item" asp-controller="User" asp-action="Profile"><i class="fas fa-user-circle font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Profile</span></a>
+
                         </div>
                     </div>
+
 
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
@@ -352,6 +356,22 @@
                                 </a>
                             </li>
                         }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Priority">
+                                    <i class="fas fa-user-friends"></i>
+                                    <span>Öncelikler</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a asp-controller="Project" asp-action="Index"> <i class="fas fa-project-diagram"></i><span>Projeler</span></a>
+                            </li>
+                        }
+
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="uil-location-point"></i>
@@ -365,6 +385,10 @@
                                 }
                             </ul>
                         </li>
+
+
+                      
+
 
 
                     </ul>
@@ -384,32 +408,32 @@
                         <div class="col-12">
 
                             @RenderBody()
-                     
-                            </div>
+
                         </div>
-                    </div> <!-- container-fluid -->
-                </div>
-                <!-- End Page-content -->
+                    </div>
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
 
 
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <script>document.write(new Date().getFullYear())</script> © Minible.
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-sm-end d-none d-sm-block">
-                                    Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
-                                </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> © Minible.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
                             </div>
                         </div>
                     </div>
-                </footer>
-            </div>
-            <!-- end main content-->
+                </div>
+            </footer>
         </div>
-        <!-- END layout-wrapper -->
+        <!-- end main content-->
+    </div>
+    <!-- END layout-wrapper -->
 
 
 </body>

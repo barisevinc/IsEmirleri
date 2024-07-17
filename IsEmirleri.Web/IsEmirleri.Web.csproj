@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\IsEmirleri.Business\IsEmirleri.Business.csproj" />
     <ProjectReference Include="..\IsEmirleri.Data\IsEmirleri.Data.csproj" />
+    <ProjectReference Include="..\IsEmirleri.Utility\IsEmirleri.Utility.csproj" />
   </ItemGroup>
 
 </Project>

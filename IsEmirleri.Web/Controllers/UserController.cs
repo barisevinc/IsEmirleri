@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using IsEmirleri.Utility;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -41,6 +42,7 @@ namespace IsEmirleri.Web.Controllers
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
+                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
 
@@ -109,6 +111,38 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult GetById(int id)
         {
             return Json(_userService.GetById(id));
+        }
+        [AllowAnonymous]
+        public IActionResult Password()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult Password(string email)
+        {
+            var newPassword =Helper.RandomPassword();
+            return Ok(newPassword);
+        }
+        public IActionResult Profile()
+        {
+            return View(_userService.Profile());
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(AppUser user)
+        {
+            var test = await _userService.UpdateWithPhoto(user, HttpContext.Request.Form.Files[0], int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            if (test.Result != null)
+            {
+                return RedirectToAction("Profile", "User");
+            }
+            else
+            {
+                return BadRequest("Hata");
+            }
+
+
+
         }
     }
 }
