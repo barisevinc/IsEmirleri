@@ -2,6 +2,7 @@
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
+using IsEmirleri.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -68,7 +69,38 @@ namespace IsEmirleri.Business.Concrete
             });
         }
 
+        public AppUser Profile()
+        {
+             
+            return _repository.GetById(int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+
+        }
+
+        public async Task<Response<AppUser>> UpdateWithPhoto(AppUser user, IFormFile foto, int currentUserId)
+        {
+            if (user.Id == currentUserId)
+            {
+
+                FileInfo fotofile = new FileInfo(foto.FileName);
+                string dosyaYolu = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Files", "UserPhotos");
+
+                if (!Directory.Exists(dosyaYolu))
+                    Directory.CreateDirectory(dosyaYolu);
+
+                string dosyaAdi = user.Id + "-" + user.Email + "-" + Helper.RandomStringGenerator(5) + fotofile.Extension;
+                using (var stream = new FileStream(Path.Combine(dosyaYolu, dosyaAdi), FileMode.Create))
+                {
+                    await foto.CopyToAsync(stream);
+                }
+
+                user.Picture = dosyaAdi;
 
 
+                return new Response<AppUser> { SuccessMessage = "Kayıt başarıyla Eklendi", Result = Update(user), ErrorMessage = "" };
+            }
+            return new Response<AppUser> { ErrorMessage = "Hata" };
+
+
+        }
     }
 }

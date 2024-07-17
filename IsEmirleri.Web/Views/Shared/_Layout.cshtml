@@ -274,21 +274,24 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="dropdown d-inline-block">
+                        @* assets/images/users/avatar-4.jpg *@
+                       @*  /Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor) *@
+                    </div><div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-4.jpg"
+                            <img class="rounded-circle header-profile-user" src="/Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor)?.Value"
                                  alt="Header Avatar">
                             <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.FindFirst(ClaimTypes.Email).Value</span>
                             <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
-
                             <a class="dropdown-item" asp-controller="User" asp-action="Logout"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Çıkış Yap</span></a>
+                            <a class="dropdown-item" asp-controller="User" asp-action="Profile"><i class="fas fa-user-circle font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Profile</span></a>
+
                         </div>
                     </div>
+
 
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
