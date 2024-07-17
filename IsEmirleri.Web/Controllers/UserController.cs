@@ -42,6 +42,7 @@ namespace IsEmirleri.Web.Controllers
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
+                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
 
