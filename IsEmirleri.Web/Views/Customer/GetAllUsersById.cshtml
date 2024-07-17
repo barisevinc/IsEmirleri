@@ -43,8 +43,8 @@
                 <div class="mb-3 row" id="deletedRow" style="display:none;">
                     <label class="form-label">Aktiflik Durumu</label>
                     <div class="square-switch">
-                        <input type="checkbox" id="ddlDeleted" switch="none" checked="">
-                        <label for="square-switch1" data-on-label="Aktif" data-off-label="Pasif"></label>
+                        <input type="checkbox" id="ddlDeleted" switch="none">
+                        <label for="ddlDeleted" data-on-label="Aktif" data-off-label="Pasif"></label>
                     </div>
                 </div>
             </div>
@@ -171,14 +171,14 @@
                         }
                     });
                     $("#btnSave").text("Güncelle").off().click(() => {
-                        let data = {
+                        var data = {
                             user: {
                                 id: userId,
                                 email: $("#txtEmail").val(),
                                 password: $("#txtPassword").val(),
                                 customerId: customerId,
                                 userTypeId: $("#ddlUserType").val(),
-                                isDeleted:$("ddlDeleted").val()
+                                isDeleted: $("#ddlDeleted").prop('checked') ? false : true // Emre yaptı
                             }
                         };
                         $.ajax({
@@ -187,18 +187,13 @@
                             data: data,
                             success: (res) => {
                                 if (res.result) {
-                                    $("#modalAdd").modal("hide");
-                                    let row = $(button).closest('tr');
+                                    let row = $(button).parent().parent();
                                     DataTable.row(row).data(data.user).draw();
                                     toastr.success(res.message);
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Hata',
-                                        text: res.message
-                                    });
                                     $("#modalAdd").modal("hide");
                                 }
+                                $("#modalAdd").modal("hide");
+                                
                             }
                         });
                     });
