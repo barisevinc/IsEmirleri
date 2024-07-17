@@ -11,5 +11,6 @@ namespace IsEmirleri.Models
         public string Name { get; set; }
         public int CustomerId {  get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual ICollection<Mission> Missions { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using IsEmirleri.Utility;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -36,27 +37,35 @@ namespace IsEmirleri.Web.Controllers
             if (user != null)
             {
                 AppUser appUser = _userService.CheckLogin(user);
+               // var item = appUser.Picture.Length;
                 if (appUser != null)
                 {
 
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
-                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture));
+                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture==null ?"null.png"  : appUser.Picture.ToString()));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
+                   
 
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties { IsPersistent = true });
 
-                    if (appUser.UserType.Name == "Admin"|| appUser.UserType.Name == "Superadmin")
-                        return RedirectToAction("Index", "User");
+                    if (appUser.UserType.Name == "Admin" || appUser.UserType.Name == "Superadmin")
+                    { TempData["success"] = $"Hoşgeldiniz";
+                    return RedirectToAction("Index", "User");
+                    }
+
                     else
-                        return RedirectToAction("Index", "Home");
+                        TempData["success"] = $"Hoşgeldiniz";
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
+            TempData["error"] = "Kullanıcı Adı ya da Şifreniz Yanlıştır!";
             return RedirectToAction("Login");
         }
 
@@ -119,10 +128,20 @@ namespace IsEmirleri.Web.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Password(string email)
+        public async Task<IActionResult> Password(string email)
         {
-            var newPassword =Helper.RandomPassword();
-            return Ok(newPassword);
+            if (await _userService.NewUserPassword(email))
+            {
+                TempData["success"] = "Şifreniz Mail Adresinize Gönderilmiştir.";
+                return RedirectToAction("index");
+
+            }
+            else
+            {
+                TempData["error"] = "Şifre Yenileme İşlemi Başarısızdır.";
+                return RedirectToAction("password");
+            }
+           
         }
         public IActionResult Profile()
         {
@@ -131,15 +150,13 @@ namespace IsEmirleri.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(AppUser user)
         {
-            var test = await _userService.UpdateWithPhoto(user, HttpContext.Request.Form.Files[0], int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            if (test.Result != null)
-            {
+           
+                
+            await _userService.UpdateWithPhoto(user);
+          
+          
                 return RedirectToAction("Profile", "User");
-            }
-            else
-            {
-                return BadRequest("Hata");
-            }
+           
 
 
 

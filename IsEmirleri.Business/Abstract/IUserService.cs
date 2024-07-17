@@ -20,8 +20,8 @@ namespace IsEmirleri.Business.Abstract
         AppUser? AddCustomerUser(AppUser user);
 
         AppUser Profile();
-        Task<Response<AppUser>> UpdateWithPhoto(AppUser user, IFormFile foto, int currentUserId);
-
+        Task<Response<AppUser>> UpdateWithPhoto(AppUser user);
+       Task<bool> NewUserPassword(string mail);
 
     }
 }
