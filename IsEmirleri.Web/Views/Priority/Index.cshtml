@@ -1,0 +1,192 @@
+﻿
+
+<div class="card">
+    <div class="card-header bg-soft-success text-dark text-center d-flex">
+
+        <div class="col-11 text-center fs-3 text-dark">Öncelik Listesi</div>
+        <div class="col-1 fs-3">
+            <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</a>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <table id="tblPriority" class="table table-bordered table-striped table-hover"></table>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="mb-3 row">
+                    <input type="text" class="form-control" id="txtPriorityname" placeholder="Öncelik adı giriniz">
+
+                </div>
+             
+
+
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Kapat
+                </button>
+                <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        let DataTable = "";
+        $(document).ready(function () {
+
+
+            $("#btnAdd").click(function () {
+                $("#modalAdd").modal("show");
+                $("#modalAdd .form-control").val('');
+          
+                $("#modalTitle").text("Yeni Öncelik Kaydı");
+
+                $("#btnSave").text("Kaydet").off().click(function () {
+
+                    let data = {
+                       Priority: {
+                            name: $("#txtPriorityname").val(),
+
+                        }
+                    }
+
+                    $.ajax({
+                        url: '/Priority/Add',
+                        type: 'POST',
+                        data: data,
+                        success: function (res) {
+
+                            $("#modalAdd").modal("hide");
+                            DataTable.row.add(res).draw();
+                        }
+                    })
+                })
+            })
+
+
+
+            DataTable = $("#tblPriority").DataTable({
+                ajax: '/Priority/GetAll',
+                columns: [
+                    { data: 'id', title: 'ID' },
+                    { data: 'name', title: 'Öncelik Adı' },
+                    //{ data: 'taskCount', title: 'Bağlı Görev Sayısı' },
+                    {
+                        data: 'id', title: 'İşlemler', render: function (data, type, row) {
+                            return `<a onclick="deletePriority(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updatePriority(${data},this)" class="btn uil-pen fs-6 btn-success"></a>`;
+                        }
+                    }
+                ]
+            });
+        });
+
+        // function fillCustomers() {
+        //     $.ajax({
+        //         url: '/Customer/GetAll',
+        //         type: 'GET',
+        //         success: function (res) {
+
+        //             $("#ddlPriority").empty().append(new Option("Lütfen seçim yapınız", 0));
+        //             for (let item of res.data) {
+        //                 $("#ddlPriority").append(new Option(item.name, item.id));
+
+        //             }
+
+        //         }
+        //     })
+        // }
+        function deletePriority(priorityId, button) {
+            toastr.success("İşlem Başarılı", "Öncelik Silindi !");
+
+            if (confirm("Silmek istediğinize emin misiniz ?")) {
+
+                let satir = $(button).parent().parent();
+                $.ajax({
+                    url: '/Priority/Delete',
+                    type: 'POST',
+                    data: {
+                       
+                            id: priorityId
+                       
+                    },
+                    success: function () {
+                        DataTable.row(satir).remove().draw();
+                    }
+                });
+            }
+
+        }
+
+        function updatePriority(priorityId, button) {
+
+            $.ajax({
+                url: '/Priority/GetById',
+                type: 'POST',
+                data: { id: priorityId },
+                success: function (res) {
+
+                    $("#modalAdd").modal("show");
+                    $("#modalTitle").text("Öncelik Düzenle");
+                    $("#txtPriorityname").val(res.name);
+
+
+                    $("#btnSave").text("Düzenle").off().click(function () {
+
+                        res.name = $("#txtPriorityname").val();
+
+
+
+                        $.ajax({
+                            url: '/Priority/Update',
+                            type: 'POST',
+                            data: {
+                                Priority: res
+                            },
+                            success: function (updatedPriority) {
+                                $("#modalAdd").modal("hide");
+
+                                let satir = $(button).parent().parent();
+                                DataTable.row(satir).data(updatedPriority).draw();
+
+
+                            }
+                        });
+
+
+                    });
+
+                }
+
+            });
+
+        }
+
+
+    </script>
+}

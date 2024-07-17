@@ -1,14 +1,11 @@
 ﻿﻿<div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <div class="col-11 text-center fs-3 text-dark">Müşteriler</div>
-             
-                    <div class="col-12 fs-3 text-end">
-                        <a href="#" id="btnAdd" class="btn btn-success ">Yeni Kayıt</a>
-                    </div>
-               
-
+            <div class="card-header bg-soft-success text-dark text-center d-flex">
+                <div class="col-10 text-center fs-3 text-dark"><i class="bx bxs-business"></i>Şirketler</div>
+                <div class="col-2 fs-3">
+                    <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
+                </div>
             </div>
             <div class="card-body">
                 <table id="tblCustomer" class="table table-bordered table-striped table-hover"></table>
@@ -27,11 +24,11 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3 row">
-                    <input type="text" class="form-control" id="txtName" placeholder="Müşteri Adı Giriniz.">
+                    <input type="text" class="form-control" id="txtName" placeholder="Şirket Adı Giriniz.">
 
                 </div>
                 <div class="mb-3 row">
-                    <input type="text" class="form-control" id="txtLimit" placeholder="Müşteri Limiti Giriniz.">
+                    <input type="text" class="form-control" id="txtLimit" placeholder="Kullanıcı Limiti Giriniz.">
 
                 </div>
 
@@ -56,21 +53,38 @@
                 ajax: '/Customer/GetAll',
                 columns: [
                     { data: 'id', title: 'ID' },
-                    { data: 'name', title: 'Müşteri Adı' },
+                    { data: 'name', title: 'Şirket Adı' },
                     { data: 'userCount', title: 'Aktif Kullanıcı Sayısı' },
                     { data: 'userLimit', title: 'Kullanıcı Limiti' },
                     {
-                        data: 'id', title: 'İşlemler', render: (data) => {
-                            return `<a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`
+                        data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
+
+                            return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`
+                        }
+                    },
+                    {
+                        data: 'id',
+                        title: 'İşlemler',
+                        render: (data, type, row) => {
+                            if (row.isDeleted) {
+                                return ' <a title="Silinmiş öğe, tekrar silinemez!"  class="btn uil-trash-alt fs-6 btn-light"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-light"></a> <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-light"></a>';
+                            } else {
+                                return `
+                        <a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a>
+                        <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>
+                        <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>
+                    `;
+                            }
                         }
                     }
-                ]
+                ],
+                order: [[4, 'asc']]
             });
 
             $("#btnAdd").off().click(() => {
                 $("#modalAdd").modal("show");
                 $("#modalAdd .form-control").val('');
-                $("#modalTitle").text("Yeni Müşteri Ekle");
+                $("#modalTitle").text("Yeni Şirket Ekle");
 
                 $("#btnSave").text("Kaydet").off().click(() => {
                     if ($("#txtName").val().trim() === '' || $("#txtLimit").val().trim() === '') {
@@ -157,9 +171,62 @@
                                 toastr.success("Müşteri Güncelleme Başarılı");
                             }
                         });
+
                     });
                 }
             });
         }
+
+
+                    }
+                });
+
+            }
+            function updateCustomer(customerId, button) {
+
+
+                $.ajax({
+                    url: '/Customer/GetById',
+                    type: 'POST',
+                    data: {
+                        id: customerId
+                    },
+                    success: (res) => {
+                        $("#modalAdd").modal("show");
+                        $("#modalTitle").text("Güncelle");
+                        $("#txtName").val(res.name);
+                        $("#txtLimit").val(res.userLimit);
+
+
+                        $("#btnSave").text("Güncelle").off().click(() => {
+
+                            res.name = $("#txtName").val();
+                            res.userLimit = $("#txtLimit").val();
+                           
+
+                            $.ajax({
+                                url: '/Customer/Update',
+                                type: 'POST',
+                                data: {
+                                    customer: res
+                                },
+                                success: (res1) => {
+                                  
+                                    let satir = $(button).parent().parent();
+                                    DataTable.row(satir).data(res1).draw();
+                                    $("#modalAdd").modal("hide");
+                                    toastr.success("Şirket Güncelleme Başarılı");
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+
+       function getUsers(customerId) {
+    sessionStorage.setItem('customerId', customerId);
+    window.location.href = '/Customer/GetAllUsersById';
+}
+
     </script>
 }

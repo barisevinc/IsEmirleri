@@ -127,7 +127,48 @@
                 });
             });
 
+
             window.deleteUser = function (userId, button) {
+
+       
+                Swal.fire({
+                    title: "Silmek İstediğinize Emin Misiniz?",
+                    text: "Bu işlem geri alınamayacaktır.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Evet!",
+                    cancelButtonText: "Hayır!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/User/Delete',
+                            type: 'POST',
+                            data: { id: userId },
+                            success: function () {
+                                let row = $(button).closest('tr');
+                                DataTable.row(row).remove().draw();
+                                toastr.success('Kullanıcı başarıyla silindi.');
+                            },
+                            error: function (err) {
+                                toastr.error('Kullanıcı silinirken bir hata oluştu: ');
+                            }
+                        });
+
+                        Swal.fire({
+                            title: "Silindi!",
+                            text: "Kullanıcı Başarılı Bir Şekilde Silinmiştir.",
+                            icon: "success",
+                            confirmButtonText: "Tamam",
+
+                        });
+                    }
+                });
+
+
+
+
             };
 
             window.updateUser = function (userId, button) {

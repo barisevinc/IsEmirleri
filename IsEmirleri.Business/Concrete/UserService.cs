@@ -2,9 +2,11 @@
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
+using IsEmirleri.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +20,13 @@ namespace IsEmirleri.Business.Concrete
     public class UserService : Service<AppUser>, IUserService
     {
         private readonly IRepository<AppUser> _repository;
-        private readonly IRepository<Customer> _customerRepository; 
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(IRepository<AppUser> repo, IRepository<Customer> customerRepo, IHttpContextAccessor httpContextAccessor) : base(repo)
         {
             _repository = repo;
-            _customerRepository = customerRepo; 
+            _customerRepository = customerRepo;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -37,9 +39,9 @@ namespace IsEmirleri.Business.Concrete
         {
             //int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
             var customer = _customerRepository.GetById(user.CustomerId.Value);
-           
+
             //limit kontrol usertype vermezsek admin dahil limit tutuyor
-            int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted &&u.UserTypeId==3).Count();
+            int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted && u.UserTypeId == 3).Count();
 
             if (userCount >= customer.UserLimit)
             {
@@ -53,22 +55,115 @@ namespace IsEmirleri.Business.Concrete
         }
         public IQueryable<AppUser> GetAll()
         {
-           
 
-            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value) && u.IsDeleted==false&& u.UserTypeId==3).Select(x => new AppUser
+
+            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value) && u.IsDeleted == false && u.UserTypeId == 3).Select(x => new AppUser
             {
                 Id = x.Id,
                 Email = x.Email,
                 Password = x.Password,
                 UserType = x.UserType,
                 Projects = x.Projects,
-                CustomerId=x.CustomerId,
+                CustomerId = x.CustomerId,
                 Tasks = x.Tasks
 
             });
         }
+        public AppUser Profile()
+        {
+
+            return _repository.GetById(int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+
+        }
+
+        public async Task<Response<AppUser>> UpdateWithPhoto(AppUser user)
+        {
+            AppUser appUser = GetById(user.Id);
+            try
+            {
+                //hata alma olasılığımızın oldu kısım bu blok içerisinde yer alır.
+                if (!_httpContextAccessor.HttpContext.Request.Form.Files.IsNullOrEmpty())
+                {
+                    var foto = _httpContextAccessor.HttpContext.Request.Form.Files[0];
+                    FileInfo fotofile = new FileInfo(foto.FileName);
+                    string dosyaYolu = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Files", "UserPhotos");
+
+                    if (!Directory.Exists(dosyaYolu))
+                        Directory.CreateDirectory(dosyaYolu);
+
+                    string dosyaAdi = user.Id + "-" + user.Email + "-" + Helper.RandomStringGenerator(5) + fotofile.Extension;
+                    using (var stream = new FileStream(Path.Combine(dosyaYolu, dosyaAdi), FileMode.Create))
+                    {
+                        await foto.CopyToAsync(stream);
+                    }
+
+                    appUser.Picture = dosyaAdi;
+
+                }
+                
+            }
+            catch (Exception ex) {
+
+            return new Response<AppUser> { SuccessMessage = "Kayıt güncellenemedi", ErrorMessage = ex.Message };
+
+                //try kısmında bir hata ile karşılaşıldığında catch devreye ve burdaki işlemler yürütülür.
+            }
+            finally
+            {
+                //kesinlikle yapılması gereken bir işlemin varsa burda yapılır
+                appUser.Password = user.Password;
+                Update(appUser);
+            }
+           
+            return new Response<AppUser> { SuccessMessage = "Kayıt başarıyla Güncellendi", ErrorMessage = "" };
+           
 
 
 
-    }
-}
+        }
+        public AppUser? AddCustomerUser(AppUser user)
+        {
+            var customer = _customerRepository.GetById(user.CustomerId.Value);
+
+            //limit kontrol usertype vermezsek admin dahil limit tutuyor
+            int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted && u.UserTypeId == 3).Count();
+
+            if (userCount >= customer.UserLimit)
+            {
+                return null;
+            }
+
+            user.CustomerId = customer.Id;
+            _repository.Add(user);
+            return user;
+
+           
+        }
+
+        public async Task<bool> NewUserPassword(string mail)
+        {
+            var appUser = GetFirstOrDefault(u => u.Email == mail);
+            if(appUser is not null)
+            {
+                string newPassword = Helper.RandomPassword();
+                appUser.Password = newPassword;
+                string message = "Merhaba,<br>" +
+                    "Şifreniz yenilenmiştir.<br>" +
+                   $"Şifreniz: {newPassword}";
+                _repository.Update(appUser);
+                if (await HelperMail.SendMail(appUser.Email, "Şifre Yenileme", message))
+                {
+                    
+                    return true;
+
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+         
+        }
+    } }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using IsEmirleri.Utility;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -35,26 +37,35 @@ namespace IsEmirleri.Web.Controllers
             if (user != null)
             {
                 AppUser appUser = _userService.CheckLogin(user);
+               // var item = appUser.Picture.Length;
                 if (appUser != null)
                 {
 
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
+                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture==null ?"null.png"  : appUser.Picture.ToString()));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
+                   
 
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties { IsPersistent = true });
 
-                    if (appUser.UserType.Name == "Admin"|| appUser.UserType.Name == "Superadmin")
-                        return RedirectToAction("Index", "User");
+                    if (appUser.UserType.Name == "Admin" || appUser.UserType.Name == "Superadmin")
+                    { TempData["success"] = $"Hoşgeldiniz";
+                    return RedirectToAction("Index", "User");
+                    }
+
                     else
-                        return RedirectToAction("Index", "Home");
+                        TempData["success"] = $"Hoşgeldiniz";
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
+            TempData["error"] = "Kullanıcı Adı ya da Şifreniz Yanlıştır!";
             return RedirectToAction("Login");
         }
 
@@ -81,6 +92,15 @@ namespace IsEmirleri.Web.Controllers
                 return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
            
         }
+        [HttpPost]
+        public IActionResult AddCustomerUser(AppUser user)
+        {
+            if (_userService.AddCustomerUser(user) != null)
+                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur.", userId = user.Id });
+
+            return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
+
+        }
 
         [HttpPost]
         public IActionResult Delete(AppUser user)
@@ -100,6 +120,46 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult GetById(int id)
         {
             return Json(_userService.GetById(id));
+        }
+        [AllowAnonymous]
+        public IActionResult Password()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Password(string email)
+        {
+            if (await _userService.NewUserPassword(email))
+            {
+                TempData["success"] = "Şifreniz Mail Adresinize Gönderilmiştir.";
+                return RedirectToAction("index");
+
+            }
+            else
+            {
+                TempData["error"] = "Şifre Yenileme İşlemi Başarısızdır.";
+                return RedirectToAction("password");
+            }
+           
+        }
+        public IActionResult Profile()
+        {
+            return View(_userService.Profile());
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(AppUser user)
+        {
+           
+                
+            await _userService.UpdateWithPhoto(user);
+          
+          
+                return RedirectToAction("Profile", "User");
+           
+
+
+
         }
     }
 }

@@ -13,6 +13,8 @@ namespace IsEmirleri.Repository.Shared.Abstract
         T Add(T entity);
         T Update(T entity);
         IQueryable<T> GetAll();
+        IQueryable<T> GetAllWithIsDeleted(Expression<Func<T, bool>> predicate);
+        IQueryable<T> GetAllWithIsDeleted();
         IQueryable<T> GetAll(Expression<Func<T,bool>> predicate);
         bool Delete(int id);
         bool HardDelete(int id);
