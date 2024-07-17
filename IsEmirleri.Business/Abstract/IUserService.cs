@@ -16,8 +16,12 @@ namespace IsEmirleri.Business.Abstract
         IQueryable<AppUser> GetAll();
         AppUser CheckLogin(AppUser user);
         AppUser? Add(AppUser user);
+
+        AppUser? AddCustomerUser(AppUser user);
+
         AppUser Profile();
         Task<Response<AppUser>> UpdateWithPhoto(AppUser user, IFormFile foto, int currentUserId);
+
 
     }
 }

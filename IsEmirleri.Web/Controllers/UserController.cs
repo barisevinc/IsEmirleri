@@ -83,6 +83,15 @@ namespace IsEmirleri.Web.Controllers
                 return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
            
         }
+        [HttpPost]
+        public IActionResult AddCustomerUser(AppUser user)
+        {
+            if (_userService.AddCustomerUser(user) != null)
+                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur.", userId = user.Id });
+
+            return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
+
+        }
 
         [HttpPost]
         public IActionResult Delete(AppUser user)

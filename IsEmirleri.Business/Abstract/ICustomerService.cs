@@ -13,10 +13,12 @@ namespace IsEmirleri.Business.Abstract
     public interface ICustomerService : IService<Customer>
     {
         IQueryable<CustomerGetAllDto> GetAllWithUserCount();
+        IQueryable<AppUser> GetAllUsersById(int customerId);
         IQueryable<Customer> GetAll(Expression<Func<Customer, bool>> predicate);
         Customer GetById(int id);
         Customer Add(Customer customer);
         CustomerGetAllDto UpdateCustomer(Customer customer);
         bool Delete(int id);
+
     }
 }

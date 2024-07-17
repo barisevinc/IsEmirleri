@@ -48,6 +48,11 @@ namespace IsEmirleri.Repository.Shared.Concrete
             return GetAll().Where(predicate);
         }
 
+        public IQueryable<T> GetAllWithIsDeleted()
+        {
+            return _dbSet;
+        }
+
         public T GetByGuid(Guid guid)
         {
             return GetFirstOrDefault(t=>t.Guid == guid);
@@ -80,5 +85,11 @@ namespace IsEmirleri.Repository.Shared.Concrete
         {
             _context.SaveChanges();
         }
+
+        public IQueryable<T> GetAllWithIsDeleted(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.Where(predicate);
+        }
+
     }
 }

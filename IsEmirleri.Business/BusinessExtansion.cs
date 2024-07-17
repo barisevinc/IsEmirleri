@@ -28,11 +28,13 @@ namespace IsEmirleri.Business
             services.AddScoped<ITaskHistoryService, TaskHistoryService>();
             services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<ICommentFileService, CommentFileService>();
+            services.AddScoped<IUserTypeService, UserTypeService>();
 
         }
         public static void AddRepositoryDI(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            
         }
     }
 }
