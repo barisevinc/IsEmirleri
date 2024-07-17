@@ -48,7 +48,7 @@
     </div>
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         var DataTable = "";
         $(document).ready(() => {
@@ -73,13 +73,18 @@
                 $("#modalTitle").text("Yeni Müşteri Ekle");
 
                 $("#btnSave").text("Kaydet").off().click(() => {
-
-                    let customer={
-                                name: $("#txtName").val(),
-                                userLimit: $("#txtLimit").val(),
-                                userCount:"0",
-                                id:"0"
+                    if ($("#txtName").val().trim() === '' || $("#txtLimit").val().trim() === '') {
+                        toastr.warning("Lütfen tüm alanları doldurun.");
+                        return;
                     }
+
+                    let customer = {
+                        name: $("#txtName").val(),
+                        userLimit: $("#txtLimit").val(),
+                        userCount: "0",
+                        id: "0"
+                    };
+
                     $.ajax({
                         url: '/Customer/Add',
                         type: 'POST',
@@ -87,81 +92,74 @@
                             customer
                         },
                         success: (res) => {
-                           
-
-                            customer.id=res.id;
+                            customer.id = res.id;
                             DataTable.row.add(customer).draw();
-                                toastr.success("Müşteri Kaydı Başarılı");
-
+                            toastr.success("Müşteri Kaydı Başarılı");
                             $("#modalAdd").modal("hide");
-
                         }
                     });
                 });
-
-
             });
-          
+
         });
-            function deleteCustomer(customerId, button) {
-                swal.fire({
-                    title: 'Silmek İstedğinize emin misiniz ?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Evet', cancelButtonText: 'Vazgeç'
-                }).then((res) => {
-                    if (res.isConfirmed) {
+
+        function deleteCustomer(customerId, button) {
+            swal.fire({
+                title: 'Silmek İstediğinize emin misiniz ?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Evet', cancelButtonText: 'Vazgeç'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    $.ajax({
+                        url: '/Customer/Delete',
+                        type: 'POST',
+                        data: { id: customerId },
+                        success: () => {
+                            let satir = $(button).parent().parent();
+                            DataTable.row(satir).remove().draw(false);
+                            toastr.success("Müşteri Silme Başarılı");
+                        }
+                    });
+                }
+            });
+        }
+
+        function updateCustomer(customerId, button) {
+            $.ajax({
+                url: '/Customer/GetById',
+                type: 'POST',
+                data: {
+                    id: customerId
+                },
+                success: (res) => {
+                    $("#modalAdd").modal("show");
+                    $("#modalTitle").text("Güncelle");
+                    $("#txtName").val(res.name);
+                    $("#txtLimit").val(res.userLimit);
+
+                    $("#btnSave").text("Güncelle").off().click(() => {
+                        if ($("#txtName").val().trim() === '' || $("#txtLimit").val().trim() === '') {
+                            toastr.warning("Lütfen tüm alanları doldurun.");
+                            return;
+                        }
+
+                        res.name = $("#txtName").val();
+                        res.userLimit = $("#txtLimit").val();
+
                         $.ajax({
-                            url: '/Customer/Delete',
+                            url: '/Customer/Update',
                             type: 'POST',
-                            data: { id: customerId },
-                            success: () => {
+                            data: {
+                                customer: res
+                            },
+                            success: (res1) => {
                                 let satir = $(button).parent().parent();
-                                DataTable.row(satir).remove().draw(false);
-                                toastr.success("Müşteri Silme Başarılı");
+                                DataTable.row(satir).data(res1).draw();
+                                $("#modalAdd").modal("hide");
+                                toastr.success("Müşteri Güncelleme Başarılı");
                             }
                         });
-
-                    }
-                });
-
-            }
-            function updateCustomer(customerId, button) {
-
-
-                $.ajax({
-                    url: '/Customer/GetById',
-                    type: 'POST',
-                    data: {
-                        id: customerId
-                    },
-                    success: (res) => {
-                        $("#modalAdd").modal("show");
-                        $("#modalTitle").text("Güncelle");
-                        $("#txtName").val(res.name);
-                        $("#txtLimit").val(res.userLimit);
-
-
-                        $("#btnSave").text("Güncelle").off().click(() => {
-
-                            res.name = $("#txtName").val();
-                            res.userLimit = $("#txtLimit").val();
-                           
-
-                            $.ajax({
-                                url: '/Customer/Update',
-                                type: 'POST',
-                                data: {
-                                    customer: res
-                                },
-                                success: (res1) => {
-                                  
-                                    let satir = $(button).parent().parent();
-                                    DataTable.row(satir).data(res1).draw();
-                                    $("#modalAdd").modal("hide");
-                                    toastr.success("Müşteri Güncelleme Başarılı");
-                                }
-                            });
-                        });
-                    }
-                });
-            }
+                    });
+                }
+            });
+        }
     </script>
 }

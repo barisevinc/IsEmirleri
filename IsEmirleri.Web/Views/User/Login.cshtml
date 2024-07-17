@@ -11,6 +11,8 @@
     <meta charset="utf-8">
     <title>IsEmri Giris</title>
     <link rel="stylesheet" href="~/css/Login.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script>
 </head>
 
 <body>
@@ -55,26 +57,34 @@
                 <div class="formbg-outer">
                     <div class="formbg">
                         <div class="formbg-inner padding-horizontal--48">
-                            <form asp-action="Login"  id="stripe-login">
+                            <form asp-action="Login" id="stripe-login" data-parsley-validate>
                                 <div class="field padding-bottom--24">
                                     <label for="email">Email</label>
-                                    <input required asp-for="Email" type="email" >
+                                    <input required asp-for="Email" type="email" class="form-control"
+                                           parsley-type="email"
+                                           data-parsley-type-message="Geçerli bir email adresi giriniz."
+                                           data-parsley-required-message="Bu alan zorunludur.">
                                 </div>
                                 <div class="field padding-bottom--24">
                                     <div class="grid--50-50">
                                         <label for="password">Şifre</label>
                                     </div>
-                                    <input required asp-for="Password" type="password">
+                                    <input required asp-for="Password" type="password" id="password"
+                                           class="form-control"
+                                           data-parsley-required="true" data-parsley-minlength="6"
+                                           data-parsley-minlength-message="Şifre en az 6 karakter olmalıdır."
+                                           data-parsley-required-message="Bu alan zorunludur.">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
-                             
+
                                 <div class="field padding-bottom--24">
                                     <input type="submit" name="submit" value="Giriş Yap">
                                 </div>
-                                
+
                             </form>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

@@ -1,53 +1,34 @@
-﻿
-
-        <div class="card">
-            <div class="card-header bg-soft-success text-dark text-center d-flex">
-
-                <div class="col-11 text-center fs-3 text-dark">Durum Listesi</div>
-                <div class="col-1 fs-3">
-                    <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</a>
-                </div>
-
-            </div>
-            <div class="card-body">
-                <table id="tblStatus" class="table table-bordered table-striped table-hover"></table>
-            </div>
+﻿<div class="card">
+    <div class="card-header bg-soft-success text-dark text-center d-flex">
+        <div class="col-11 text-center fs-3 text-dark">Durum Listesi</div>
+        <div class="col-1 fs-3">
+            <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</a>
         </div>
-
-
-
+    </div>
+    <div class="card-body">
+        <table id="tblStatus" class="table table-bordered table-striped table-hover"></table>
+    </div>
+</div>
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-
-                <div class="mb-3 row">
-                    <input type="text" class="form-control" id="txtStatusname" placeholder="Durum adı giriniz">
-
+            <form id="statusForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                
-
-
-
-
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Kapat
-                </button>
-                <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
-            </div>
-
-
+                <div class="modal-body">
+                    <div class="mb-3 row">
+                        <input type="text" class="form-control" id="txtStatusname" placeholder="Durum adı giriniz" required>
+                        <span class="text-danger" id="statusNameValidation" style="display:none;">Durum adı zorunludur.</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" id="btnSave" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -60,46 +41,53 @@
         let DataTable = "";
         $(document).ready(function () {
 
-
             $("#btnAdd").click(function () {
                 $("#modalAdd").modal("show");
-                $("#modalAdd .form-control").val('');
+                $("#statusForm")[0].reset();
+                $("#statusNameValidation").hide();
                 $("#modalTitle").text("Yeni Durum Kaydı");
-
                 $("#btnSave").text("Kaydet").off().click(function () {
+                    $("#statusForm").submit();
+                });
+            });
 
+            $("#statusForm").submit(function (event) {
+                event.preventDefault();
+                let isValid = this.checkValidity();
+                if (!isValid) {
+                    event.stopPropagation();
+                    $("#statusNameValidation").show();
+                } else {
+                    $("#statusNameValidation").hide();
                     let data = {
                         missionStatus: {
                             name: $("#txtStatusname").val(),
-                            
                         }
-                    }
-
+                    };
+                    let action = $("#modalTitle").text().includes("Yeni") ? '/Status/Add' : '/Status/Update';
                     $.ajax({
-                        url: '/Status/Add',
+                        url: action,
                         type: 'POST',
                         data: data,
                         success: function (res) {
-
                             $("#modalAdd").modal("hide");
-                            DataTable.row.add(res).draw();
+                            if (action === '/Status/Add') {
+                                DataTable.row.add(res).draw();
+                            } else {
+                                let satir = $("#modalAdd").data("row");
+                                DataTable.row(satir).data(res).draw();
+                            }
                         }
-                    })
-                })
-            })
-
-
+                    });
+                }
+            });
 
             DataTable = $("#tblStatus").DataTable({
                 ajax: '/Status/GetAll',
                 columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'name', title: 'Durum Adı' },
-
-                    //------------------------------------------------------------------------------------------------------------------------------------------------------
                     { data: 'taskCount', title: 'Bağlı Görev Sayısı' },
-
-
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<a onclick="deleteStatus(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateStatus(${data},this)" class="btn uil-pen fs-6 btn-success"></a>`;
@@ -109,12 +97,9 @@
             });
         });
 
-
         function deleteStatus(statusId, button) {
             toastr.success("İşlem Başarılı", "Kullanıcı Silindi !");
-
             if (confirm("Silmek istediğinize emin misiniz ?")) {
-
                 let satir = $(button).parent().parent();
                 $.ajax({
                     url: '/Status/Delete',
@@ -129,53 +114,24 @@
                     }
                 });
             }
-
         }
 
         function updateStatus(statusId, button) {
-
             $.ajax({
                 url: '/Status/GetById',
                 type: 'POST',
                 data: { id: statusId },
                 success: function (res) {
-
                     $("#modalAdd").modal("show");
                     $("#modalTitle").text("Durum Düzenle");
                     $("#txtStatusname").val(res.name);
-                
-
+                    $("#modalAdd").data("row", $(button).parent().parent());
+                    $("#statusNameValidation").hide();
                     $("#btnSave").text("Düzenle").off().click(function () {
-
-                        res.name = $("#txtStatusname").val();
-                     
-
-
-                        $.ajax({
-                            url: '/Status/Update',
-                            type: 'POST',
-                            data: {
-                                missionStatus:res
-                            },
-                            success: function (updatedStatus) {
-                                $("#modalAdd").modal("hide");
-
-                                let satir = $(button).parent().parent();
-                                DataTable.row(satir).data(updatedStatus).draw();
-                               
-
-                            }
-                        });
-
-
+                        $("#statusForm").submit();
                     });
-
                 }
-
             });
-
         }
-
-
     </script>
 }
