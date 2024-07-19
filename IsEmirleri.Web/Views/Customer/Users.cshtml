@@ -57,17 +57,18 @@
 @section Scripts {
     <script>
         var DataTable = "";
+        var customerId = @Model;
         $(document).ready(() => {
-          //  var customerId = sessionStorage.getItem('customerId');
+            
            
 
                 $.ajax({
                     url: '/Customer/GetAllUsersById',
                     type: 'POST',
-                    data: { customerId: @Model },
+                data: { customerId: customerId },
                     success: (response) => {
 
-                        var table = $('#tblUsers').DataTable({
+                        DataTable = $('#tblUsers').DataTable({
                             data: response.data,
                             columns: [
                                 {
@@ -118,7 +119,7 @@
                             user: {
                                 email: $("#txtEmail").val(),
                                 password: $("#txtPassword").val(),
-                                customerId: customerId,
+                            customerId: customerId,
                                 userTypeId: $("#ddlUserType").val(),
 
                             }
@@ -149,6 +150,7 @@
                         });
                     });
                 });
+
                 updateUser = (userId, button) => {
                     fillUserTypes();
                     $("#modalAdd").modal("show");
@@ -174,7 +176,7 @@
                                 id: userId,
                                 email: $("#txtEmail").val(),
                                 password: $("#txtPassword").val(),
-                                customerId: customerId,
+                            customerId: customerId,
                                 userTypeId: $("#ddlUserType").val(),
                                 isDeleted: $("#ddlDeleted").prop('checked') ? false : true // Emre yaptı
                             }
@@ -184,13 +186,15 @@
                             type: 'POST',
                             data: data,
                             success: (res) => {
-                                if (res.result) {
+                         
+                               
+                                    
                                     let row = $(button).parent().parent();
-                                    $('#tblUsers').DataTable().row(row).data(data.user).draw();
-                                    toastr.success(res.message);
+                                   DataTable.row(row).data(data.user).draw();
+                                    toastr.success("Kayıt başarıyla güncellendi");
                                     $("#modalAdd").modal("hide");
-                                }
-                                $("#modalAdd").modal("hide");
+                                
+                          
                                 
                             }
                         });
