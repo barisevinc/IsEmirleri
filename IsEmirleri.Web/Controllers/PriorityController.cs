@@ -2,6 +2,7 @@
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -36,7 +37,10 @@ namespace IsEmirleri.Web.Controllers
         [HttpPost]
         public IActionResult Add(Priority priority) 
         {
+        
             return Ok(_priorityService.Add(priority));
+            
+
         }
         [HttpPost]
         public IActionResult Update(Priority priority) 

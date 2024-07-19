@@ -27,13 +27,13 @@
             </div>
             <div class="modal-body">
 
-
+                <form id="frmPriority" class="needs-validate" data-parsley-validate>
                 <div class="mb-3 row">
-                    <input type="text" class="form-control" id="txtPriorityname" placeholder="Öncelik adı giriniz">
+                        <input type="text" class="form-control" id="txtPriorityname" required data-parsley-required-message="Bu alan zorunludur." data-parsley-minlength="3" data-parsley-pattern="^[a-zA-Z]+$" placeholder="Öncelik adı giriniz">
 
                 </div>
              
-
+                </form>
 
 
 
@@ -63,30 +63,46 @@
 
             $("#btnAdd").click(function () {
                 $("#modalAdd").modal("show");
-                $("#modalAdd .form-control").val('');
+                $("#frmPriority").parsley().reset();
+                $("#frmPriority").removeClass("was-validated");
+                $("#frmPriority").trigger("reset");
           
                 $("#modalTitle").text("Yeni Öncelik Kaydı");
 
                 $("#btnSave").text("Kaydet").off().click(function () {
+                  
 
-                    let data = {
-                       priority: {
-                            name: $("#txtPriorityname").val(),
-                            
+                    if ($("#frmPriority").parsley().validate()) {
 
+                        let data = {
+                            priority: {
+                                name: $("#txtPriorityname").val(),
+
+
+                            }
                         }
+
+                        $.ajax({
+                            url: '/Priority/Add',
+                            type: 'POST',
+                            data: data,
+                            success: function (res) {
+
+                                $("#modalAdd").modal("hide");
+                                DataTable.row.add(res).draw();
+                            }
+                        });
+                        $("#frmPriority").removeClass("was-validated");
+
+
+                    }
+                    else {
+                        $("#frmPriority").addClass("was-validated");
+                    
                     }
 
-                    $.ajax({
-                        url: '/Priority/Add',
-                        type: 'POST',
-                        data: data,
-                        success: function (res) {
 
-                            $("#modalAdd").modal("hide");
-                            DataTable.row.add(res).draw();
-                        }
-                    })
+                   
                 })
             })
 
