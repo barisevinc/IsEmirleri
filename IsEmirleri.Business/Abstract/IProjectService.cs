@@ -18,7 +18,7 @@ namespace IsEmirleri.Business.Abstract
 
         IQueryable<AppUser> FillUsers();
      
-        IQueryable<Project> AddProject(Project project, List<string> userIds);
+        Project AddProject(Project project, List<string> userIds);
 
         bool Delete(int id);
 
