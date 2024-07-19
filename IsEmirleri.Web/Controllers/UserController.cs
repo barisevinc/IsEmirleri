@@ -47,7 +47,8 @@ namespace IsEmirleri.Web.Controllers
                     claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture==null ?"null.png"  : appUser.Picture.ToString()));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
-                   
+                    claims.Add(new Claim("CustomerId", appUser.CustomerId.ToString()));
+
 
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

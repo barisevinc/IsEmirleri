@@ -70,8 +70,9 @@
                 $("#btnSave").text("Kaydet").off().click(function () {
 
                     let data = {
-                       Priority: {
+                       priority: {
                             name: $("#txtPriorityname").val(),
+                            
 
                         }
                     }
@@ -106,23 +107,9 @@
             });
         });
 
-        // function fillCustomers() {
-        //     $.ajax({
-        //         url: '/Customer/GetAll',
-        //         type: 'GET',
-        //         success: function (res) {
-
-        //             $("#ddlPriority").empty().append(new Option("Lütfen seçim yapınız", 0));
-        //             for (let item of res.data) {
-        //                 $("#ddlPriority").append(new Option(item.name, item.id));
-
-        //             }
-
-        //         }
-        //     })
-        // }
+      
         function deletePriority(priorityId, button) {
-            toastr.success("İşlem Başarılı", "Öncelik Silindi !");
+          
 
             if (confirm("Silmek istediğinize emin misiniz ?")) {
 
@@ -137,6 +124,7 @@
                     },
                     success: function () {
                         DataTable.row(satir).remove().draw();
+                        toastr.success("İşlem Başarılı", "Öncelik Silindi !");
                     }
                 });
             }
@@ -166,7 +154,7 @@
                             url: '/Priority/Update',
                             type: 'POST',
                             data: {
-                                Priority: res
+                                priority: res
                             },
                             success: function (updatedPriority) {
                                 $("#modalAdd").modal("hide");

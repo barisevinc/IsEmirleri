@@ -1,0 +1,40 @@
+﻿     <!--- Sidemenu -->
+<div id="sidebar-menu">
+    <!-- Left Menu Start -->
+    <ul class="metismenu list-unstyled" id="side-menu">
+        <li class="menu-title">Menu</li>
+
+       
+       
+            <li>
+                <a asp-action="Index" asp-controller="User">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Kullanıcılar</span>
+                </a>
+            </li>
+
+
+        <li>
+            <a asp-controller="Project" asp-action="Index"> <i class="fas fa-project-diagram"></i><span>Projeler</span></a>
+        </li>
+
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="uil-location-point"></i>
+                <span>Tanımlamalar</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                    <li><a href="@Url.Action("Index","Status")">Durumlar</a></li>
+                <li><a href="@Url.Action("Index","Priority")">Öncelikler</a></li>
+                
+            </ul>
+        </li>
+
+
+
+
+
+
+    </ul>
+</div>
+<!-- Sidebar -->

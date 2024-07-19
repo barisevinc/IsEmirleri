@@ -57,7 +57,7 @@ namespace IsEmirleri.Business.Concrete
         {
 
 
-            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value) && u.IsDeleted == false && u.UserTypeId == 3).Select(x => new AppUser
+            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value) && u.IsDeleted == false && u.UserTypeId == 3).Select(x => new AppUser
             {
                 Id = x.Id,
                 Email = x.Email,

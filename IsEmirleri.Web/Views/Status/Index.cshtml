@@ -98,7 +98,7 @@
         });
 
         function deleteStatus(statusId, button) {
-            toastr.success("İşlem Başarılı", "Kullanıcı Silindi !");
+         
             if (confirm("Silmek istediğinize emin misiniz ?")) {
                 let satir = $(button).parent().parent();
                 $.ajax({
@@ -111,6 +111,7 @@
                     },
                     success: function () {
                         DataTable.row(satir).remove().draw();
+                        toastr.success("İşlem Başarılı", "Kullanıcı Silindi !");
                     }
                 });
             }
