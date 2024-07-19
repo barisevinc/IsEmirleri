@@ -67,7 +67,7 @@
                         title: 'İşlemler',
                         render: (data, type, row) => {
                             if (row.isDeleted) {
-                                return ' <a title="Silinmiş öğe, tekrar silinemez!"  class="btn uil-trash-alt fs-6 btn-light"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-light"></a> <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-light"></a>';
+                                return `<a title="Silinmiş öğe, tekrar silinemez!"  class="btn uil-trash-alt fs-6 btn-light"></a> <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-light"></a> <a href="Customer/Users/${data}" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-light"></a>`;
                             } else {
                                 return `
                         <a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a>

@@ -78,6 +78,7 @@ namespace IsEmirleri.Repository.Shared.Concrete
         public T Update(T entity)
         {
             _dbSet.Update(entity);
+            entity.DateUpdated = DateTime.Now;
             Save();
             return entity;
         }
