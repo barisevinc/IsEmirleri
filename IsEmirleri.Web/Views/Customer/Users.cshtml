@@ -1,4 +1,4 @@
-﻿
+﻿@model int
 
 <div class="row">
     <div class="col-12">
@@ -58,13 +58,13 @@
     <script>
         var DataTable = "";
         $(document).ready(() => {
-            var customerId = sessionStorage.getItem('customerId');
-            if (customerId) {
+          //  var customerId = sessionStorage.getItem('customerId');
+           
 
                 $.ajax({
                     url: '/Customer/GetAllUsersById',
                     type: 'POST',
-                    data: { customerId: customerId },
+                    data: { customerId: @Model },
                     success: (response) => {
 
                         var table = $('#tblUsers').DataTable({
@@ -212,7 +212,7 @@
                     });
                 }
                 
-            }
+            
         });
 
        function deleteUser(userId, button) {

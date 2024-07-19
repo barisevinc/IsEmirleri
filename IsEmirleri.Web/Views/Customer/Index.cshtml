@@ -72,7 +72,7 @@
                                 return `
                         <a title="Sil" onclick="deleteCustomer(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a>
                         <a onclick="updateCustomer(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>
-                        <a onclick="getUsers(${data},this)" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>
+                        <a href="Customer/Users/${data}" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>
                     `;
                             }
                         }
@@ -220,10 +220,7 @@
                 });
             }
 
-       function getUsers(customerId) {
-    sessionStorage.setItem('customerId', customerId);
-    window.location.href = '/Customer/GetAllUsersById';
-}
+      
 
     </script>
 }

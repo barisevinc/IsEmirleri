@@ -52,9 +52,9 @@ namespace IsEmirleri.Web.Controllers
 
         }
         [HttpGet]
-        public IActionResult GetAllUsersById() 
+        public IActionResult Users(int id) 
         {
-            return View();
+            return View(id);
         }
 
         [HttpPost]
