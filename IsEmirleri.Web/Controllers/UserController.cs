@@ -55,9 +55,13 @@ namespace IsEmirleri.Web.Controllers
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties { IsPersistent = true });
 
-                    if (appUser.UserType.Name == "Admin" || appUser.UserType.Name == "Superadmin")
+                    if (appUser.UserType.Name == "Admin")
                     { TempData["success"] = $"Hoşgeldiniz";
                     return RedirectToAction("Index", "User");
+                    }
+                    if(appUser.UserType.Name == "Superadmin"){
+                        TempData["success"] = $"Hoşgeldiniz";
+                        return RedirectToAction("Index", "Customer");
                     }
 
                     else
