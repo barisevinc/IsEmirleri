@@ -62,5 +62,10 @@ namespace IsEmirleri.Web.Controllers
         {
             return Json(new { data = _customerService.GetAllUsersById(customerId) });
         }
+        [HttpPost]
+        public IActionResult UpdateUser(AppUser user)
+        {
+            return Ok(_customerService.UpdateCustomerUsers(user));
+        }
     }
 }
