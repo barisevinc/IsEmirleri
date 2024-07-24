@@ -115,18 +115,19 @@ namespace IsEmirleri.Business.Concrete
             }
         }
 
-        public AppUser UpdateCustomerUsers(AppUser user)
+        public bool UpdateCustomerUsers(AppUser user)
         {
             var appUser = _appUserRepository.GetById(user.Id);
             if (IsLimitAvailable(appUser.CustomerId.Value) == false)
             {
                 appUser.Email = user.Email;
                 appUser.Password = user.Password;
-               // appUser.UserTypeId = user.UserTypeId;
-                return _appUserRepository.Update(appUser);
+                // appUser.UserTypeId = user.UserTypeId;
+                _appUserRepository.Update(appUser);
+                return false;
             }
-           
-            return _appUserRepository.Update(appUser);
+            _appUserRepository.Update(appUser);
+            return true;
 
         }
     }

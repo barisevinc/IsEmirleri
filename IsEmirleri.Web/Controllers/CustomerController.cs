@@ -63,9 +63,15 @@ namespace IsEmirleri.Web.Controllers
             return Json(new { data = _customerService.GetAllUsersById(customerId) });
         }
         [HttpPost]
-        public IActionResult UpdateUser(AppUser user)
+        public IActionResult UpdateUserWithCustomer(AppUser user)
         {
-            return Ok(_customerService.UpdateCustomerUsers(user));
+           if(_customerService.UpdateCustomerUsers(user)) 
+            { 
+            return Ok(new {result=true,message="Kullanıcı Güncellemesi Başarıyla Yapılmıştır."});
+
+            }
+            return Ok(new { result = false, message = "Kullanıcı Güncellemesi Başarıyla Yapılmıştır.Limitinizden Dolayı Kullanıcınız Aktif Edilememiştir." ,isDeleted=false});
+
         }
     }
 }

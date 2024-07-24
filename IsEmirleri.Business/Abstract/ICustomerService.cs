@@ -19,7 +19,7 @@ namespace IsEmirleri.Business.Abstract
         Customer Add(Customer customer);
         CustomerGetAllDto UpdateCustomer(Customer customer);
         bool Delete(int id);
-        AppUser UpdateCustomerUsers(AppUser user);
+        bool UpdateCustomerUsers(AppUser user);
         bool IsLimitAvailable(int customerId);
 
     }

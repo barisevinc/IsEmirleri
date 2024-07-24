@@ -59,167 +59,177 @@
         var DataTable = "";
         var customerId = @Model;
         $(document).ready(() => {
-            
-           
 
-                $.ajax({
-                    url: '/Customer/GetAllUsersById',
-                    type: 'POST',
+
+
+            $.ajax({
+                url: '/Customer/GetAllUsersById',
+                type: 'POST',
                 data: { customerId: customerId },
-                    success: (response) => {
+                success: (response) => {
 
-                        DataTable = $('#tblUsers').DataTable({
-                            data: response.data,
-                            columns: [
-                                {
-                                    data: 'picture', title: 'Fotoğraf', render: function (data) {
-                                        return `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px;border-radius:50%" />`;
-                                    }
-                                },
-                                { data: 'id', title: 'ID' },
-                                { data: 'email', title: 'Email' },
-                                {
-                                    data: 'userTypeId', title: 'Kullanıcı Tipi', render: function (data) {
-                                        if (data == 2) {
-                                            return `<i class="badge bg-info-subtle text-info font-size-12">Müşteri</i>`;
-                                        }
-                                        else if (data == 3) {
-                                            return `<i class="badge bg-warning-subtle text-warning font-size-12">Kullanıcı</i>`;
-                                        }
-
-                                    }
-                                },
-                                {
-                                    data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
-
-
-                                        return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`;
-                                    }
-                                },
-
-                                {
-                                    data: 'id', title: 'İşlemler', render: (data) => {
-                                        return `<a title="Sil" onclick="deleteUser(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateUser(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
-                                    }
+                    DataTable = $('#tblUsers').DataTable({
+                        data: response.data,
+                        columns: [
+                            {
+                                data: 'picture', title: 'Fotoğraf', render: function (data) {
+                                    return `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px;border-radius:50%" />`;
                                 }
+                            },
+                            { data: 'id', title: 'ID' },
+                            { data: 'email', title: 'Email' },
+                            {
+                                data: 'userTypeId', title: 'Kullanıcı Tipi', render: function (data) {
+                                    if (data == 2) {
+                                        return `<i class="badge bg-info-subtle text-info font-size-12">Müşteri</i>`;
+                                    }
+                                    else if (data == 3) {
+                                        return `<i class="badge bg-warning-subtle text-warning font-size-12">Kullanıcı</i>`;
+                                    }
 
-                            ]
-                        });
-                    }
-                });
-                $("#btnAdd").click(function () {
-                    $("#modalAdd").modal("show");
-                    $("#deletedRow").hide();
-                    $("#modalAdd .form-control").val('');
-                    $("#modalTitle").text("Yeni Kullanıcı Kaydı");
-                    fillUserTypes();
-
-                    $("#btnSave").text("Kaydet").off().click(function () {
-                        let data = {
-                            user: {
-                                email: $("#txtEmail").val(),
-                                password: $("#txtPassword").val(),
-                            customerId: customerId,
-                                userTypeId: $("#ddlUserType").val(),
-
-                            }
-                        };
-
-                        $.ajax({
-                            url: '/User/AddCustomerUser',
-                            type: 'POST',
-                            data: data,
-                            success: function (res) {
-                                if (res.result) {
-                                    $("#modalAdd").modal("hide");
-                                    data.user.id = res.userId;
-                                    DataTable.row.add(data.user).draw();
-                                    toastr.success(res.message);
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Hata',
-                                        text: res.message,
-
-
-                                    });
-                                    $("#modalAdd").modal("hide");
                                 }
+                            },
+                            {
+                                data: 'isDeleted', title: 'Aktif/Pasif', render: function (data) {
 
-                            }
-                        });
-                    });
-                });
 
-                updateUser = (userId, button) => {
-                    fillUserTypes();
-                    $("#modalAdd").modal("show");
-                    $("#deletedRow").show(); 
-                    $("#modalTitle").text("Kullanıcı Güncelleme");
+                                    return data ? `<i class="badge bg-danger-subtle text-danger font-size-12">Pasif</i >` : `<i class="badge bg-success-subtle text-success font-size-12" >Aktif</i>`;
+                                }
+                            },
 
-                    $.ajax({
-                        url: '/User/GetById',
-                        type: 'POST',
-                        data: { id: userId },
-                        success: (res) => {
-                            $("#txtEmail").val(res.email);
-                            $("#txtPassword").val(res.password);
-                            $("#ddlUserType").val(res.userTypeId);
-                            $("#ddlDeleted").prop('checked', !res.isDeleted);
-                           
-
-                        }
-                    });
-                    $("#btnSave").text("Güncelle").off().click(() => {
-                        var data = {
-                            user: {
-                                id: userId,
-                                email: $("#txtEmail").val(),
-                                password: $("#txtPassword").val(),
-                            customerId: customerId,
-                                userTypeId: $("#ddlUserType").val(),
-                                isDeleted: $("#ddlDeleted").prop('checked') ? false : true // Emre yaptı
-                            }
-                        };
-                        $.ajax({
-                            url: '/Customer/UpdateUser',
-                            type: 'POST',
-                            data: data,
-                            success: (res) => {
-                         
-                               
-                                    
-                                    let row = $(button).parent().parent();
-                                   DataTable.row(row).data(data.user).draw();
-                                    toastr.success("Kayıt başarıyla güncellendi");
-                                    $("#modalAdd").modal("hide");
-                                
-                          
-                                
-                            }
-                        });
-                    });
-                };
-               
-                function fillUserTypes() {
-                    $.ajax({
-                        url: '/UserType/GetAll',
-                        type: 'GET',
-                        success: (res) => {
-                            $("#ddlUserType").empty();
-                            
-                            for (var item of res.data) {
-                                $("#ddlUserType").append(new Option(item.name, item.id));
+                            {
+                                data: 'id', title: 'İşlemler', render: (data) => {
+                                    return `<a title="Sil" onclick="deleteUser(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateUser(${data},this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
+                                }
                             }
 
-                        }
+                        ]
                     });
                 }
-                
-            
+            });
+            $("#btnAdd").click(function () {
+                $("#modalAdd").modal("show");
+                $("#deletedRow").hide();
+                $("#modalAdd .form-control").val('');
+                $("#modalTitle").text("Yeni Kullanıcı Kaydı");
+                fillUserTypes();
+
+                $("#btnSave").text("Kaydet").off().click(function () {
+                    let data = {
+                        user: {
+                            email: $("#txtEmail").val(),
+                            password: $("#txtPassword").val(),
+                            customerId: customerId,
+                            userTypeId: $("#ddlUserType").val(),
+
+                        }
+                    };
+
+                    $.ajax({
+                        url: '/User/AddCustomerUser',
+                        type: 'POST',
+                        data: data,
+                        success: function (res) {
+                            if (res.result) {
+                                $("#modalAdd").modal("hide");
+                                data.user.id = res.userId;
+                                DataTable.row.add(data.user).draw();
+                                toastr.success(res.message);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: res.message,
+
+
+                                });
+                                $("#modalAdd").modal("hide");
+                            }
+
+                        }
+                    });
+                });
+            });
+
+            updateUser=(userId, button)=> {
+                fillUserTypes();
+                $("#modalAdd").modal("show");
+                $("#deletedRow").show();
+                $("#modalTitle").text("Kullanıcı Güncelleme");
+
+                $.ajax({
+                    url: '/User/GetById',
+                    type: 'POST',
+                    data: { id: userId },
+                    success: (res) => {
+                        $("#txtEmail").val(res.email);
+                        $("#txtPassword").val(res.password);
+                        $("#ddlUserType").val(res.userTypeId);
+                        $("#ddlDeleted").prop('checked', !res.isDeleted);
+
+
+                    }
+                });
+                $("#btnSave").text("Güncelle").off().click(() => {
+
+                    var user = {
+                        id: userId,
+                        email: $("#txtEmail").val(),
+                        password: $("#txtPassword").val(),
+                        customerId: customerId,
+                        userTypeId: $("#ddlUserType").val(),
+                        isDeleted: $("#ddlDeleted").prop('checked') ? false : true // Emre yaptı
+                    }
+
+                    $.ajax({
+                        url: '/Customer/UpdateUserWithCustomer',
+                        type: 'POST',
+                        data:{user:user},
+                        success: function (res) {
+
+                            if (res.result) {
+                                let row = $(button).parent().parent();
+                                DataTable.row(row).data(user).draw();
+                                toastr.success(res.message);
+                                $("#modalAdd").modal("hide");
+                            }else{
+                                user.isDeleted = true;
+                                let row = $(button).parent().parent();
+                                DataTable.row(row).data(user).draw();
+                                toastr.warning(res.message);
+                                $("#modalAdd").modal("hide");
+                            }
+
+                           
+
+
+
+                        },error:function (){
+                            toastr.error("hata");
+                        }
+                    });
+                });
+            };
+
+            function fillUserTypes() {
+                $.ajax({
+                    url: '/UserType/GetAll',
+                    type: 'GET',
+                    success: (res) => {
+                        $("#ddlUserType").empty();
+
+                        for (var item of res.data) {
+                            $("#ddlUserType").append(new Option(item.name, item.id));
+                        }
+
+                    }
+                });
+            }
+
+
         });
 
-       function deleteUser(userId, button) {
+        function deleteUser(userId, button) {
             Swal.fire({
                 title: "Silmek İstediğinize Emin Misiniz?",
                 text: "Bu işlem geri alınamayacaktır.",
@@ -238,7 +248,7 @@
                         success: function (res) {
 
                             let zz = $(button).parent().parent();
-                         
+
                             $('#tblUsers').DataTable().row(zz).draw(false);
                             toastr.success('Kullanıcı başarıyla silindi.');
                         },
