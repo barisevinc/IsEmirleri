@@ -25,7 +25,7 @@ namespace IsEmirleri.Business.Abstract
 
         bool Delete(int id);
 
-        Project Update(Project project, int[] userIds);
+        Project Update(Project project, string[] userIds);
 
         ProjectGetAllDto GetByProjectId(int id);
 

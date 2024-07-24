@@ -115,33 +115,35 @@
                 $("#modalAdd .form-control").val('');
                 $("#modalTitle").text("Yeni Proje Ekle");
 
-            
-                    $("#txtUserSelect").select2({
-                        width: 'resolve',
-                        ajax: {
-                            url: '/Project/FillUsers',
-                            dataType: 'json',
-                            processResults: function (data) {
+                fillUserData();
 
-                                return {
-                                    results: data.data.map(user => ({ id: user.email, text: user.email }))
-                                };
-                            }
-                        },
-                        placeholder: "Kullanıcı Seçin",
-                        allowClear: true,
-                        dropdownAutoWidth: true,
-                        minimumResultsForSearch: 0,
-                        maximumInputLength: 0
 
-                    });
-
-               
             });
 
+            function fillUserData() {
+
+                $("#txtUserSelect").select2({
+                    width: 'resolve',
+                    ajax: {
+                        url: '/Project/FillUsers',
+                        dataType: 'json',
+                        processResults: function (data) {
+
+                            return {
+                                results: data.data.map(user => ({ id: user.email, text: user.email }))
+                            };
+                        }
+                    },
+                    placeholder: "Kullanıcı Seçin",
+                    allowClear: true,
+                    dropdownAutoWidth: true,
+                    minimumResultsForSearch: 0,
+                    maximumInputLength: 0
+
+                });
+            }
 
             $("#btnSave").off().click(() => {
-
                 let selectedUserEmails = $("#txtUserSelect").val();
 
 
@@ -151,7 +153,6 @@
                 };
 
 
-
                 $.ajax({
                     url: '/Project/Add',
                     type: 'POST',
@@ -159,15 +160,12 @@
                         project: project,
                         usersEmails: selectedUserEmails
                     },
-                    success: (res) =>  {                        
-                        DataTable.row.add(res).draw();
-                        $("#modalAdd").modal("hide");
+                    success: () => {
+                        $('#tblProject').DataTable().ajax.reload()
                         toastr.success("Proje Kaydı Başarılı");
-                       
-
+                        $("#modalAdd").modal("hide");
                     }
                 });
-             
             });
 
         });
@@ -184,9 +182,9 @@
                         type: 'POST',
                         data: { id: projectId },
                         success: () => {
-                            $('#tblProject').DataTable().ajax.reload()
+                            // $('#tblProject').DataTable().ajax.reload()
                             let satir = $(button).parent().parent();
-                            DataTable.row(satir).remove().draw();
+                            $('#tblProject').DataTable().row(satir).remove().draw();
                             toastr.success("Proje Başarıyla Silindi");
                         }
                     });
@@ -195,83 +193,94 @@
 
         }
 
+
         function updateProject(projectId, button) {
+
+
             $.ajax({
                 url: '/Project/GetById',
                 type: 'GET',
                 data: { id: projectId },
                 success: function (res) {
                     $("#modalAdd").modal("show");
+
+
                     $("#modalTitle").text("Proje Düzenle");
                     $("#txtName").val(res.name);
                     $("#txtDescription").val(res.description);
+
+
                     $("#txtUserSelect").empty();
 
+            $.ajax({
+                url: "/Project/FillUsers",
+                success: function (data) {
+                   data.data.map(u=>
+
+                                $("#txtUserSelect").append(new Option(u.email, u.mail, false, res.userEmails.find(yu=>yu==u.email)!=null))
+                   )
                    
-                    res.userEmails.forEach(function (email) {
-                        //option icerisindeki ilk email kullanıcının gördügü kısım (text)
-                        //ikinci email ise ilk option ın asl degeri (value)
-                        //ilk true varsayılan olarak secılı olup olmadıgını belırtıyor
-                        //ikinci true aktif olarak seçili olup olmadıgını belirtiyor
-                        var newOption = new Option(email, email, true, true);
-                        $("#txtUserSelect").append(newOption);
-                    });
 
-                    
-                    $.ajax({
-                        url: '/Project/FillUsers',
-                        dataType: 'json',
-                        success: function (data) {
-                            var emailSelect = $('#txtUserSelect');
-
-                            
-                            data.data.forEach(function (user) {
-                              
-                                if (!res.userEmails.includes(user.email)) {
-                                    // user.email res.userEmails dizisinde yoksa, yani bu e-posta adresi henüz secilmemisse, yeni bir option ekle
-                                    var newOption = new Option(user.email, user.email, false, false);
-                                    emailSelect.append(newOption);
-                                }
-                            });
-
-                           
-                            $("#txtUserSelect").select2({
-                                dropdownParent: $("#modalAdd"),
-                                placeholder: 'Email Giriniz',
-                                width: "100%"
-                            });
-
-                            //secilen kullanıcıları guncelle
-                            $("#txtUserSelect").val(res.userEmails).trigger('change');
-                        }
-                    });
-
-                    $("#btnSave").text("Kaydet").off().click(function () {
-                        let selectedUserEmails = $("#txtUserSelect").val();
-                        let project = {
-                            id: projectId,
-                            name: $("#txtName").val(),
-                            description: $("#txtDescription").val(),
-                        };
-                        $.ajax({
-                            url: '/Project/Update',
-                            type: 'POST',
-                            data: {
-                                project: project,
-                                usersEmails: selectedUserEmails
-                            },
-                            success: function (updateProject) {
-                                $("#modalAdd").modal("hide");
-                                // ?   closest('tr')
-                                let row = $(button).closest('tr');
-                                DataTable.row(row).data(updateProject).draw();
-                                toastr.success('Proje başarıyla güncellendi.');
-                            }
-                        });
-                    });
                 }
             });
+            $("#txtUserSelect").select2({
+                dropdownParent: $("#modalAdd"),
+                placeholder: 'Email Giriniz',
+                width: "100%"
+            });
+
+            // $.ajax({
+            //     url: '/Project/FillUsers',
+            //     dataType: 'json',
+            //     success: function (data) {
+            //         var emailSelect = $("#txtUserSelect").val();
+
+
+            //         // data.data.forEach(function (user) {
+
+            //         //     if (!res.userEmails.includes(user.email)) {
+            //         //         // user.email res.userEmails dizisinde yoksa, yani bu e-posta adresi henüz secilmemisse, yeni bir option ekle
+            //         //         var newOption = new Option(user.email, user.email, false, false);
+            //         //         emailSelect.append(newOption);
+            //         //     }
+            //         // });
+
+
+            //
+
+            //         //secilen kullanıcıları guncelle
+            //         // $("#txtUserSelect").val(res.userEmails).trigger('change');
+            //     }
+            // });
+
+            $("#btnSave").text("Kaydet").off().click(function () {
+                let selectedUserEmails = $("#txtUserSelect").val();
+                let project = {
+                    id: projectId,
+                    name: $("#txtName").val(),
+                    description: $("#txtDescription").val(),
+                };
+                $.ajax({
+                    url: '/Project/Update',
+                    type: 'POST',
+                    data: {
+                        project: project,
+                        usersEmails: selectedUserEmails
+                    },
+                    success: function (updateProject) {
+                        $("#modalAdd").modal("hide");
+                        // ?   closest('tr')
+                      //  let row = $(button).closest('tr');
+                       // DataTable.row(row).data(updateProject).draw();
+                        toastr.success('Proje başarıyla güncellendi.');
+                                 $('#tblProject').DataTable().ajax.reload()
+
+                    }
+                });
+            });
         }
+                    });
+                }
 
 
 

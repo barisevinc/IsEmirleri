@@ -49,11 +49,11 @@ namespace IsEmirleri.Business.Concrete
 
         public IQueryable<ProjectGetAllDto> GetAllByCustomerId()
         {
-            
+
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
             var result = _repository.GetAll()
-                .Where(p => p.CustomerId == currentCustomerId) 
+                .Where(p => p.CustomerId == currentCustomerId)
                 .Include(p => p.Users)
                 .Select(p => new ProjectGetAllDto
                 {
@@ -62,7 +62,7 @@ namespace IsEmirleri.Business.Concrete
                     Description = p.Description,
                     CustomerId = p.CustomerId,
                     UserEmails = p.Users
-                        .Where(u => u.CustomerId == currentCustomerId) 
+                        .Where(u => u.CustomerId == currentCustomerId)
                         .Select(u => u.Email)
                         .ToList()
                 });
@@ -92,7 +92,7 @@ namespace IsEmirleri.Business.Concrete
         {
             //var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
-          
+
             project.CustomerId = currentCustomerId;
             var addedProject = _repository.Add(project);
             Console.WriteLine(userIds.Count);
@@ -115,9 +115,9 @@ namespace IsEmirleri.Business.Concrete
         }
 
 
-        public Project Update(Project project, int[] userIds)
+        public Project Update(Project project, string[] usersEmails)
         {
-            Project asil = GetById(project.Id);
+            Project asil = base.GetAll(u => u.Id == project.Id).Include(u => u.Users).FirstOrDefault();
             asil.Name = project.Name;
             asil.Description = project.Description;
 
@@ -125,9 +125,9 @@ namespace IsEmirleri.Business.Concrete
             asil.Users.Clear();
 
           
-            foreach (int userId in userIds)
+            foreach (var email in usersEmails)
             {
-                AppUser user = _userRepository.GetById(userId);
+                AppUser user = _userRepository.GetFirstOrDefault(u=>u.Email== email);
                 if (user != null)
                 {
                     asil.Users.Add(user);

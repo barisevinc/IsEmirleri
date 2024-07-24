@@ -36,8 +36,10 @@ namespace IsEmirleri.Web.Controllers
         [HttpPost]
         public IActionResult Add(Project project,List<string> usersEmails)
         {
-            
-            return Ok(_projectService.AddProject(project, usersEmails));
+            _projectService.AddProject(project, usersEmails);
+
+
+            return NoContent();
         }
 
 
@@ -49,10 +51,10 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Project project, int[] userIds)
+        public IActionResult Update(Project project, string[] usersEmails)
         {
-            var updatedProject = _projectService.Update(project, userIds);
-            return Ok(updatedProject);
+            var updatedProject = _projectService.Update(project, usersEmails);
+            return NoContent();
         }
 
 
