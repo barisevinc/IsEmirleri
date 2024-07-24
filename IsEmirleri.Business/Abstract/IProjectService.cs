@@ -13,20 +13,25 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IProjectService:IService<Project>
     {
-        
-        IQueryable<ProjectGetAllDto> GetAllWithUsers();       
+        //her admin sadece bağlı olduğu firmanın proje listesini görebilsin
+        IQueryable<ProjectGetAllDto> GetAllByCustomerId();
 
+        //IQueryable<Project> GetAllByCustomerId();
+
+        //select2 ddl'yi ilgili userlar ile doldurma
         IQueryable<AppUser> FillUsers();
      
         Project AddProject(Project project, List<string> userIds);
 
         bool Delete(int id);
 
-        ProjectUpdateDto UpdateProject(ProjectUpdateDto updateDto);
+        Project Update(Project project, int[] userIds);
 
-     
+        ProjectGetAllDto GetByProjectId(int id);
 
-       
+
+
+
 
 
     }

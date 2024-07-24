@@ -13,6 +13,40 @@
         </div>
     </div>
 </div>
+@* <div class="modal fade" id="modalEkle" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Proje Güncelleme Formu
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="mb-3 row">
+                    <input type="text" id="txtName" placeholder="Proje Adı Giriniz" class="form-control" />
+                </div>
+                <div class="mb-3 row">
+                    <textarea id="txtDescription" rows="3" placeholder="Bir açıklama giriniz" class="form-control"></textarea>
+                </div>
+                <div class="mb-3 row">
+
+                    <select id="ddlKullanicilar" multiple class="form-select">
+                    </select>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat </button>
+                <button type="button" id="btnKaydet" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div> *@
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -81,7 +115,7 @@
                 $("#modalAdd .form-control").val('');
                 $("#modalTitle").text("Yeni Proje Ekle");
 
-                if (!$("#txtUserSelect").data('select2')) {
+            
                     $("#txtUserSelect").select2({
                         width: 'resolve',
                         ajax: {
@@ -98,25 +132,25 @@
                         allowClear: true,
                         dropdownAutoWidth: true,
                         minimumResultsForSearch: 0,
-                        maximumInputLength: 0 
+                        maximumInputLength: 0
 
                     });
 
-                } else {
-                    $("#txtUserSelect").val(null).trigger('change');
-                }
+               
             });
 
 
             $("#btnSave").off().click(() => {
+
                 let selectedUserEmails = $("#txtUserSelect").val();
-          
+
 
                 let project = {
                     name: $("#txtName").val(),
                     description: $("#txtDescription").val(),
                 };
-                
+
+
 
                 $.ajax({
                     url: '/Project/Add',
@@ -125,17 +159,20 @@
                         project: project,
                         usersEmails: selectedUserEmails
                     },
-                    success: () => {
-                        $('#tblProject').DataTable().ajax.reload()
-                        toastr.success("Proje Kaydı Başarılı");
+                    success: (res) =>  {                        
+                        DataTable.row.add(res).draw();
                         $("#modalAdd").modal("hide");
+                        toastr.success("Proje Kaydı Başarılı");
+                       
+
                     }
                 });
+             
             });
 
         });
 
-       
+
 
         function deleteProject(projectId, button) {
             swal.fire({
@@ -158,7 +195,85 @@
 
         }
 
-        
+        function updateProject(projectId, button) {
+            $.ajax({
+                url: '/Project/GetById',
+                type: 'GET',
+                data: { id: projectId },
+                success: function (res) {
+                    $("#modalAdd").modal("show");
+                    $("#modalTitle").text("Proje Düzenle");
+                    $("#txtName").val(res.name);
+                    $("#txtDescription").val(res.description);
+                    $("#txtUserSelect").empty();
+
+                   
+                    res.userEmails.forEach(function (email) {
+                        //option icerisindeki ilk email kullanıcının gördügü kısım (text)
+                        //ikinci email ise ilk option ın asl degeri (value)
+                        //ilk true varsayılan olarak secılı olup olmadıgını belırtıyor
+                        //ikinci true aktif olarak seçili olup olmadıgını belirtiyor
+                        var newOption = new Option(email, email, true, true);
+                        $("#txtUserSelect").append(newOption);
+                    });
+
+                    
+                    $.ajax({
+                        url: '/Project/FillUsers',
+                        dataType: 'json',
+                        success: function (data) {
+                            var emailSelect = $('#txtUserSelect');
+
+                            
+                            data.data.forEach(function (user) {
+                              
+                                if (!res.userEmails.includes(user.email)) {
+                                    // user.email res.userEmails dizisinde yoksa, yani bu e-posta adresi henüz secilmemisse, yeni bir option ekle
+                                    var newOption = new Option(user.email, user.email, false, false);
+                                    emailSelect.append(newOption);
+                                }
+                            });
+
+                           
+                            $("#txtUserSelect").select2({
+                                dropdownParent: $("#modalAdd"),
+                                placeholder: 'Email Giriniz',
+                                width: "100%"
+                            });
+
+                            //secilen kullanıcıları guncelle
+                            $("#txtUserSelect").val(res.userEmails).trigger('change');
+                        }
+                    });
+
+                    $("#btnSave").text("Kaydet").off().click(function () {
+                        let selectedUserEmails = $("#txtUserSelect").val();
+                        let project = {
+                            id: projectId,
+                            name: $("#txtName").val(),
+                            description: $("#txtDescription").val(),
+                        };
+                        $.ajax({
+                            url: '/Project/Update',
+                            type: 'POST',
+                            data: {
+                                project: project,
+                                usersEmails: selectedUserEmails
+                            },
+                            success: function (updateProject) {
+                                $("#modalAdd").modal("hide");
+                                // ?   closest('tr')
+                                let row = $(button).closest('tr');
+                                DataTable.row(row).data(updateProject).draw();
+                                toastr.success('Proje başarıyla güncellendi.');
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+
 
     </script>
 }

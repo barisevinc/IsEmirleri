@@ -22,10 +22,10 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
 
-        public IActionResult GetAll(int customerId)
+        public IActionResult GetAll()
         {
 
-            return Json(new { data = _projectService.GetAllWithUsers() });
+            return Json(new { data = _projectService.GetAllByCustomerId()}) ;
         }
 
         public IActionResult FillUsers()
@@ -49,33 +49,18 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(ProjectUpdateDto updateDto)
+        public IActionResult Update(Project project, int[] userIds)
         {
-            var updatedProject = _projectService.UpdateProject(updateDto);
+            var updatedProject = _projectService.Update(project, userIds);
             return Ok(updatedProject);
         }
 
 
-
-        //[HttpGet]
-        //public IActionResult GetById(int id)
-        //{
-        //    var project = _projectService.GetById(id);
-        //    if (project == null)
-        //    {
-        //        return NotFound("Proje bulunamadı.");
-        //    }
-
-        //    var projectDto = new ProjectUpdateDto
-        //    {
-        //        Id = project.Id,
-        //        Name = project.Name,
-        //        Description = project.Description,
-        //        UserEmails = project.Users.Select(u => u.Email).ToList()
-        //    };
-
-        //    return Ok(projectDto);
-        //}
+       
+        public IActionResult GetById(int id)
+        {
+            return Ok(_projectService.GetByProjectId(id));
+        }
 
 
 
