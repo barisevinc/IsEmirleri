@@ -33,6 +33,7 @@ namespace IsEmirleri.Web.Controllers
             return Json(new {data = _projectService.FillUsers() });
         }
 
+
         [HttpPost]
         public IActionResult Add(Project project,List<string> usersEmails)
         {

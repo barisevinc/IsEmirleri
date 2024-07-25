@@ -209,49 +209,36 @@
                     $("#txtName").val(res.name);
                     $("#txtDescription").val(res.description);
 
-
                     $("#txtUserSelect").empty();
 
             $.ajax({
                 url: "/Project/FillUsers",
-                success: function (data) {
-                   data.data.map(u=>
+                success: function (resUsers) {
+                   //data.data: sunucudan dönen json verisinin içinde, kullanıcı bılgılerının oldugu bır dizi
+                   //map herbir u kullanıcı nesnesı uzerınde ıslem yapıyor
+                   //her kullanıcı ıcın bır optıon ogesı olustur
 
-                                $("#txtUserSelect").append(new Option(u.email, u.mail, false, res.userEmails.find(yu=>yu==u.email)!=null))
-                   )
+                    for (let item of resUsers.data) 
+                    {
+                                $("#txtUserSelect").append(new Option(item.email, item.id, false, res.users.find(u => u.id == item.id)!=null))
+                    }
+
+
+                   //          resUsers.data.map(u =>
+
+                   //              $("#txtUserSelect").append(new Option(u.email, u.mail, false, res.userEmails.find(yu=>yu==u.email)!=null))
+                   // )
                    
 
                 }
             });
+
             $("#txtUserSelect").select2({
                 dropdownParent: $("#modalAdd"),
                 placeholder: 'Email Giriniz',
                 width: "100%"
             });
 
-            // $.ajax({
-            //     url: '/Project/FillUsers',
-            //     dataType: 'json',
-            //     success: function (data) {
-            //         var emailSelect = $("#txtUserSelect").val();
-
-
-            //         // data.data.forEach(function (user) {
-
-            //         //     if (!res.userEmails.includes(user.email)) {
-            //         //         // user.email res.userEmails dizisinde yoksa, yani bu e-posta adresi henüz secilmemisse, yeni bir option ekle
-            //         //         var newOption = new Option(user.email, user.email, false, false);
-            //         //         emailSelect.append(newOption);
-            //         //     }
-            //         // });
-
-
-            //
-
-            //         //secilen kullanıcıları guncelle
-            //         // $("#txtUserSelect").val(res.userEmails).trigger('change');
-            //     }
-            // });
 
             $("#btnSave").text("Kaydet").off().click(function () {
                 let selectedUserEmails = $("#txtUserSelect").val();
@@ -273,7 +260,7 @@
                       //  let row = $(button).closest('tr');
                        // DataTable.row(row).data(updateProject).draw();
                         toastr.success('Proje başarıyla güncellendi.');
-                                 $('#tblProject').DataTable().ajax.reload()
+                        $('#tblProject').DataTable().ajax.reload()
 
                     }
                 });

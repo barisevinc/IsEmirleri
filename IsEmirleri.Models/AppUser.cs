@@ -23,7 +23,7 @@ namespace IsEmirleri.Models
         public virtual AppUserType UserType { get; set; }
         public int? CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
-        public virtual ICollection<Project> Projects { get; set; } = [];
+        //public virtual ICollection<Project> Projects { get; set; } = [];
         public virtual ICollection<Mission> Tasks { get; set; } = [];
     }
 }

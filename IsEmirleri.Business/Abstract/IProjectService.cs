@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.Business.Abstract
 {
-    public interface IProjectService:IService<Project>
+    public interface IProjectService : IService<Project>
     {
         //her admin sadece bağlı olduğu firmanın proje listesini görebilsin
-        IQueryable<ProjectGetAllDto> GetAllByCustomerId();
+        IQueryable<Project> GetAllByCustomerId();
 
         //IQueryable<Project> GetAllByCustomerId();
 
         //select2 ddl'yi ilgili userlar ile doldurma
         IQueryable<AppUser> FillUsers();
-     
+
         Project AddProject(Project project, List<string> userIds);
 
         bool Delete(int id);
 
         Project Update(Project project, string[] userIds);
 
-        ProjectGetAllDto GetByProjectId(int id);
+        Project GetByProjectId(int id);
 
 
 

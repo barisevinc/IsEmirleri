@@ -20,54 +20,36 @@ namespace IsEmirleri.Business.Concrete
 {
     public class ProjectService : Service<Project>, IProjectService
     {
+        private readonly IUserService _userService;
         private readonly IRepository<Project> _repository;
-        private readonly IRepository<AppUser> _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public ProjectService(IRepository<Project> repository, IRepository<AppUser> userRepository, IHttpContextAccessor httpContextAccessor) : base(repository)
+        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService) : base(repository)
         {
             _repository = repository;
-            _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
         }
 
 
-        public ProjectGetAllDto GetByProjectId(int id)
+        //düzenlemeye basınca
+        public Project GetByProjectId(int id)
         {
-            var project = _repository.GetAll().Include(p => p.Users).FirstOrDefault(p => p.Id == id);
+            return _repository.GetAll().Include(p => p.Users).FirstOrDefault(p => p.Id == id);
 
-            return new ProjectGetAllDto
-            {
-                Id = project.Id,
-                Name = project.Name,
-                Description = project.Description,
-                CustomerId = project.CustomerId,
-                UserEmails = project.Users.Select(u => u.Email).ToList()
-            };
+         
         }
 
-        public IQueryable<ProjectGetAllDto> GetAllByCustomerId()
+
+        //her admin sadece bağlı olduğu firmanın proje listesini görebilsin
+        public IQueryable<Project> GetAllByCustomerId()
         {
 
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
-            var result = _repository.GetAll()
-                .Where(p => p.CustomerId == currentCustomerId)
-                .Include(p => p.Users)
-                .Select(p => new ProjectGetAllDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    CustomerId = p.CustomerId,
-                    UserEmails = p.Users
-                        .Where(u => u.CustomerId == currentCustomerId)
-                        .Select(u => u.Email)
-                        .ToList()
-                });
-
-            return result;
+            return _repository.GetAll(p => p.CustomerId == currentCustomerId).Include(p => p.Users);
+        
         }
 
 
@@ -77,11 +59,7 @@ namespace IsEmirleri.Business.Concrete
         {
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
-            var result = _userRepository.GetAll(u =>
-                u.CustomerId == currentCustomerId &&
-                u.IsDeleted == false &&
-                u.UserTypeId != 1 &&
-                u.UserTypeId != 2);
+            var result = _userService.GetAll(u => u.CustomerId == currentCustomerId && u.UserTypeId == 3);
 
             return result;
         }
@@ -99,9 +77,7 @@ namespace IsEmirleri.Business.Concrete
 
             if (userIds != null && userIds.Count > 0)
             {
-                var users = _userRepository.GetAll()
-                    .Where(u => userIds.Contains(u.Email))
-                    .ToList();
+                var users = _userService.GetAll(u => userIds.Contains(u.Email)).ToList();
 
                 foreach (var user in users)
                 {
@@ -121,20 +97,20 @@ namespace IsEmirleri.Business.Concrete
             asil.Name = project.Name;
             asil.Description = project.Description;
 
-           
+
             asil.Users.Clear();
 
-          
+
             foreach (var email in usersEmails)
             {
-                AppUser user = _userRepository.GetFirstOrDefault(u=>u.Email== email);
+                AppUser user = _userService.GetFirstOrDefault(u => u.Email == email);
                 if (user != null)
                 {
                     asil.Users.Add(user);
                 }
             }
 
-            _repository.Update(asil); 
+            _repository.Update(asil);
             return asil;
         }
 
