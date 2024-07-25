@@ -1,0 +1,247 @@
+﻿﻿<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-soft-success text-dark text-center d-flex">
+                <div class="col-10 text-center fs-3 text-dark"><i class="dripicons-pencil"></i>   Görevler</div>
+                <div class="col-2 fs-3">
+                    <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="tblMission" class="table table-bordered table-striped table-hover"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMission">
+                    <div class="mb-3">
+                        <label for="txtTitle" class="form-label">Başlık</label>
+                        <input type="text" class="form-control" id="txtTitle" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="txtDescription" class="form-label">Açıklama</label>
+                        <textarea class="form-control" id="txtDescription" ></textarea>
+                    </div>
+                    @* <div class="mb-3">
+                        <label for="ddlFiles" class="form-label">Files</label>
+                        <select class="form-select" id="ddlFiles" ></select>
+                    </div> *@
+                    <div class="mb-3">
+                        <label for="ddlPriorities" class="form-label">Öncelik</label>
+                        <select class="form-select" id="ddlPriorities" ></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ddlStatuses" class="form-label">Durum</label>
+                        <select class="form-select" id="ddlStatuses" ></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ddlProjects" class="form-label">Görevin Ait Olduğu Proje</label>
+                        <select class="form-select" id="ddlProjects" ></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ddlUsers" class="form-label">Kullanıcılar</label>
+                        <select class="form-select" id="ddlUsers"  multiple></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txtEndDate" class="form-label">Görevin Bitmesi Gereken Tarihi</label>
+                        <input type="date" class="form-control" id="txtEndDate" >
+                    </div>
+                    
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Kapat
+                </button>
+                <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var DataTable = "";
+        $(document).ready(() => {
+            DataTable = $("#tblMission").DataTable({
+                ajax: '/Mission/GetAll',
+                columns: [
+                    { data: 'id', title: 'ID' },
+                    { data: 'title', title: 'Başlık' },
+                    { data: 'description', title: 'Açıklama' },
+                    { data: 'projectName', title: 'Bulunduğu Proje' },
+                    { data: 'priorityName', title: 'Öncelik' },
+                    {
+                        data: 'id',
+                        title: 'İşlemler',
+                        render: (data) => {
+
+                                return `
+                                <a href="Mission/GetById/${data}" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>`
+                        }
+                    }
+                ],
+            });
+
+        });
+
+        $("#btnAdd").click(function () {
+            $("#modalAdd").modal("show");
+            $("#deletedRow").hide();
+            $("#modalAdd .form-control").val('');
+            $("#modalTitle").text("Yeni Görev Ekleme");
+            fillUsers();
+            // fillFiles();
+            fillPriorities();
+            fillProjects();
+            fillStatuses();
+
+            $("#btnSave").text("Kaydet").off().click(()=> {
+                let data = {
+                    mission: {
+                        
+                        title: $("#txtTitle").val(),
+                        description: $("#txtDescription").val(),
+                        // fileId: $("#ddlFiles").val(),
+                        priorityId: $("#ddlPriorities").val(),
+                        statusId: $("#ddlStatuses").val(),
+                        projectId: $("#ddlProjects").val(),
+                        userId: $("#ddlUsers").val(),
+                        endDate:$("#txtEndDate").val()
+
+                    }
+                };
+
+                $.ajax({
+                    url: '/Mission/Add',
+                    type: 'POST',
+                    data: data,
+                    success: function (res) {
+                        if (res) {
+                            $("#modalAdd").modal("hide");
+                            DataTable.row.add(data.mission).draw();
+                            toastr.success("Görev Başarıyla Oluşturuldu");
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: res.message,
+                            });
+                            
+                        }
+
+                    }
+                });
+            });
+        });
+
+        function fillStatuses() {
+            $.ajax({
+                url: '/Status/GetAll',
+                type: 'GET',
+                success: (res) => {
+                    $("#ddlStatuses").empty();
+
+                    for (var item of res.data) {
+                        $("#ddlStatuses").append(new Option(item.name, item.id));
+                    }
+                    $("#ddlStatuses").select2({
+                        dropdownParent: $('#modalAdd'),
+                        width: "100%",
+                        placeholder: "Görevin Durumunu Seçiniz"
+
+                    });
+
+                }
+            });
+        }
+
+        function fillProjects() {
+            $.ajax({
+                url: '/Project/GetAll',
+                type: 'GET',
+                success: (res) => {
+                    $("#ddlProjects").empty();
+
+                    for (var item of res.data) {
+                        $("#ddlProjects").append(new Option(item.name, item.id));
+                    }
+                    $("#ddlProjects").select2({
+                        dropdownParent: $('#modalAdd'),
+                        width: "100%",
+                        placeholder: "Görevin Ait Olduğu Projeyi Seçiniz"
+
+                    });
+
+                }
+            });
+        }
+
+        function fillUsers() {
+            $.ajax({
+                url: '/Project/FillUsers',
+                type: 'GET',
+                success: (res) => {
+                    $("#ddlUsers").empty();
+
+                    for (var item of res.data) {
+                        $("#ddlUsers").append(new Option(item.email, item.id));
+                    }
+                    $("#ddlUsers").select2({
+                        dropdownParent: $('#modalAdd'),
+                        width: "100%",
+                        placeholder: "Göreve Dahil olacak Kullanıcı Seçiniz"
+
+                    });
+                }
+            });
+        }
+
+        function fillFiles() {
+            $.ajax({
+                url: '/TaskFile/GetAll',
+                type: 'GET',
+                success: (res) => {
+                    $("#ddlFiles").empty();
+
+                    for (var item of res.data) {
+                        $("#ddlFiles").append(new Option(item.name, item.id));
+                    }
+
+                }
+            });
+        }
+
+        function fillPriorities() {
+            $.ajax({
+                url: '/Priority/GetAll',
+                type: 'GET',
+                success: (res) => {
+                    $("#ddlPriorities").empty();
+
+                    for (var item of res.data) {
+                        $("#ddlPriorities").append(new Option(item.name, item.id));
+                    }
+                    $("#ddlPriorities").select2({
+                        dropdownParent: $('#modalAdd'),
+                        width: "100%",
+                        placeholder: "Görevin Önceliğini Seçiniz"
+
+                    });
+                }
+            });
+        }
+    </script>
+
+}
+

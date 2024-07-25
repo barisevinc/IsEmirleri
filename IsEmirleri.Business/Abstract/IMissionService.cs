@@ -1,4 +1,6 @@
 ﻿using IsEmirleri.Business.Shared.Abstract;
+using IsEmirleri.DTO.CustomerDTOs;
+using IsEmirleri.DTO.MissionDTOs;
 using IsEmirleri.Models;
 using System;
 using System.Collections.Generic;
@@ -10,5 +12,6 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IMissionService:IService<Mission>
     {
+        IQueryable<MissionGetAllDto> GetAllWithProjectName();
     }
 }
