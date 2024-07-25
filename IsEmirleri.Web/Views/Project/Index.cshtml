@@ -204,7 +204,7 @@
                         success: () => {
                             // $('#tblProject').DataTable().ajax.reload()
                             let satir = $(button).parent().parent();
-                            $('#tblProject').DataTable().row(satir).remove().draw();
+                            DataTable.row(satir).remove().draw();
                             toastr.success("Proje Başarıyla Silindi");
                         }
                     });
