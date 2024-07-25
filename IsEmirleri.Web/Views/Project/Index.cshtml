@@ -101,7 +101,18 @@
                     { data: 'name', title: 'Proje Adı' },
                     { data: 'description', title: 'Açıklama' },
                     { data: 'customerId', title: 'Müşteri ID' },
-                    { data: 'userEmails', title: 'Tanımlanmış Kullanıcılar', render: data => data.join(', ') },
+                    { data: 'users', title: 'Tanımlanmış Kullanıcılar', render: function (data) {
+                        
+                        let emails = "";
+                        for (let item of data)
+                            emails += item.email + '<br>';
+
+                        return emails;
+
+                        
+                   
+                    
+                    } },
                     {
                         data: 'id', title: 'İşlemler', render: (data) => {
                             return `<a title="Sil" onclick="deleteProject(${data}, this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateProject(${data}, this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
