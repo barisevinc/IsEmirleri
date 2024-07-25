@@ -26,9 +26,19 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
-        public IActionResult Add(Mission mission) { 
+        public IActionResult Add(Mission mission) 
+        {
+            try
+            {
+
+                return Ok(_missionService.Add(mission));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         
-            return Ok(_missionService.Add(mission));
+           
         }
 
         public IActionResult GetById(int id) { 

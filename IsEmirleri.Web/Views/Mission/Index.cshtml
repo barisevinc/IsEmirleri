@@ -79,8 +79,8 @@
                     { data: 'id', title: 'ID' },
                     { data: 'title', title: 'Başlık' },
                     { data: 'description', title: 'Açıklama' },
-                    { data: 'mission.project.name', title: 'Bulunduğu Proje' },
-                    { data: 'mission.project.name', title: 'Öncelik' },
+                    { data: 'project.name', title: 'Bulunduğu Proje' },
+                    { data: 'priority.name', title: 'Öncelik' },
                     {
                         data: 'id',
                         title: 'İşlemler',
@@ -98,7 +98,7 @@
         $("#btnAdd").click(function () {
             $("#modalAdd").modal("show");
             $("#deletedRow").hide();
-            $("#modalAdd .form-control").val('');
+            $("#formMission").trigger('reset');
             $("#modalTitle").text("Yeni Görev Ekleme");
             fillUsers();
             // fillFiles();
@@ -127,19 +127,21 @@
                     type: 'POST',
                     data: data,
                     success: function (res) {
-                        if (res) {
-                            $("#modalAdd").modal("hide");
-                            DataTable.row.add(data.mission).draw();
-                            toastr.success("Görev Başarıyla Oluşturuldu");
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Hata'
-                              
-                            });
-                            
-                        }
+                        $("#modalAdd").modal("hide");
+                        res.project = { name: $("#ddlProjects option:selected").text() };
+                       
+                        res.priority = { name: $("#ddlPriorities option:selected").text() };
+                        DataTable.row.add(res).draw();
+                        toastr.success("Görev Başarıyla Oluşturuldu");
 
+                    },
+                    error: function (res) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text:res
+
+                        });
                     }
                 });
             });
