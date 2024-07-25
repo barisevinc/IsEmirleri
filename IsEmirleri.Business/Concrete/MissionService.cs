@@ -23,7 +23,7 @@ namespace IsEmirleri.Business.Concrete
 
         public IQueryable<Mission> GetAll()
         {
-            return _repository.GetAll().Include(x => x.Project).Include(x=>x.Priority).Select(x => new MissionGetAllDto
+            return _repository.GetAll().Include(x => x.Project).Include(x=>x.Priority).Select(x => new Mission
             {
               Id = x.Id,
               Title= x.Title,
