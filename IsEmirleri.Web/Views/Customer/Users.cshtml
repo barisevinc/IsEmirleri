@@ -193,7 +193,7 @@
                                 toastr.success(res.message);
                                 $("#modalAdd").modal("hide");
                             }else{
-                                user.isDeleted = true;
+                               // user.isDeleted = true;
                                 let row = $(button).parent().parent();
                                 DataTable.row(row).data(user).draw();
                                 toastr.warning(res.message);
