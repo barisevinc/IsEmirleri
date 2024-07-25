@@ -26,7 +26,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                    <button type="submit" id="btnSave" class="btn btn-primary">Kaydet</button>
+                    <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
                 </div>
             </form>
         </div>
@@ -43,44 +43,42 @@
 
             $("#btnAdd").click(function () {
                 $("#modalAdd").modal("show");
-                $("#statusForm")[0].reset();
+                $("#statusForm").trigger('reset');
                 $("#statusNameValidation").hide();
                 $("#modalTitle").text("Yeni Durum Kaydı");
                 $("#btnSave").text("Kaydet").off().click(function () {
-                    $("#statusForm").submit();
+                    let isValid = this.checkValidity();
+                    if (!isValid) {
+                        event.stopPropagation();
+                        $("#statusNameValidation").show();
+                    } else {
+                        $("#statusNameValidation").hide();
+                        let data = {
+                            missionStatus: {
+                                name: $("#txtStatusname").val(),
+                            }
+                        };
+                        let action = $("#modalTitle").text().includes("Yeni") ? '/Status/Add' : '/Status/Update';
+                        $.ajax({
+                            url: action,
+                            type: 'POST',
+                            data: data,
+                            success: function (res) {
+                                $("#modalAdd").modal("hide");
+                                if (action === '/Status/Add') {
+                                    res.taskCount = 0;
+                                    DataTable.row.add(res).draw();
+                                } else {
+                                    let satir = $("#modalAdd").data("row");
+                                    DataTable.row(satir).data(res).draw();
+                                }
+                            }
+                        });
+                    }
                 });
             });
 
-            $("#statusForm").submit(function (event) {
-                event.preventDefault();
-                let isValid = this.checkValidity();
-                if (!isValid) {
-                    event.stopPropagation();
-                    $("#statusNameValidation").show();
-                } else {
-                    $("#statusNameValidation").hide();
-                    let data = {
-                        missionStatus: {
-                            name: $("#txtStatusname").val(),
-                        }
-                    };
-                    let action = $("#modalTitle").text().includes("Yeni") ? '/Status/Add' : '/Status/Update';
-                    $.ajax({
-                        url: action,
-                        type: 'POST',
-                        data: data,
-                        success: function (res) {
-                            $("#modalAdd").modal("hide");
-                            if (action === '/Status/Add') {
-                                DataTable.row.add(res).draw();
-                            } else {
-                                let satir = $("#modalAdd").data("row");
-                                DataTable.row(satir).data(res).draw();
-                            }
-                        }
-                    });
-                }
-            });
+         
 
             DataTable = $("#tblStatus").DataTable({
                 ajax: '/Status/GetAll',

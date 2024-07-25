@@ -22,7 +22,7 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetAll() {
 
-            return Json(new { data = _missionService.GetAllWithProjectName()});
+            return Json(new { data = _missionService.GetAll()});
 
         }
 
