@@ -30,7 +30,8 @@ namespace IsEmirleri.Business.Concrete
               StartDate = x.StartDate, 
               EndDate = x.EndDate,
               Project = x.Project,
-              Priority= x.Priority
+              Priority= x.Priority,
+              Status= x.Status
 
             });
         }
