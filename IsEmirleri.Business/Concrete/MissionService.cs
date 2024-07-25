@@ -21,7 +21,7 @@ namespace IsEmirleri.Business.Concrete
             _repository = repository;
         }
 
-        public IQueryable<MissionGetAllDto> GetAllWithProjectName()
+        public IQueryable<Mission> GetAll()
         {
             return _repository.GetAll().Include(x => x.Project).Include(x=>x.Priority).Select(x => new MissionGetAllDto
             {
@@ -30,11 +30,12 @@ namespace IsEmirleri.Business.Concrete
               Description = x.Description,
               StartDate = x.StartDate, 
               EndDate = x.EndDate,
-              ProjectName = x.Project.Name,
-              PriorityName= x.Priority.Name
+              Project = x.Project,
+              Priority= x.Priority
 
             });
         }
 
+       
     }
 }

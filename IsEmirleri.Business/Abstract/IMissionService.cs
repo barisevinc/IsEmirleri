@@ -12,6 +12,5 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IMissionService:IService<Mission>
     {
-        IQueryable<MissionGetAllDto> GetAllWithProjectName();
     }
 }

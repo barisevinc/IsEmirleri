@@ -79,8 +79,8 @@
                     { data: 'id', title: 'ID' },
                     { data: 'title', title: 'Başlık' },
                     { data: 'description', title: 'Açıklama' },
-                    { data: 'projectName', title: 'Bulunduğu Proje' },
-                    { data: 'priorityName', title: 'Öncelik' },
+                    { data: 'mission.project.name', title: 'Bulunduğu Proje' },
+                    { data: 'mission.project.name', title: 'Öncelik' },
                     {
                         data: 'id',
                         title: 'İşlemler',
@@ -134,8 +134,8 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Hata',
-                                text: res.message,
+                                title: 'Hata'
+                              
                             });
                             
                         }
@@ -157,8 +157,8 @@
                     }
                     $("#ddlStatuses").select2({
                         dropdownParent: $('#modalAdd'),
-                        width: "100%",
-                        placeholder: "Görevin Durumunu Seçiniz"
+                        width: "100%"
+                        
 
                     });
 
@@ -178,8 +178,8 @@
                     }
                     $("#ddlProjects").select2({
                         dropdownParent: $('#modalAdd'),
-                        width: "100%",
-                        placeholder: "Görevin Ait Olduğu Projeyi Seçiniz"
+                        width: "100%"
+                        
 
                     });
 
@@ -200,7 +200,7 @@
                     $("#ddlUsers").select2({
                         dropdownParent: $('#modalAdd'),
                         width: "100%",
-                        placeholder: "Göreve Dahil olacak Kullanıcı Seçiniz"
+                        placeholder: "Göreve Dahil olacak Kullanıcıları Seçiniz"
 
                     });
                 }
@@ -234,9 +234,8 @@
                     }
                     $("#ddlPriorities").select2({
                         dropdownParent: $('#modalAdd'),
-                        width: "100%",
-                        placeholder: "Görevin Önceliğini Seçiniz"
-
+                        width: "100%"
+                      
                     });
                 }
             });
