@@ -94,25 +94,27 @@
         var DataTable = "";
 
         $(document).ready(() => {
-            var DataTable = $("#tblProject").DataTable({
+            DataTable = $("#tblProject").DataTable({
                 ajax: '/Project/GetAll',
                 columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'name', title: 'Proje Adı' },
                     { data: 'description', title: 'Açıklama' },
                     { data: 'customerId', title: 'Müşteri ID' },
-                    { data: 'users', title: 'Tanımlanmış Kullanıcılar', render: function (data) {
-                        
-                        let emails = "";
-                        for (let item of data)
-                            emails += item.email + '<br>';
+                    {
+                        data: 'users', title: 'Tanımlanmış Kullanıcılar', render: function (data) {
 
-                        return emails;
+                            let emails = "";
+                            for (let item of data)
+                                emails += item.email + '<br>';
 
-                        
-                   
-                    
-                    } },
+                            return emails;
+
+
+
+
+                        }
+                    },
                     {
                         data: 'id', title: 'İşlemler', render: (data) => {
                             return `<a title="Sil" onclick="deleteProject(${data}, this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateProject(${data}, this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
@@ -131,31 +133,10 @@
 
             });
 
-            function fillUserData() {
 
-                $("#txtUserSelect").select2({
-                    width: 'resolve',
-                    ajax: {
-                        url: '/Project/FillUsers',
-                        dataType: 'json',
-                        processResults: function (data) {
-
-                            return {
-                                results: data.data.map(user => ({ id: user.email, text: user.email }))
-                            };
-                        }
-                    },
-                    placeholder: "Kullanıcı Seçin",
-                    allowClear: true,
-                    dropdownAutoWidth: true,
-                    minimumResultsForSearch: 0,
-                    maximumInputLength: 0
-
-                });
-            }
 
             $("#btnSave").off().click(() => {
-                let selectedUserEmails = $("#txtUserSelect").val();
+                let selectedUserIds = $("#txtUserSelect").val();
 
 
                 let project = {
@@ -169,10 +150,15 @@
                     type: 'POST',
                     data: {
                         project: project,
-                        usersEmails: selectedUserEmails
+                        userIds: selectedUserIds
                     },
-                    success: () => {
-                        $('#tblProject').DataTable().ajax.reload()
+                    success: (res) => {
+                        // $('#tblProject').DataTable().ajax.reload();
+                        //   DataTable.ajax.reload(false);
+
+                        DataTable.row.add(res).draw(false);
+
+
                         toastr.success("Proje Kaydı Başarılı");
                         $("#modalAdd").modal("hide");
                     }
@@ -180,6 +166,29 @@
             });
 
         });
+
+        function fillUserData() {
+
+            $("#txtUserSelect").select2({
+                width: 'resolve',
+                ajax: {
+                    url: '/Project/FillUsers',
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        return {
+                            results: res.data.map(user => ({ id: user.id, text: user.email }))
+                        };
+                    }
+                },
+                placeholder: "Kullanıcı Seçin",
+                allowClear: true,
+                dropdownAutoWidth: true,
+                minimumResultsForSearch: 0,
+                maximumInputLength: 0
+
+            });
+        }
 
 
 
@@ -222,63 +231,61 @@
 
                     $("#txtUserSelect").empty();
 
-            $.ajax({
-                url: "/Project/FillUsers",
-                success: function (resUsers) {
-                   //data.data: sunucudan dönen json verisinin içinde, kullanıcı bılgılerının oldugu bır dizi
-                   //map herbir u kullanıcı nesnesı uzerınde ıslem yapıyor
-                   //her kullanıcı ıcın bır optıon ogesı olustur
+                    $.ajax({
+                        url: "/Project/FillUsers",
+                        success: function (resUsers) {
+                            //data.data: sunucudan dönen json verisinin içinde, kullanıcı bılgılerının oldugu bır dizi
+                            //map herbir u kullanıcı nesnesı uzerınde ıslem yapıyor
+                            //her kullanıcı ıcın bır optıon ogesı olustur
 
-                    for (let item of resUsers.data) 
-                    {
-                                $("#txtUserSelect").append(new Option(item.email, item.id, false, res.users.find(u => u.id == item.id)!=null))
-                    }
-
-
-                   //          resUsers.data.map(u =>
-
-                   //              $("#txtUserSelect").append(new Option(u.email, u.mail, false, res.userEmails.find(yu=>yu==u.email)!=null))
-                   // )
-                   
-
-                }
-            });
-
-            $("#txtUserSelect").select2({
-                dropdownParent: $("#modalAdd"),
-                placeholder: 'Email Giriniz',
-                width: "100%"
-            });
+                            for (let item of resUsers.data) {
+                                $("#txtUserSelect").append(new Option(item.email, item.id, false, res.users.find(u => u.id == item.id) != null))
+                            }
 
 
-            $("#btnSave").text("Kaydet").off().click(function () {
-                let selectedUserEmails = $("#txtUserSelect").val();
-                let project = {
-                    id: projectId,
-                    name: $("#txtName").val(),
-                    description: $("#txtDescription").val(),
-                };
-                $.ajax({
-                    url: '/Project/Update',
-                    type: 'POST',
-                    data: {
-                        project: project,
-                        usersEmails: selectedUserEmails
-                    },
-                    success: function (updateProject) {
-                        $("#modalAdd").modal("hide");
-                        // ?   closest('tr')
-                      //  let row = $(button).closest('tr');
-                       // DataTable.row(row).data(updateProject).draw();
-                        toastr.success('Proje başarıyla güncellendi.');
-                        $('#tblProject').DataTable().ajax.reload()
 
-                    }
-                });
-            });
-        }
+
+
+                        }
+                    });
+
+                    $("#txtUserSelect").select2({
+                        dropdownParent: $("#modalAdd"),
+                        placeholder: 'Email Giriniz',
+                        width: "100%"
+                    });
+
+
+                    $("#btnSave").text("Kaydet").off().click(function () {
+
+                        let project = {
+                            id: projectId,
+                            name: $("#txtName").val(),
+                            description: $("#txtDescription").val(),
+                        };
+                        $.ajax({
+                            url: '/Project/Update',
+                            type: 'POST',
+                            data: {
+                                project: project,
+                                userIds: $("#txtUserSelect").val()
+                            },
+                            success: function (updateProject) {
+                                $("#modalAdd").modal("hide");
+                                // ?   closest('tr')
+                                let row = $(button).parent().parent();
+                                DataTable.row(row).data(updateProject).draw();
+                                
+                                
+                                toastr.success('Proje başarıyla güncellendi.');
+                                //  $('#tblProject').DataTable().ajax.reload()
+
+                            }
+                        });
                     });
                 }
+            });
+        }
 
 
 

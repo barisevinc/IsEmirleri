@@ -1,6 +1,5 @@
 ﻿using IsEmirleri.Business.Shared.Abstract;
 using IsEmirleri.DTO.CustomerDTOs;
-using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using System;
 using System.Collections.Generic;
@@ -21,11 +20,11 @@ namespace IsEmirleri.Business.Abstract
         //select2 ddl'yi ilgili userlar ile doldurma
         IQueryable<AppUser> FillUsers();
 
-        Project AddProject(Project project, List<string> userIds);
+        Project AddProject(Project project, List<int> userIds);
 
         bool Delete(int id);
 
-        Project Update(Project project, string[] userIds);
+        Project Update(Project project, List<int> userIds);
 
         Project GetByProjectId(int id);
 

@@ -1,6 +1,5 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Concrete;
-using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,12 +34,9 @@ namespace IsEmirleri.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Add(Project project,List<string> usersEmails)
+        public IActionResult Add(Project project,List<int> userIds)
         {
-            _projectService.AddProject(project, usersEmails);
-
-
-            return NoContent();
+          return Ok(_projectService.AddProject(project, userIds));
         }
 
 
@@ -52,10 +48,10 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Project project, string[] usersEmails)
+        public IActionResult Update(Project project, List<int> userIds)
         {
-            var updatedProject = _projectService.Update(project, usersEmails);
-            return NoContent();
+          
+            return Ok(_projectService.Update(project, userIds));
         }
 
 

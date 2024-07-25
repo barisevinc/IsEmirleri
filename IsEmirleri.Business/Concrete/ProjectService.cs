@@ -1,7 +1,6 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.DTO.CustomerDTOs;
-using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -66,18 +65,18 @@ namespace IsEmirleri.Business.Concrete
 
 
 
-        public Project AddProject(Project project, List<string> userIds)
+        public Project AddProject(Project project, List<int> userIds)
         {
             //var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
 
             project.CustomerId = currentCustomerId;
             var addedProject = _repository.Add(project);
-            Console.WriteLine(userIds.Count);
+           // Console.WriteLine(userIds.Count);
 
             if (userIds != null && userIds.Count > 0)
             {
-                var users = _userService.GetAll(u => userIds.Contains(u.Email)).ToList();
+                var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
 
                 foreach (var user in users)
                 {
@@ -91,7 +90,7 @@ namespace IsEmirleri.Business.Concrete
         }
 
 
-        public Project Update(Project project, string[] usersEmails)
+        public Project Update(Project project,List<int> userIds)
         {
             Project asil = base.GetAll(u => u.Id == project.Id).Include(u => u.Users).FirstOrDefault();
             asil.Name = project.Name;
@@ -101,9 +100,9 @@ namespace IsEmirleri.Business.Concrete
             asil.Users.Clear();
 
 
-            foreach (var email in usersEmails)
+            foreach (var userId in userIds)
             {
-                AppUser user = _userService.GetFirstOrDefault(u => u.Email == email);
+                AppUser user = _userService.GetById(userId);
                 if (user != null)
                 {
                     asil.Users.Add(user);
