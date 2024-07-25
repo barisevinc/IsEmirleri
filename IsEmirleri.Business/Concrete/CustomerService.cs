@@ -91,8 +91,7 @@ namespace IsEmirleri.Business.Concrete
                 Picture = x.Picture,
                 Password = x.Password,
                 UserType = x.UserType,
-                UserTypeId = x.UserTypeId,
-                Projects = x.Projects,
+                UserTypeId = x.UserTypeId,               
                 CustomerId = x.CustomerId,
                 IsDeleted = x.IsDeleted,
                 Tasks = x.Tasks

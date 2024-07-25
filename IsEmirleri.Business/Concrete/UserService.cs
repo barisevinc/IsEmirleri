@@ -62,8 +62,7 @@ namespace IsEmirleri.Business.Concrete
                 Id = x.Id,
                 Email = x.Email,
                 Password = x.Password,
-                UserType = x.UserType,
-                Projects = x.Projects,
+                UserType = x.UserType,               
                 CustomerId = x.CustomerId,
                 Tasks = x.Tasks
 

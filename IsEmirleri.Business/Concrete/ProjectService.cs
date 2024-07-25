@@ -1,12 +1,12 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.DTO.CustomerDTOs;
-using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,38 +19,99 @@ namespace IsEmirleri.Business.Concrete
 {
     public class ProjectService : Service<Project>, IProjectService
     {
+        private readonly IUserService _userService;
         private readonly IRepository<Project> _repository;
-        private readonly IRepository<AppUser> _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public ProjectService(IRepository<Project> repository, IRepository<AppUser> userRepository, IHttpContextAccessor httpContextAccessor) : base(repository)
+        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService) : base(repository)
         {
             _repository = repository;
-            _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
+        }
+
+
+        //düzenlemeye basınca
+        public Project GetByProjectId(int id)
+        {
+            return _repository.GetAll().Include(p => p.Users).FirstOrDefault(p => p.Id == id);
+
+         
+        }
+
+
+        //her admin sadece bağlı olduğu firmanın proje listesini görebilsin
+        public IQueryable<Project> GetAllByCustomerId()
+        {
+
+            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+
+            return _repository.GetAll(p => p.CustomerId == currentCustomerId).Include(p => p.Users);
+        
         }
 
 
 
-        public IQueryable<ProjectGetAllDto> GetAllWithUsers()
+        //select2 ddl'yi ilgili userlar ile doldurma
+        public IQueryable<AppUser> FillUsers()
         {
-            var result = _repository.GetAll().Include(p => p.Users)
-         .Select(p => new ProjectGetAllDto
-         {
-             Id = p.Id,
-             Name = p.Name,
-             Description = p.Description,
-             CustomerId = p.CustomerId,
+            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
-             UserEmails = p.Users
-                         .Where(u => u.CustomerId == p.CustomerId)
-                         .Select(u => u.Email)
-                         .ToList()
-         });
+            var result = _userService.GetAll(u => u.CustomerId == currentCustomerId && u.UserTypeId == 3);
+
             return result;
         }
 
+
+
+        public Project AddProject(Project project, List<int> userIds)
+        {
+            //var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+
+            project.CustomerId = currentCustomerId;
+            var addedProject = _repository.Add(project);
+           // Console.WriteLine(userIds.Count);
+
+            if (userIds != null && userIds.Count > 0)
+            {
+                var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
+
+                foreach (var user in users)
+                {
+                    addedProject.Users = users;
+                }
+
+                _repository.Update(addedProject);
+            }
+
+            return addedProject;
+        }
+
+
+        public Project Update(Project project,List<int> userIds)
+        {
+            Project asil = base.GetAll(u => u.Id == project.Id).Include(u => u.Users).FirstOrDefault();
+            asil.Name = project.Name;
+            asil.Description = project.Description;
+
+
+            asil.Users.Clear();
+
+
+            foreach (var userId in userIds)
+            {
+                AppUser user = _userService.GetById(userId);
+                if (user != null)
+                {
+                    asil.Users.Add(user);
+                }
+            }
+
+            _repository.Update(asil);
+            return asil;
+        }
 
 
         public bool Delete(int id)
@@ -61,102 +122,7 @@ namespace IsEmirleri.Business.Concrete
 
 
 
-        public IQueryable<AppUser> FillUsers()
-        {
-            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
 
-            var result = _userRepository.GetAll(u =>
-                u.CustomerId == currentCustomerId &&
-                u.IsDeleted == false &&
-                u.UserTypeId != 1 &&
-                u.UserTypeId != 2);
-
-            return result;
-        }
-
-
-
-        public Project AddProject(Project project, List<string> userIds)
-        {
-            //burada eklenenler sql e geliyor ama webde görünmüyor
-            var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
-            project.CustomerId = currentCustomerId;
-            var addedProject = _repository.Add(project);
-            Console.WriteLine(userIds.Count);
-
-            if (userIds != null && userIds.Count > 0)
-            {
-                var users = _userRepository.GetAll()
-                    .Where(u => userIds.Contains(u.Email))
-                    .ToList();
-
-                //     foreach (var user in users)
-                //   {
-                addedProject.Users = users;
-              //  }
-
-                _repository.Update(addedProject);
-            }
-
-            return addedProject;
-        }
-
-
-        public ProjectUpdateDto UpdateProject(ProjectUpdateDto updateDto)
-        {
-
-            var project = _repository.GetById(updateDto.Id);
-
-
-            project.Name = updateDto.Name;
-            project.Description = updateDto.Description;
-
-
-            project.Users.Clear();
-
-            if (updateDto.UserEmails != null && updateDto.UserEmails.Count > 0)
-            {
-                var users = _userRepository.GetAll()
-                    .Where(u => updateDto.UserEmails.Contains(u.Email))
-                    .ToList();
-
-                foreach (var user in users)
-                {
-                    project.Users.Add(user);
-                }
-            }
-
-            //?
-            _repository.Update(project);
-
-            return new ProjectUpdateDto
-            {
-                Id = project.Id,
-                Name = project.Name,
-                Description = project.Description,
-                UserEmails = project.Users.Select(u => u.Email).ToList()
-            };
-        }
-
-
-
-
-        //public ProjectGetAllDto GetById(int id)
-        //{
-
-        //    var project = _repository.GetAll()
-        //        .Include(p => p.Users)
-        //        .FirstOrDefault(p => p.Id == id);
-
-        //    return new ProjectGetAllDto
-        //    {
-        //        Id = project.Id,
-        //        Name = project.Name,
-        //        Description = project.Description,
-        //        CustomerId = project.CustomerId,
-        //        UserEmails = project.Users.Select(u => u.Email).ToList()
-        //    };
-        //}
 
     }
 }

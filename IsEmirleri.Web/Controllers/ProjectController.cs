@@ -1,6 +1,5 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Concrete;
-using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,10 +21,10 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
 
-        public IActionResult GetAll(int customerId)
+        public IActionResult GetAll()
         {
 
-            return Json(new { data = _projectService.GetAllWithUsers() });
+            return Json(new { data = _projectService.GetAllByCustomerId()}) ;
         }
 
         public IActionResult FillUsers()
@@ -33,11 +32,11 @@ namespace IsEmirleri.Web.Controllers
             return Json(new {data = _projectService.FillUsers() });
         }
 
+
         [HttpPost]
-        public IActionResult Add(Project project,List<string> usersEmails)
+        public IActionResult Add(Project project,List<int> userIds)
         {
-            
-            return Ok(_projectService.AddProject(project, usersEmails));
+          return Ok(_projectService.AddProject(project, userIds));
         }
 
 
@@ -49,33 +48,18 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(ProjectUpdateDto updateDto)
+        public IActionResult Update(Project project, List<int> userIds)
         {
-            var updatedProject = _projectService.UpdateProject(updateDto);
-            return Ok(updatedProject);
+          
+            return Ok(_projectService.Update(project, userIds));
         }
 
 
-
-        //[HttpGet]
-        //public IActionResult GetById(int id)
-        //{
-        //    var project = _projectService.GetById(id);
-        //    if (project == null)
-        //    {
-        //        return NotFound("Proje bulunamadı.");
-        //    }
-
-        //    var projectDto = new ProjectUpdateDto
-        //    {
-        //        Id = project.Id,
-        //        Name = project.Name,
-        //        Description = project.Description,
-        //        UserEmails = project.Users.Select(u => u.Email).ToList()
-        //    };
-
-        //    return Ok(projectDto);
-        //}
+       
+        public IActionResult GetById(int id)
+        {
+            return Ok(_projectService.GetByProjectId(id));
+        }
 
 
 
