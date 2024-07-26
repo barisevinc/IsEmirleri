@@ -98,5 +98,46 @@ namespace IsEmirleri.Business.Concrete
 
             });
         }
+        public bool IsLimitAvailable(int customerId)
+        {
+            var customer = _repository.GetById(customerId);
+
+            int userCount = _appUserRepository.GetAll(u => u.CustomerId == customer.Id && u.UserTypeId == 3).Count();
+            if (userCount >= customer.UserLimit)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool UpdateCustomerUsers(AppUser user)
+        {
+            var appUser = _appUserRepository.GetById(user.Id);
+            if (IsLimitAvailable(appUser.CustomerId.Value))
+            {
+                appUser.Email = user.Email;
+                appUser.Password = user.Password;
+                appUser.IsDeleted = user.IsDeleted;
+                appUser.UserTypeId = user.UserTypeId;
+                _appUserRepository.Update(appUser);
+                return true;
+            }
+            else if(user.IsDeleted)
+            {
+                appUser.UserTypeId=user.UserTypeId;
+                appUser.IsDeleted= true;
+                appUser.Email = user.Email;
+                appUser.Password = user.Password;
+                _appUserRepository.Update(appUser);
+                return false;
+                
+            }
+            return true;
+            
+        }
     }
 }

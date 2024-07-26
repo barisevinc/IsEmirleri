@@ -19,6 +19,8 @@ namespace IsEmirleri.Business.Abstract
         Customer Add(Customer customer);
         CustomerGetAllDto UpdateCustomer(Customer customer);
         bool Delete(int id);
+        bool UpdateCustomerUsers(AppUser user);
+        bool IsLimitAvailable(int customerId);
 
     }
 }
