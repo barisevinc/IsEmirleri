@@ -31,6 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 });
 builder.Services.AddBusinessDI();
 builder.Services.AddRepositoryDI();
+builder.Services.AddBusinessDI_Dinamik();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 

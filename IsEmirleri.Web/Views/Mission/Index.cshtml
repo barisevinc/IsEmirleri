@@ -85,7 +85,8 @@
                     {
                         data: 'id',
                         title: 'İşlemler',
-                        render: (data) => {
+                        orderable:false,
+                        render: (data) => {    
 
                                 return `
                                 <a href="Mission/GetById/${data}" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>`
