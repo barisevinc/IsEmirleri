@@ -55,8 +55,6 @@ namespace IsEmirleri.Business.Concrete
         }
         public IQueryable<AppUser> GetAll()
         {
-
-
             return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value) && u.IsDeleted == false && u.UserTypeId == 3).Select(x => new AppUser
             {
                 Id = x.Id,

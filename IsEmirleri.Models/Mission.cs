@@ -27,7 +27,7 @@ namespace IsEmirleri.Models
 
         public virtual ICollection<AppUser> Assignees { get; set; } = [];
         public virtual ICollection<TaskHistory> TaskHistory { get; set; } = [];
-        public virtual ICollection<TaskFile> Files { get; set; }= [];
+        public virtual ICollection<TaskFile>? Files { get; set; }= [];
         public int PriorityId { get; set; }
         public virtual Priority Priority { get; set; }
 
