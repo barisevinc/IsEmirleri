@@ -19,11 +19,13 @@ namespace IsEmirleri.Business.Concrete
     {
         private readonly IRepository<Priority> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRepository<Mission> _repositoryMission;
 
-        public PriorityService(IRepository<Priority> repository, IHttpContextAccessor httpContextAccessor) : base(repository)
+        public PriorityService(IRepository<Priority> repository, IHttpContextAccessor httpContextAccessor, IRepository<Mission> repositoryMission) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
+            _repositoryMission = repositoryMission;
         }
 
         public Priority Add(Priority priority)
@@ -46,11 +48,12 @@ namespace IsEmirleri.Business.Concrete
 
         public IQueryable<PriorityGetAllDto> GetAllWithTaskCount()
         {
-            var result = _repository.GetAll().Select(p => new PriorityGetAllDto
+            var customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            var result = _repository.GetAll().Where(x=>x.CustomerId==customerId).Select(p => new PriorityGetAllDto
             {
                 Id = p.Id,
                 Name = p.Name,
-                TaskCount = _repository.GetAll().Where(p => p.IsDeleted == false).Count()
+                TaskCount = _repositoryMission.GetAll().Where(x => x.PriorityId == p.Id).Count()
             }); 
             return result;
         }
