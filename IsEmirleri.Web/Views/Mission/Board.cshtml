@@ -1,0 +1,32 @@
+﻿<div id="content" class="d-flex p-2">
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Mission/GetAllOnBoard',
+                type: 'GET',
+                success: function (res) {
+                    for (let item of res.data) {
+                        $("#content").append(`
+                            <div class="card col-2 me-2">
+                                <div class="card-header text-white text-center">${item.missionStatus.name}</div>
+                                <div class="card-body">
+                                    ${item.title}<br />
+                                </div>
+                                
+                            </div>
+                        `);
+                    }
+                }
+            });
+        });
+
+
+
+
+        
+
+    </script>
+}

@@ -26,6 +26,10 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
+        public IActionResult GetAllOnBoard() {
+
+            return Json(new { data = _missionService.GetAllMissionDto() });
+        }
         public IActionResult Add(Mission mission) 
         {
             try
@@ -54,6 +58,11 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult Delete(int id) { 
         
             return Ok(_missionService.Delete(id));
+        }
+
+        public IActionResult Board() {
+
+            return View();
         }
     }
 }
