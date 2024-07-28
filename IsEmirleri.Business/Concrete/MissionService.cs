@@ -18,12 +18,13 @@ namespace IsEmirleri.Business.Concrete
     {
         private readonly IRepository<Mission> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+        private readonly IStatusService _statusService;
 
-        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor) :base(repository)
+        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor, IStatusService statusService) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
+            _statusService = statusService;
         }
 
         public IQueryable<Mission> GetAll()
@@ -63,13 +64,15 @@ namespace IsEmirleri.Business.Concrete
 
         public IQueryable<MissionDto> GetAllMissionDto()
         {
-            return _repository.GetAll().Include(s => s.Status).Select(x => new MissionDto
-            {
-
-                Id = x.Id,
-                Title = x.Title,
-                MissionStatus = x.Status
-            });
+            return from mission in _repository.GetAll()
+                   join status in _statusService.GetAll() on mission.StatusId equals status.Id
+                   select new MissionDto
+                   {
+                       Id = mission.Id,
+                       Title = mission.Title,
+                       MissionStatusId = mission.StatusId,
+                       MissionStatus = status
+                   };
 
         }
     }

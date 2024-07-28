@@ -25,11 +25,7 @@ namespace IsEmirleri.Web.Controllers
             return Json(new { data = _missionService.GetAll()});
 
         }
-
-        public IActionResult GetAllOnBoard() {
-
-            return Json(new { data = _missionService.GetAllMissionDto() });
-        }
+        
         public IActionResult Add(Mission mission) 
         {
             try
@@ -63,6 +59,12 @@ namespace IsEmirleri.Web.Controllers
         public IActionResult Board() {
 
             return View();
+        }
+        [HttpPost]
+        public IActionResult GetAllOnBoard()
+        {
+
+            return Json(new { data = _missionService.GetAllMissionDto() });
         }
     }
 }

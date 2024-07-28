@@ -1,32 +1,30 @@
-﻿<div id="content" class="d-flex p-2">
-</div>
+﻿<div id="content" class="d-flex p-2"></div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
             $.ajax({
                 url: '/Mission/GetAllOnBoard',
-                type: 'GET',
+                type: 'POST',
                 success: function (res) {
-                    for (let item of res.data) {
+                    let groupedData = res.data.reduce((acc, curr) => {
+                        (acc[curr.missionStatus.name] = acc[curr.missionStatus.name] || []).push(curr);
+                        return acc;
+                    }, {});
+
+                    for (let status in groupedData) {
+                        let missionItems = groupedData[status].map(m => `${m.title}<br />`).join('');
                         $("#content").append(`
-                            <div class="card col-2 me-2">
-                                <div class="card-header text-white text-center">${item.missionStatus.name}</div>
-                                <div class="card-body">
-                                    ${item.title}<br />
-                                </div>
-                                
-                            </div>
-                        `);
+                                    <div class="card col-3 me-2">
+                                        <div class="card-header text-center text-dark">${status}</div>
+                                        <div class="card-body">
+                                            ${missionItems}
+                                        </div>
+                                    </div>
+                                `);
                     }
                 }
             });
         });
-
-
-
-
-        
-
     </script>
 }
