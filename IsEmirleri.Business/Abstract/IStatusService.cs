@@ -12,5 +12,6 @@ namespace IsEmirleri.Business.Abstract
     public interface IStatusService : IService<MissionStatus>
     {
         List<MissionStatusGetAllDto> GetAllByStatus();
+        IQueryable<MissionStatus> GetAllLoginStatus();
     }
 }

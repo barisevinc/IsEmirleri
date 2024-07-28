@@ -45,12 +45,25 @@ namespace IsEmirleri.Business.Concrete
 
         public List<MissionStatusGetAllDto> GetAllByStatus()
         {
-          return  _repository.GetAll().Select(s => new MissionStatusGetAllDto
+            var customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+            return  _repository.GetAll().Where(s => s.CustomerId == customerId).Select(s => new MissionStatusGetAllDto
             {
                 Id = s.Id,
                 Name = s.Name,
                 TaskCount = _repositoryMission.GetAll().Where(x => x.StatusId == s.Id).Count()
             }).ToList();
+        }
+
+        public IQueryable<MissionStatus> GetAllLoginStatus()
+        {
+            var customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+
+            return _repository.GetAll().Where(s => s.CustomerId == customerId).Select(x => new MissionStatus
+            {
+                Id= x.Id,
+                Name= x.Name
+            });
+           
         }
     }
 }
