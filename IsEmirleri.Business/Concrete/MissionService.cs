@@ -18,6 +18,7 @@ namespace IsEmirleri.Business.Concrete
     {
         private readonly IRepository<Mission> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        
 
         public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor) :base(repository)
         {
@@ -28,19 +29,35 @@ namespace IsEmirleri.Business.Concrete
         public IQueryable<Mission> GetAll()
         {
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            var item2= base.GetAll()
+                .Include(x => x.Assignees)
+                .Include(x=>x.Status)
+                .Include(x=>x.Priority)
+                .Include(x=>x.Project)
+                .Include(x=>x.TaskHistory)
+                .Include(x=>x.Comments)
+                .Include(x=>x.Files)               
+                .Where(x => x.Project.CustomerId == customerId).AsEnumerable().AsQueryable();
 
-            return _repository.GetAll().Include(x => x.Project).Include(x=>x.Priority).Where(x => x.Project.CustomerId==customerId).AsEnumerable().Select(x => new Mission
+            var item= _repository.GetAll().Include(x=>x.Assignees).Where(x => x.Project.CustomerId == customerId).AsEnumerable().Select(x => new Mission
             {
-              Id = x.Id,
-              Title= x.Title,
-              Description = x.Description,
-              StartDate = x.StartDate, 
-              EndDate = x.EndDate,
-              Project = x.Project,
-              Priority= x.Priority,
-              Status = x.Status
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                Project = x.Project,
+                Priority = x.Priority,
+                Status = x.Status,
+                Assignees =x.Assignees.ToList(),
+                TaskHistory=x.TaskHistory.ToList(),
+                Files=x.Files.ToList(),
+                Comments =x.Comments.ToList(),
+
+                
 
             }).AsQueryable();
+            return item2;
 
         }
 

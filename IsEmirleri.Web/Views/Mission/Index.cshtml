@@ -85,7 +85,14 @@
                     { data: 'project.name', title: 'Bulunduğu Proje' },
                     { data: 'status.name', title: 'Durum' },
                     { data: 'priority.name', title: 'Öncelik' },
-                    { data: 'assignees.email', title: 'Görev Sahibi' },
+                    {
+                        data: 'assignees', title: 'Görev Sahibi', render: (data) => {
+                            let assignees = "";
+                            for (var item of data) {
+                                assignees += item.email + "<br/>"
+                            }
+                            return assignees;
+                    } },
                     {
                         data: 'id',
                         title: 'İşlemler',
