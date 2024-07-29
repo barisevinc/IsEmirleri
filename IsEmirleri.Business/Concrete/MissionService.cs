@@ -75,5 +75,19 @@ namespace IsEmirleri.Business.Concrete
                    };
 
         }
+
+        public IQueryable<MissionDto> GetTaskBystatus(int statusId)
+        
+        {
+            return _repository.GetAll().Where(m => m.StatusId == statusId)
+                .Select(m => new MissionDto
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    MissionStatusId = m.StatusId,
+                    MissionStatus = m.Status
+                });
+        }
+        
     }
 }

@@ -4,27 +4,43 @@
     <script>
         $(document).ready(function () {
             $.ajax({
-                url: '/Mission/GetAllOnBoard',
+                url: '/Status/GetAll',
                 type: 'POST',
                 success: function (res) {
-                    let groupedData = res.data.reduce((acc, curr) => {
-                        (acc[curr.missionStatus.name] = acc[curr.missionStatus.name] || []).push(curr);
-                        return acc;
-                    }, {});
+                    let groupedData = res.data;
 
-                    for (let status in groupedData) {
-                        let missionItems = groupedData[status].map(m => `${m.title}<br />`).join('');
+                    groupedData.forEach(status => {
                         $("#content").append(`
-                                    <div class="card col-3 me-2">
-                                        <div class="card-header text-center text-dark">${status}</div>
-                                        <div class="card-body">
-                                            ${missionItems}
-                                        </div>
+                                    <div class="card col-3 me-2" id="status-card-${status.id}">
+                                        <div class="card-header text-center text-dark">${status.name} (${status.taskCount})</div>
+                                        <div class="card-body" id="tasks-${status.id}"></div>
                                     </div>
                                 `);
-                    }
+
+                        fillStatusTasks(status.id);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Status/GetAll error:", status, error);
                 }
             });
         });
+
+        function fillStatusTasks(statusId) {
+
+            $.ajax({
+                url: '/Mission/GetTasksByStatus',
+                type: 'POST',
+                data:{ data: JSON.stringify({ ids: [statusId] }) },
+                contentType: 'application/json',
+                success: function (taskRes) {
+                    let taskItems = taskRes.data.map(t => `<div>${t.title}</div>`).join('');
+                    $(`#tasks-${statusId}`).html(taskItems);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Mission/GetTasksByStatus error:", status, error);
+                }
+            });
+        }
     </script>
 }

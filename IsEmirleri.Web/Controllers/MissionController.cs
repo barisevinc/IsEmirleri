@@ -22,11 +22,11 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetAll() {
 
-            return Json(new { data = _missionService.GetAll()});
+            return Json(new { data = _missionService.GetAll() });
 
         }
-        
-        public IActionResult Add(Mission mission) 
+
+        public IActionResult Add(Mission mission)
         {
             try
             {
@@ -37,8 +37,17 @@ namespace IsEmirleri.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        
+
+
+        }
+
+        [HttpPost]
+        public IActionResult GetTasksByStatus([FromBody] List<int> statusIds)
+        {
            
+
+            
+            return Json(new { data = _missionService.GetTaskBystatus(statusIds) });
         }
 
         public IActionResult GetById(int id) { 

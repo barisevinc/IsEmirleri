@@ -13,6 +13,6 @@ namespace IsEmirleri.DTO.MissionDTOs
         public string Title {  get; set; }
         public int MissionStatusId {  get; set; }
         public virtual MissionStatus MissionStatus { get; set; }
-        public virtual ICollection<AppUser> Assignees { get; set; } = [];
+        public virtual ICollection<Mission> Missions { get; set; } = [];
     }
 }
