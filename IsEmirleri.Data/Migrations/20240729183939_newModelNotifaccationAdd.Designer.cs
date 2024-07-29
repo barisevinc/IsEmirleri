@@ -4,6 +4,7 @@ using IsEmirleri.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IsEmirleri.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240729183939_newModelNotifaccationAdd")]
+    partial class newModelNotifaccationAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,30 +138,30 @@ namespace IsEmirleri.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6061),
-                            DateDeleted = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6080),
-                            DateUpdated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6080),
-                            Guid = new Guid("e924e9f8-fa16-4006-bde3-c52da4caa037"),
+                            DateCreated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4057),
+                            DateDeleted = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4075),
+                            DateUpdated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4074),
+                            Guid = new Guid("8b210727-4996-47f1-9b15-b2e9ade4ba77"),
                             IsDeleted = false,
                             Name = "Superadmin"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6085),
-                            DateDeleted = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6086),
-                            DateUpdated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6086),
-                            Guid = new Guid("e57d7bfc-518a-497d-8790-926fb2a8f055"),
+                            DateCreated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4077),
+                            DateDeleted = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4078),
+                            DateUpdated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4078),
+                            Guid = new Guid("d1fb83c3-17c8-43aa-a192-95cc6e697530"),
                             IsDeleted = false,
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6088),
-                            DateDeleted = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6089),
-                            DateUpdated = new DateTime(2024, 7, 29, 22, 1, 57, 810, DateTimeKind.Local).AddTicks(6089),
-                            Guid = new Guid("f14fbdd9-4a6f-4a89-b34d-21e6fbf22294"),
+                            DateCreated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4080),
+                            DateDeleted = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4081),
+                            DateUpdated = new DateTime(2024, 7, 29, 21, 39, 38, 539, DateTimeKind.Local).AddTicks(4081),
+                            Guid = new Guid("5dfdc600-06c2-44ab-a249-6244c0835639"),
                             IsDeleted = false,
                             Name = "User"
                         });
@@ -396,6 +399,9 @@ namespace IsEmirleri.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -426,12 +432,9 @@ namespace IsEmirleri.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Notifications");
                 });
@@ -716,13 +719,9 @@ namespace IsEmirleri.Data.Migrations
 
             modelBuilder.Entity("IsEmirleri.Models.Notification", b =>
                 {
-                    b.HasOne("IsEmirleri.Models.AppUser", "User")
+                    b.HasOne("IsEmirleri.Models.AppUser", null)
                         .WithMany("Notifications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("IsEmirleri.Models.Priority", b =>

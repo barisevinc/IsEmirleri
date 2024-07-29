@@ -25,5 +25,6 @@ namespace IsEmirleri.Models
         public virtual Customer Customer { get; set; }
         public virtual ICollection<Project> Projects { get; set; } = [];
         public virtual ICollection<Mission> Tasks { get; set; } = [];
+        public virtual ICollection<Notification> Notifications { get; set; } = []; 
     }
 }

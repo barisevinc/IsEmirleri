@@ -29,6 +29,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     };
 
 });
+builder.Services.AddHttpClient();
 builder.Services.AddBusinessDI();
 builder.Services.AddRepositoryDI();
 builder.Services.AddBusinessDI_Dinamik();

@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IsEmirleri.Business", "IsEm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IsEmirleri.Models", "IsEmirleri.Models\IsEmirleri.Models.csproj", "{7D6EF64A-2883-4CAF-8C03-9309A55F5AFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.DTO", "IsEmirleri.DTO\IsEmirleri.DTO.csproj", "{1D4DC39E-EE6F-40F3-9032-DFE34D650138}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IsEmirleri.DTO", "IsEmirleri.DTO\IsEmirleri.DTO.csproj", "{1D4DC39E-EE6F-40F3-9032-DFE34D650138}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsEmirleri.Api", "IsEmirleri.Api\IsEmirleri.Api.csproj", "{52958CC7-0171-45E7-946D-7BEB6E580656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{1D4DC39E-EE6F-40F3-9032-DFE34D650138}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D4DC39E-EE6F-40F3-9032-DFE34D650138}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D4DC39E-EE6F-40F3-9032-DFE34D650138}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52958CC7-0171-45E7-946D-7BEB6E580656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52958CC7-0171-45E7-946D-7BEB6E580656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52958CC7-0171-45E7-946D-7BEB6E580656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52958CC7-0171-45E7-946D-7BEB6E580656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

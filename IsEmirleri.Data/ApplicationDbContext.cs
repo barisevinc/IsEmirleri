@@ -29,6 +29,7 @@ namespace IsEmirleri.Data
         public virtual DbSet<TaskFile> TaskFiles { get; set; }
         public virtual DbSet<TaskHistory> TaskHistories { get; set; }
         public virtual DbSet<MissionStatus> TaskStatuses { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
