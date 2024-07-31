@@ -22,13 +22,15 @@ namespace IsEmirleri.Business.Concrete
         private readonly IUserService _userService;
         private readonly IRepository<Project> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly INotificationService notificationService;
 
 
-        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService) : base(repository)
+        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService, INotificationService notificationService) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
+            this.notificationService = notificationService;
         }
 
 
@@ -80,6 +82,7 @@ namespace IsEmirleri.Business.Concrete
 
                 foreach (var user in users)
                 {
+                    notificationService.NewNotificationProject(user.Id);
                     addedProject.Users = users;
                 }
 

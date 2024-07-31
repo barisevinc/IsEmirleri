@@ -16,20 +16,34 @@ namespace IsEmirleri.Web.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
             var client = _httpClientFactory.CreateClient();
-           var response=await client.GetAsync("https://localhost:7207/api/Notification");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var jsonData = await response.Content.ReadAsStringAsync();
-                var value = JsonConvert.DeserializeObject<List<Notification>>(jsonData);
-                return View(value);
+                var response = await client.GetAsync("https://localhost:7207/api/Notification");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonData = await response.Content.ReadAsStringAsync();
+                    var value = JsonConvert.DeserializeObject<List<Notification>>(jsonData);
+                    TempData["success"] = $"api açık";
+
+                    return Ok(value);
+
+                }
+            }
+            catch (Exception ex) {
+                TempData["success"] = $"api kapalı";
+                List<Notification> list = new List<Notification>();
+
+                return BadRequest(list);
 
             }
 
             return View();
+
         }
     }
 }

@@ -11,5 +11,9 @@ namespace IsEmirleri.Business.Abstract
     public interface INotificationService:IService<Notification>
     {
         List<Notification> GetAllNotification();
+        void NotificationRead(int userId);
+        void NewNotificationMission(int userId);
+        void NewNotificationProject(int userId);
+        int NotificationWithNotRead(int userId);
     }
 }
