@@ -49,16 +49,22 @@ namespace IsEmirleri.Business.Concrete
 
         }
 
-        public IQueryable<Mission> GetAllMission(List<int> ids)
+        public List<MissionDto> GetAllMission()
         {
-            return _repository.GetAll().Where(m => ids.Contains(m.StatusId))
-                .Select(m => new Mission
-                {
-                    Id = m.Id,
-                    Title = m.Title,
-                    StatusId= m.StatusId
-                                
-                });
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+
+
+
+
+            return _repository.GetAll().Include(x => x.Assignees).Where(x => x.Project.CustomerId == customerId).Select(x => new MissionDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Description=x.Description,
+                StatusId=x.StatusId,
+                appUsers = x.Assignees.ToList(),
+
+            }).ToList();
         }
 
 

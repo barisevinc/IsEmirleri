@@ -12,7 +12,7 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IMissionService:IService<Mission>
     {
-        IQueryable<Mission> GetAllMission(List<int> ids);
+        List<MissionDto> GetAllMission();
         //IQueryable<MissionDto> GetTaskBystatus(int ids);
        // List<MissionStatusWithMissionDto> GetAllMissionDto();
 

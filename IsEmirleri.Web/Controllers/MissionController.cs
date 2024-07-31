@@ -26,6 +26,14 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
+        public IActionResult GetAllCard()
+        {
+            var item = _missionService.GetAllMission();
+
+            return Json( item);
+
+        }
+
         public IActionResult Add(Mission mission)
         {
             try
@@ -67,13 +75,7 @@ namespace IsEmirleri.Web.Controllers
 
             return View();
         }
-        [HttpGet]
-        public IActionResult GetAllOnBoard(List<int> ids)
-        {
-
-            return Json(new { data = _missionService.GetAllMission(ids) });
-        }
-
+        
         //public IActionResult GetAllMission(List<int> ids)
         //{
         //    return Json(new { data = _missionService.GetAllMission(ids) });

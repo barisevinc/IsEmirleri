@@ -14,37 +14,72 @@
 
                     groupedData.forEach(status => {
                         $("#content").append(`
-                                    <div class="card col-3 me-2" id="status-card-${status.id}">
-                                        <div class="card-header text-center text-dark">${status.name} (${status.taskCount})</div>
-                                        <div class="card-body" id="tasks-${status.id}"></div>
-                                    </div>
-                                `);
+                                            <div class="card col-3 me-2" id="status-card-${status.id}">
+                                                <div class="card-header text-center text-dark">${status.name} (${status.taskCount})</div>
+                                                <div class="card-body" id="tasks-${status.id}">
 
-                        allStatusIds.push(status.id); 
+
+                                                </div>
+                                            </div>
+                                        `);
+
+                        allStatusIds.push(status.id);
 
 
                     });
-                    fillStatusTasks(allStatusIds);
+                    //  fillStatusTasks(allStatusIds);
                 }
-               
+
             });
+            fillCarMision()
         });
 
 
         function fillStatusTasks(statusIds) {
-           
+
             console.log(statusIds);
             $.ajax({
                 url: '/Mission/GetAllOnBoard',
                 type: 'GET',
-                data:{ ids:statusIds},
+                data: { ids: statusIds },
                 success: function (taskRes) {
                     let taskItems = taskRes.data.map(t => `<div>${t.title}</div>`).join('');
                     $(`#tasks-${statusId}`).html(taskItems);
                 }
-               
+
             });
         }
+
+        function fillCarMision() {
+
+
+            $.ajax({
+                url: "/Mission/GetAllCard",
+                success: (data) => {
+
+                    for (var item of data) {
+
+                        $("#tasks-" + item.statusId).append(`
+
+                                          <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">${item.title} #${item.id}</h5>
+                        <p class="card-text">${item.description}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                      </div>
+                    </div>
+                  </div>
+
+
+                                    `)
+
+                    }
+
+                }
+            })
+        }
+
     </script>
 }
 
