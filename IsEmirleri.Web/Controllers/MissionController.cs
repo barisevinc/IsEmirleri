@@ -41,15 +41,13 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult GetTasksByStatus([FromBody] List<int> statusIds)
-        {
-           
+        //[HttpPost]
+        //public IActionResult GetTaskBystatus(int ids)
+        //{
+        //    return Json(new { data = _missionService.GetTaskBystatus(ids) });
+        //}
 
-            
-            return Json(new { data = _missionService.GetTaskBystatus(statusIds) });
-        }
-
+        
         public IActionResult GetById(int id) { 
         
             return Ok(_missionService.GetById(id));
@@ -69,11 +67,16 @@ namespace IsEmirleri.Web.Controllers
 
             return View();
         }
-        [HttpPost]
-        public IActionResult GetAllOnBoard()
+        [HttpGet]
+        public IActionResult GetAllOnBoard(List<int> ids)
         {
 
-            return Json(new { data = _missionService.GetAllMissionDto() });
+            return Json(new { data = _missionService.GetAllMission(ids) });
         }
+
+        //public IActionResult GetAllMission(List<int> ids)
+        //{
+        //    return Json(new { data = _missionService.GetAllMission(ids) });
+        //}
     }
 }

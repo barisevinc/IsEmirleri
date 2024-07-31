@@ -1,4 +1,5 @@
-﻿<div id="content" class="d-flex p-2"></div>
+﻿
+<div id="content" class="d-flex p-2"></div>
 
 @section Scripts {
     <script>
@@ -9,6 +10,8 @@
                 success: function (res) {
                     let groupedData = res.data;
 
+                    var allStatusIds = [];
+
                     groupedData.forEach(status => {
                         $("#content").append(`
                                     <div class="card col-3 me-2" id="status-card-${status.id}">
@@ -17,30 +20,83 @@
                                     </div>
                                 `);
 
-                        fillStatusTasks(status.id);
+                        allStatusIds.push(status.id); 
+
+
                     });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Status/GetAll error:", status, error);
+                    fillStatusTasks(allStatusIds);
                 }
+               
             });
         });
 
-        function fillStatusTasks(statusId) {
 
+        function fillStatusTasks(statusIds) {
+           
+            console.log(statusIds);
             $.ajax({
-                url: '/Mission/GetTasksByStatus',
-                type: 'POST',
-                data:{ data: JSON.stringify({ ids: [statusId] }) },
-                contentType: 'application/json',
+                url: '/Mission/GetAllOnBoard',
+                type: 'GET',
+                data:{ ids:statusIds},
                 success: function (taskRes) {
                     let taskItems = taskRes.data.map(t => `<div>${t.title}</div>`).join('');
                     $(`#tasks-${statusId}`).html(taskItems);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Mission/GetTasksByStatus error:", status, error);
                 }
+               
             });
         }
     </script>
 }
+
+
+@* <div id="content" class="d-flex p-2"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Mission/GetAllOnBoard',
+                type: 'GET',
+                success: function (res) {
+                    let statusHtmlMap = {};
+
+                    // İlk döngüde her status için bir card oluşturuyoruz
+                    for (let item of res.data) {
+                        if (!statusHtmlMap[item.statusId]) {
+                            // Her bir status için kart oluşturma
+                            $("#content").append(`
+                                        <div class="card col-3 me-2" id="status-card-${item.statusId}">
+                                            <div class="card-header text-center">${item.statusName}</div>
+                                            <div class="card-body" id="tasks-${item.statusId}">
+                                            </div>
+                                        </div>
+                                    `);
+
+                            // Oluşturulan kartı kaydediyoruz
+                            statusHtmlMap[item.statusId] = `tasks-${item.statusId}`;
+                        }
+                    }
+
+                    // Sonra her bir mission'ı ilgili kartın body kısmına ekliyoruz
+                    for (let item of res.data) {
+                        let statusId = item.statusId;
+                        let tasksDivId = statusHtmlMap[statusId];
+
+                        for (let mission of item.missions) {
+                            let missionHtml = `
+                                        <div>
+                                            ${mission.title}<br />
+                                        </div>
+                                    `;
+                            $(`#${tasksDivId}`).append(missionHtml);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Mission/GetAllOnBoard error:", status, error);
+                }
+            });
+        });
+    </script>
+}
+ *@

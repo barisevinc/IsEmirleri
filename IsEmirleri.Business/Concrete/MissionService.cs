@@ -30,17 +30,7 @@ namespace IsEmirleri.Business.Concrete
         public IQueryable<Mission> GetAll()
         {
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
-            var item2= base.GetAll()
-                .Include(x => x.Assignees)
-                .Include(x=>x.Status)
-                .Include(x=>x.Priority)
-                .Include(x=>x.Project)
-                .Include(x=>x.TaskHistory)
-                .Include(x=>x.Comments)
-                .Include(x=>x.Files)               
-                .Where(x => x.Project.CustomerId == customerId).AsEnumerable().AsQueryable();
-
-            var item= _repository.GetAll().Include(x=>x.Assignees).Where(x => x.Project.CustomerId == customerId).AsEnumerable().Select(x => new Mission
+            return _repository.GetAll().Include(x=>x.Assignees).Where(x => x.Project.CustomerId == customerId).Select(x => new Mission
             {
                 Id = x.Id,
                 Title = x.Title,
@@ -54,40 +44,50 @@ namespace IsEmirleri.Business.Concrete
                 TaskHistory=x.TaskHistory.ToList(),
                 Files=x.Files.ToList(),
                 Comments =x.Comments.ToList(),
-
-                
-
-            }).AsQueryable();
-            return item2;
+            });
+           
 
         }
 
-        public IQueryable<MissionDto> GetAllMissionDto()
+        public IQueryable<Mission> GetAllMission(List<int> ids)
         {
-            return from mission in _repository.GetAll()
-                   join status in _statusService.GetAll() on mission.StatusId equals status.Id
-                   select new MissionDto
-                   {
-                       Id = mission.Id,
-                       Title = mission.Title,
-                       MissionStatusId = mission.StatusId,
-                       MissionStatus = status
-                   };
-
-        }
-
-        public IQueryable<MissionDto> GetTaskBystatus(int statusId)
-        
-        {
-            return _repository.GetAll().Where(m => m.StatusId == statusId)
-                .Select(m => new MissionDto
+            return _repository.GetAll().Where(m => ids.Contains(m.StatusId))
+                .Select(m => new Mission
                 {
                     Id = m.Id,
                     Title = m.Title,
-                    MissionStatusId = m.StatusId,
-                    MissionStatus = m.Status
+                    StatusId= m.StatusId
+                                
                 });
         }
-        
+
+
+        //public IQueryable<MissionDto> GetAllMissionDto()
+        //{
+        //    return from mission in _repository.GetAll()
+        //           join status in _statusService.GetAll() on mission.StatusId equals status.Id
+        //           select new MissionDto
+        //           {
+        //               Id = mission.Id,
+        //               Title = mission.Title,
+        //               MissionStatusId = mission.StatusId,
+        //               MissionStatus = status
+        //           };
+
+        //}
+
+        //public IQueryable<MissionDto> GetTaskBystatus(int statusId)
+
+        //{
+        //    return _repository.GetAll().Where(m => m.StatusId == statusId)
+        //        .Select(m => new MissionDto
+        //        {
+        //            Id = m.Id,
+        //            Title = m.Title,
+        //            MissionStatusId = m.StatusId,
+        //            MissionStatus = m.Status
+        //        });
+        //}
+
     }
 }
