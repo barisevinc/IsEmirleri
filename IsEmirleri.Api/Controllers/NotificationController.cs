@@ -21,16 +21,17 @@ namespace IsEmirleri.Api.Controllers
         {
 
 
-            return Ok(notificationService.GetAllNotification());
+            return Ok();
         }
 
-        [HttpPut("{id:int}")]
+        [HttpGet("NotificationRead/{id}")]
+
         public IActionResult NotificationRead([FromRoute(Name = "id")] int id) { 
         
 
             notificationService.NotificationRead(id);
 
-            return NoContent();
+            return Ok();
         
         }
 

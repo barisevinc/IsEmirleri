@@ -23,7 +23,7 @@
     <!-- App Css-->
     <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  
+
     <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     @await RenderSectionAsync("Styles", false);
@@ -98,40 +98,38 @@
                         </div>
                     </div>
                     <div class="dropdown d-inline-block">
-                    <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="uil-bell"></i>
-                        <span class="badge bg-danger rounded-pill" id="notificationCount"></span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                         aria-labelledby="page-header-notifications-dropdown">
-                        <div class="p-3">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h5 class="m-0 font-size-16"> Bildirimler </h5>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="#!" class="small"> Mark all as read</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
-                            <div class="simplebar-content" style="padding: 0px;">
-                                <div data-simplebar id="notificationList" style="max-height: 230px;">
+                        <button type="button" onclick="readNotification()" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="uil-bell"></i>
+                            <span class="badge bg-danger rounded-pill" id="notificationCount"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                             aria-labelledby="page-header-notifications-dropdown">
+                            <div class="p-3">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h5 class="m-0 font-size-16"> Bildirimler </h5>
+                                    </div>
+                                    <div class="col-auto">
+                                
+                                    </div>
                                 </div>
                             </div>
-                            <div class="p-2 border-top">
-                                <div class="d-grid">
-                                    <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
-                                        <i class="uil-arrow-circle-right me-1"></i> View More..
-                                    </a>
+                            <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
+                                <div class="simplebar-content" style="padding: 0px;">
+                                    <div data-simplebar id="notificationList" style="max-height: 230px;">
+                                    </div>
                                 </div>
+                                <div class="p-2 border-top">
+                                    <div class="d-grid">
+                                       
+                                    </div>
+                                </div>
+
                             </div>
-                       
-                        </div>
                         </div>
                         @* assets/images/users/avatar-4.jpg *@
-                       @*  /Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor) *@
+                        @*  /Files/UserPhotos/@User.FindFirst(ClaimTypes.Actor) *@
                     </div><div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -239,59 +237,125 @@
 <partial name="_PluginsPartial.cshtml" />
 
 <script>
-    
+
     $(document).ready(() => {
-        getCount();
-        getNotification();
+
+     
+
+
 
     })
 
-    async function getCount() {
-        await fetch("https://localhost:7207/api/Notification/NotificationWithNotRead/3").then((res) => res.json()).then((data) => {
-            $("#notificationCount").text(data);
+    // async function getCount() {
+    //     await fetch("https://localhost:7207/api/Notification/NotificationWithNotRead/3").then((res) => res.json()).then((data) => {
+    //         $("#notificationCount").text(data);
+    //     })
+    // }
+
+
+    function readNotification(){
+        $.ajax({
+            type:"put",
+            url: "/Notification/NotificationRead"
         })
     }
 
+    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7207/SignalRHub").build();
 
-    async function getNotification() {
-        await fetch("https://localhost:7207/api/Notification").then((res)=>res.json()).then((data)=>{
-
-            $("#notificationList").empty();
-            data.map(item=>
-
-                $("#notificationList").append(`
-
-                        <a href="javascript:void(0);" class="text-dark notification-item">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="flex-shrink-0 me-3">
-                                                        <div class="avatar-xs">
-                                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                                                <i class="${item.icon}"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                            <h6 class="mb-1">${item.type}</h6>
-                                                        <div class="font-size-12 text-muted">
-                                                                <p class="mb-1">${item.description}</p>
-                                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                    `)
+    connection.start()
+        .then(() => {
 
 
+            setInterval(() => {
+                connection.invoke("SendNotification", @User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            )
-
+            }, 5000);
 
         })
-            
-    }
-    
- 
+        .catch((err) => {
+            console.error("Error starting SignalR connection:", err);
+        });
+
+    connection.on("NotificationCount", (value) => {
+
+
+        if (value != 0 && value != $("#notificationCount").text()) {
+            toastr.success("Yeni Bir Bildiriminiz Var")
+        }
+
+        $("#notificationCount").text(value);
+    })
+
+    connection.on("NotificationList", (value) => {
+
+        $("#notificationList").empty();
+        value.map(item =>
+
+            $("#notificationList").append(`
+
+                                <a href="javascript:void(0);" class="text-dark notification-item">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <div class="avatar-xs">
+                                                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                                        <i class="${item.icon}"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                    <h6 class="mb-1">${item.type}</h6>
+                                                                <div class="font-size-12 text-muted">
+                                                                        <p class="mb-1">${item.description}</p>
+                                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+
+                            `))
+
+    })
+
+
+    // async function getNotification() {
+    //     await fetch("https://localhost:7207/api/Notification").then((res)=>res.json()).then((data)=>{
+
+    //         $("#notificationList").empty();
+    //         data.map(item=>
+
+    //             $("#notificationList").append(`
+
+    //                     <a href="javascript:void(0);" class="text-dark notification-item">
+    //                                             <div class="d-flex align-items-start">
+    //                                                 <div class="flex-shrink-0 me-3">
+    //                                                     <div class="avatar-xs">
+    //                                                         <span class="avatar-title bg-primary rounded-circle font-size-16">
+    //                                                             <i class="${item.icon}"></i>
+    //                                                         </span>
+    //                                                     </div>
+    //                                                 </div>
+    //                                                 <div class="flex-grow-1">
+    //                                                         <h6 class="mb-1">${item.type}</h6>
+    //                                                     <div class="font-size-12 text-muted">
+    //                                                             <p class="mb-1">${item.description}</p>
+    //                                                         <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+    //                                                     </div>
+    //                                                 </div>
+    //                                             </div>
+    //                                         </a>
+
+    //                 `)
+
+
+
+    //         )
+
+
+    //     })
+
+    // }
+
+
 </script>
 
 @await RenderSectionAsync("Scripts", false);

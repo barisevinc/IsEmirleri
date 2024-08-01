@@ -25,9 +25,9 @@ namespace IsEmirleri.Business.Concrete
             _contextAccessor = contextAccessor;
         }
 
-        public List<Notification> GetAllNotification()
+        public List<Notification> GetAllNotification(int userId)
         {
-            int userId = 3;
+            
           return  _notificationRepository.GetAll(u => u.UserId == userId).OrderByDescending(x=>x.DateCreated).ToList();
 
         }
