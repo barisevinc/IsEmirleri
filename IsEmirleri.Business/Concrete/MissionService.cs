@@ -53,47 +53,21 @@ namespace IsEmirleri.Business.Concrete
         {
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
-
-
-
-            return _repository.GetAll().Include(x => x.Assignees).Where(x => x.Project.CustomerId == customerId).Select(x => new MissionDto
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Description=x.Description,
-                StatusId=x.StatusId,
-                appUsers = x.Assignees.ToList(),
-
-            }).ToList();
+            return _repository.GetAll()
+                .Include(x => x.Assignees)
+                .Where(x => x.Project.CustomerId == customerId)
+                .Select(x => new MissionDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    StatusId = x.StatusId,
+                    Assignees = x.Assignees.ToList(),
+                })
+                .ToList();
         }
 
 
-        //public IQueryable<MissionDto> GetAllMissionDto()
-        //{
-        //    return from mission in _repository.GetAll()
-        //           join status in _statusService.GetAll() on mission.StatusId equals status.Id
-        //           select new MissionDto
-        //           {
-        //               Id = mission.Id,
-        //               Title = mission.Title,
-        //               MissionStatusId = mission.StatusId,
-        //               MissionStatus = status
-        //           };
-
-        //}
-
-        //public IQueryable<MissionDto> GetTaskBystatus(int statusId)
-
-        //{
-        //    return _repository.GetAll().Where(m => m.StatusId == statusId)
-        //        .Select(m => new MissionDto
-        //        {
-        //            Id = m.Id,
-        //            Title = m.Title,
-        //            MissionStatusId = m.StatusId,
-        //            MissionStatus = m.Status
-        //        });
-        //}
 
     }
 }

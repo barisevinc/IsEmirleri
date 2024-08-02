@@ -46,16 +46,8 @@ namespace IsEmirleri.Web.Controllers
                 return BadRequest(ex.Message);
             }
 
-
         }
 
-        //[HttpPost]
-        //public IActionResult GetTaskBystatus(int ids)
-        //{
-        //    return Json(new { data = _missionService.GetTaskBystatus(ids) });
-        //}
-
-        
         public IActionResult GetById(int id) { 
         
             return Ok(_missionService.GetById(id));
@@ -76,9 +68,6 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
         
-        //public IActionResult GetAllMission(List<int> ids)
-        //{
-        //    return Json(new { data = _missionService.GetAllMission(ids) });
-        //}
+        
     }
 }
