@@ -249,23 +249,35 @@
                     for (var item of data) {
                         let emails = "";
                         for (var user of item.assignees) {
-                            emails += user.email + "<br/>";
+                                emails += `<i title="${user.email}" class="uil-user-circle" > </i>`;
                         }
 
                         $("#tasks-" + item.statusId).append(`
                             <div class="col-sm-12">
                                 <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
                                     <div class="card-body">
+                                                <div class="d-flex align-items-start justify-content-between">
                                         <h5 class="card-title">#${item.id} ${item.title}</h5>
-                                        <p class="card-text">${item.description}</p>
-                                        <h6 class="card-text">${emails}</h6>
+                                       
+                                        <div class="email-icons">
+                                            ${emails}
+                                        </div>
                                     </div>
+                                   <p class="card-text">${item.description}</p>
                                 </div>
+                            </div>
                             </div>
                             <style>
                                 .card-clickable:hover {
                                     background-color: #f8f9fa;
                                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                                }
+                                .email-icons {
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                display: flex;
+                                gap: 5px;
                                 }
                             </style>
                         `);
@@ -273,6 +285,8 @@
                 }
             });
         }
+
+           
             function fillProjects() {
                 $.ajax({
                     url: '/Project/GetAll',
