@@ -108,7 +108,7 @@
                     <form id="formMission">
                         <div class="mb-3">
                             <label for="txtTitle" class="form-label">Başlık</label>
-                            <input type="text" class="form-control" id="txtTitle">
+                            <input type="text" class="form-control" id="txtTitle" required>
                         </div>
                         <div class="mb-3">
                             <label for="txtDescription" class="form-label">Açıklama</label>
@@ -197,9 +197,7 @@
                     $("#btnSave").text("Kaydet").off().click(() => {
                         let statusId = $("#hiddenStatusId").val();
 
-                        let data = {
-                            mission: {
-
+                        let mission = {
                                 title: $("#txtTitle").val(),
                                 description: $("#txtDescription").val(),
                                 // fileId: $("#ddlFiles").val(),
@@ -208,15 +206,15 @@
                                 statusId: statusId,
                                 endDate: $("#txtEndDate").val()
 
-                            }
-                        };
+                        }
+                      
                         let selectedUserIds = $("#ddlUsers").val();
 
                         $.ajax({
                             url: '/Mission/Add',
                             type: 'POST',
                             data: {
-                                data: data,
+                                mission: mission,
                                 userIds: selectedUserIds
                             },
                             success: function (res) {

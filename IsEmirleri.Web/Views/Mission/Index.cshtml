@@ -121,8 +121,7 @@
             fillStatuses();
 
             $("#btnSave").text("Kaydet").off().click(()=> {
-                let data = {
-                    mission: {
+                let mission = {
                         
                         title: $("#txtTitle").val(),
                         description: $("#txtDescription").val(),
@@ -133,20 +132,20 @@
                         endDate:$("#txtEndDate").val()
 
                     }
-                };
+               
                 let selectedUserIds = $("#ddlUsers").val();
 
                 $.ajax({
                     url: '/Mission/Add',
                     type: 'POST',
                     data: {
-                        data:data,
+                        mission: mission,
                         userIds:selectedUserIds
                     },
                     success: function (res) {
                         $("#modalAdd").modal("hide");
                         res.project = { name: $("#ddlProjects option:selected").text() };
-                       
+                        res.status = { name: $("#ddlStatuses option:selected").text() };
                         res.priority = { name: $("#ddlPriorities option:selected").text() };
                         DataTable.row.add(res).draw();
                         toastr.success("Görev Başarıyla Oluşturuldu");
