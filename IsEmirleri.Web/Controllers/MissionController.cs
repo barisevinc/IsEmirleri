@@ -43,7 +43,7 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetById(int id) { 
         
-            return Ok(_missionService.GetById(id));
+            return Ok(_missionService.GetByMissionId(id));
         }
 
         public IActionResult Update(Mission mission) { 

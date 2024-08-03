@@ -11,5 +11,6 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface IMissionService:IService<Mission>
     {
+        Mission GetByMissionId(int missionId);
     }
 }
