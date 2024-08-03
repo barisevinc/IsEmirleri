@@ -1,12 +1,101 @@
-﻿<div class="card col-12 p-3">
-    <div class="card-header text-center text-dark">
+﻿
+<html>
+<head>
+   
+    <title>Görev Yönetim Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .card-item {
+            flex-grow: 1;
+            flex-basis: calc(25% - 10px);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .card-item .card-header,
+        .card-item .card-body,
+        .card-item .card-footer {
+            flex-grow: 0;
+        }
+
+        .card-item .card-footer {
+            cursor: pointer;
+            background-color: #e2e6ea;
+            transition: background-color 0.3s;
+            margin-top: auto; 
+        }
+
+        .card-item .card-footer:hover {
+            background-color: #d6d8db;
+        }
+
+        .card-clickable {
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card-clickable:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+       
+    </style>
+   
+</head>
+<body>
+
+<div class="card col-12 p-3" style="background-color: #f8f9fa;">
+    <div class="card-header text-center text-dark" style="background-color: #e9ecef;">
         <h4>Görev Yönetim Sayfası</h4>
     </div>
-    <div id="content" class="d-flex flex-wrap p-2 col-12">
+    <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
         
     </div>
 </div>
-
 
 @section Scripts {
     <script>
@@ -19,30 +108,29 @@
 
                     groupedData.forEach(status => {
                         $("#content").append(`
-            <div class="card col-1 me-2" id="status-card-${status.id}">
-                <div class="card-header text-dark text-center position-relative p-3 border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 d-flex align-items-center">
-                            ${status.name}
-                            <span class="badge bg-secondary ms-2">${status.taskCount}</span>
-                        </h5>
-                        <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
-                            ⋮
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body" id="tasks-${status.id}">
-                </div>
-                        <div class="card-footer btn btn-hover btn-secondary text-start text-dark" id="taskAdd-${status.id}"><i class="bx bx-plus"></i> Görev Ekle
-                </div>
-            </div>
-        `);
-
+                            <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
+                                <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0 d-flex align-items-center">
+                                            ${status.name}
+                                            <span class="badge bg-secondary ms-2">${status.taskCount}</span>
+                                        </h5>
+                                        <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
+                                            ⋮
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="tasks-${status.id}">
+                                </div>
+                                <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
+                                    <i class="bx bx-plus"></i> Görev Ekle
+                                </div>
+                            </div>
+                        `);
                     });
+                    fillCarMision();
                 }
-
             });
-            fillCarMision();
         });
 
         function fillCarMision() {
@@ -56,30 +144,28 @@
                         }
 
                         $("#tasks-" + item.statusId).append(`
-            <div class="col-sm-12">
-                <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                    <div class="card-body">
-                        <h5 class="card-title">#${item.id} ${item.title}</h5>
-                        <p class="card-text">${item.description}</p>
-                        <h6 class="card-text">${emails}</h6>
-                    </div>
-                </div>
-            </div>
-            <style>
-                .card-clickable:hover {
-                    background-color: #f8f9fa;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
-            </style>
-        `);
-
+                            <div class="col-sm-12">
+                                <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">#${item.id} ${item.title}</h5>
+                                        <p class="card-text">${item.description}</p>
+                                        <h6 class="card-text">${emails}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <style>
+                                .card-clickable:hover {
+                                    background-color: #f8f9fa;
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                                }
+                            </style>
+                        `);
                     }
                 }
             });
         }
-        
-
     </script>
 }
 
-
+</body>
+</html>
