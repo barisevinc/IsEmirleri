@@ -40,6 +40,22 @@ namespace IsEmirleri.Web.Controllers
         
            
         }
+        [HttpPost]
+        public IActionResult UpdateDescription(int missionId, string description)
+        {
+
+            var result = _missionService.UpdateMissionDescription(missionId, description);
+            if (result)
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Güncelleme sırasında bir hata oluştu." });
+            }
+
+
+        }
 
         public IActionResult GetById(int id) { 
         

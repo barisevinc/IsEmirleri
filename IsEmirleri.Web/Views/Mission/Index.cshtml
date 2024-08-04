@@ -82,8 +82,18 @@
                         <p><i class="bi bi-link"></i> İlişkili: <a href="/project/index" id="project"></a></p>
                         <button class="btn btn-primary" id="start-timer"><i class="bi bi-play-circle"></i> Süre Başlat</button>
                         <div class="mt-3">
-                            <h6><i class="uil-info-circle"></i> Açıklama</h6>
-                            <p id="description"></p>
+                            <h6>
+                                <i class="uil-info-circle"></i> Açıklama
+                                <i class="uil-comment-alt-edit ms-2" title="Düzenle" id="edit-description"></i>
+                            </h6>
+                            <div id="description-container">
+                                <p id="description"></p>
+                            </div>
+                            <div id="edit-description-container" style="display: none;">
+                                <textarea class="form-control" id="edit-description-text" placeholder="Açıklamayı buraya yazın..."></textarea>
+                                <button type="button" id="save-description" class="btn btn-primary btn-sm">Kaydet</button>
+                                <button type="button" id="close-description" class="btn btn-danger btn-sm">Kapat</button>
+                            </div>
                         </div>
                       
                         <div class="mt-3">
@@ -171,6 +181,9 @@
 
         });
         showMissionDetails = function (missionId, button) {
+            $("#edit-description").off("click");
+            $("#save-description").off("click");
+            $("#close-description").off("click");
             $.ajax({
                 url: `/Mission/GetById/${missionId}`,
                 type: 'POST',
@@ -180,7 +193,7 @@
                     $("#modalDetail").modal("show");
                     $("#taskModalLabel").text(res.title);
                     $("#statuss").text(`Durum: ${res.statusName}`);
-                    $("#description").text(res.description || "Açıklama burada olacak.");
+                    $("#description").text(res.description);
                     $("#project").text(`#${res.projectId} - ${res.projectName}`);
                     $("#created-date").text(`Oluşturuldu: ${formatDate(res.dateCreated)}`);
                     $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
@@ -222,7 +235,44 @@
                     console.error("Görev detayları yüklenirken hata oluştu:", err);
                 }   
             });
+            $("#edit-description").click(function () {
+                $("#description-container").hide();
+                $("#edit-description-container").show();
+                $("#edit-description-text").val($("#description").text().trim());
+            });
+
+            $("#save-description").click(function () {
+                const updatedDescription = $("#edit-description-text").val().trim();
+                if (updatedDescription === "") {
+                    toastr.error('Açıklama boş olamaz. Lütfen bir açıklama girin.');
+                    return; // İşlem yapılmadan çıkış yap
+                }
+                $.ajax({
+                    url: `/Mission/UpdateDescription/${missionId}`,
+                    type: 'POST',
+                    data: { missionId: missionId, description: updatedDescription },
+                    success: function (res) {
+                        if (res.success) {
+                            $("#description").text(updatedDescription);
+                            $("#edit-description-container").hide();
+                            $("#description-container").show();
+                            toastr.success('Açıklama başarıyla güncellendi.');
+
+                        } else {
+                            toastr.error('Açıklama güncellenirken hata oluştu: ' + res.message);
+                        }
+                    },
+                    error: function (err) {
+                        toastr.error('Açıklama güncellenirken bir hata oluştu.', err);
+                    }
+                });
+            });
+            $("#close-description").click(function () {
+                $("#edit-description-container").hide();
+                $("#description-container").show();
+            });
         };
+        
         //tarih
         function formatDate(dateString) {
             if (!dateString) return "";

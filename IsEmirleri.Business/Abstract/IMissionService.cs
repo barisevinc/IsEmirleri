@@ -13,5 +13,7 @@ namespace IsEmirleri.Business.Abstract
     public interface IMissionService:IService<Mission>
     {
         MissionGetByDto GetByMissionId(int missionId);
+        bool UpdateMissionDescription(int missionId, string description);
+
     }
 }
