@@ -1,5 +1,6 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
+using IsEmirleri.DTO.MissionDTO;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -44,15 +45,37 @@ namespace IsEmirleri.Business.Concrete
             });
         }
 
-        public Mission GetByMissionId(int missionId)
+        public MissionGetByDto GetByMissionId(int missionId)
         {
-            return _repository.GetAll().Include(p => p.Assignees)
+            var mission = _repository.GetAll()
+           .Include(p => p.Assignees)
            .Include(p => p.Status)
            .Include(p => p.Priority)
-           .Include(p => p.Project)
            .Include(p => p.Comments)
-           .ThenInclude(c => c.User)
-           .FirstOrDefault(p => p.Id == missionId);
+           .Include(p => p.Project)
+           .ThenInclude(p => p.Users)
+           .Where(p => p.Id == missionId)
+           .Select(p => new MissionGetByDto
+           {
+               Id = p.Id,
+               Title = p.Title,
+               Description = p.Description,
+               StartDate = p.StartDate,
+               EndDate = p.EndDate,
+               DateCreated = p.DateCreated,
+               DateUpdated = p.DateUpdated,
+               StatusName = p.Status.Name,
+               PriorityName = p.Priority.Name,
+               ProjectName = p.Project.Name,
+               ProjectId = p.Project.Id,
+               AssigneeEmails = p.Assignees.Select(a => a.Email).ToList(),
+               EmailNotification = p.EmailNotification,
+               SmsNotification = p.SmsNotification,
+               Comments = p.Comments.ToList()
+           })
+           .FirstOrDefault();
+
+            return mission;
         }
         
     }

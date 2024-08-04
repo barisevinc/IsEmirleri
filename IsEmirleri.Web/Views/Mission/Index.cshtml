@@ -179,21 +179,20 @@
 
                     $("#modalDetail").modal("show");
                     $("#taskModalLabel").text(res.title);
-                    $("#statuss").text(`Durum: ${res.status.name}`);
+                    $("#statuss").text(`Durum: ${res.statusName}`);
                     $("#description").text(res.description || "Açıklama burada olacak.");
-                    $("#project").text(`#${res.project.id} - ${res.project.name}`);
+                    $("#project").text(`#${res.projectId} - ${res.projectName}`);
                     $("#created-date").text(`Oluşturuldu: ${formatDate(res.dateCreated)}`);
                     $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
                     $("#start-date").text(res.startDate ? `Başlangıç Tarihi: ${formatDate(res.startDate)}` : 'Başlangıç Tarihi: Başlamadı');
-                    $("#priority").text(`Öncelik: ${res.priority.name}`);
+                    $("#priority").text(`Öncelik: ${res.priorityName}`);
                     
                     //$("#logged-time").text(`Girilen Süre: ${formatDuration(res.loggedTime)}`);
                      //$("#total-time").text(`Girilen Toplam Süre: ${formatDuration(res.totalTime)}`);
                     let assigneesText = "";
-                    if (res.assignees && res.assignees.length > 0) {
-                        for (var user of res.assignees) {
-                     
-                            assigneesText += user.email + "<br/>";
+                    if (res.assigneeEmails && res.assigneeEmails.length > 0) {
+                        for (var email of res.assigneeEmails) {
+                            assigneesText += email + "<br/>";
                         }
                     } else {
                         assigneesText = "Atanan üye yok";
@@ -204,14 +203,14 @@
                     let commentsText = "";
                     if (res.comments && res.comments.length > 0) {
                         for (var comment of res.comments) {
-                          commentsText += `
-                          <div class="card">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                            <p class="mb-0"><i title="${comment.user.email}" class="uil-user-circle"></i>${comment.description || 'Yorum içeriği yok'}</p>
-                           <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                          </div>
-                          </div>
-                          `;
+                            commentsText += `
+                            <div class="card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <p class="mb-0"><i title="${comment.userId}" class="uil-user-circle"></i>${comment.description || 'Yorum içeriği yok'}</p>
+                                    <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                </div>
+                            </div>
+                            `;
                         }
                     } else {
                         commentsText = "<p>Henüz yorum yapılmamış.</p>";
