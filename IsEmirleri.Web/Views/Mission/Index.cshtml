@@ -209,8 +209,8 @@
                     } else {
                         commentsText = "<p>Henüz yorum yapılmamış.</p>";
                     }
-                    $("#comments").html(commentsText); 
-
+                    $("#comments").html(commentsText);
+                    $("#modalDetail").data('missionId', missionId);
                 },
                 error: function (err) {
                     console.error("Görev detayları yüklenirken hata oluştu:", err);
@@ -242,7 +242,31 @@
         // function formatDuration(duration) {
         //     return duration; // Uygun formatlama ekleyin
         // }
-
+        $("#btnAddComment").click(function () {
+            let missionId = $("#modalDetail").data('missionId'); 
+            let comment = {
+                description: $("#newComment").val(),
+                taskId: missionId,
+            }
+            $.ajax({
+                url: '/Comment/Add',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(comment),
+                success: function (res) {
+                    let commentsText = "";
+                    for (var comment of res.comments) {
+                        commentsText += `<p>${comment.description || 'Yorum içeriği yok'}</p>`;
+                    }
+                    $("#comments").html(commentsText);
+                    $("#newComment").val(""); 
+                },
+                error: function (err) {
+                    console.error("Yorum eklenirken hata oluştu:", err);
+                }
+            });
+        });
         $("#btnAdd").click(function () {
             $("#modalAdd").modal("show");
             $("#deletedRow").hide();

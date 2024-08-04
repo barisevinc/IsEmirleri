@@ -10,5 +10,6 @@ namespace IsEmirleri.Business.Abstract
 {
     public interface ICommentService : IService<Comment>
     {
+        IQueryable<Comment> AddComment(Comment comment);
     }
 }
