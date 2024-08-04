@@ -32,7 +32,7 @@ namespace IsEmirleri.Business.Concrete
         {
             comment.UserId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _repository.Add(comment);
-            return _repository.GetAll(c=>c.TaskId == comment.TaskId);
+            return _repository.GetAll(c=>c.TaskId == comment.TaskId).Include(c => c.User);
         }
     }
 }

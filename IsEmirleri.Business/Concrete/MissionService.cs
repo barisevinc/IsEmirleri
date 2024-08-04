@@ -51,6 +51,7 @@ namespace IsEmirleri.Business.Concrete
            .Include(p => p.Priority)
            .Include(p => p.Project)
            .Include(p => p.Comments)
+           .ThenInclude(c => c.User)
            .FirstOrDefault(p => p.Id == missionId);
         }
         
