@@ -52,6 +52,7 @@ namespace IsEmirleri.Business.Concrete
            .Include(p => p.Status)
            .Include(p => p.Priority)
            .Include(p => p.Comments)
+           .ThenInclude(p => p.User)
            .Include(p => p.Project)
            .ThenInclude(p => p.Users)
            .Where(p => p.Id == missionId)
