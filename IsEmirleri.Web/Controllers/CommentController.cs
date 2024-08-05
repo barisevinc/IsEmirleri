@@ -25,7 +25,7 @@ namespace IsEmirleri.Web.Controllers
         {
             if (comment == null)
             {
-                return BadRequest("Comment is null");
+                return BadRequest("Yorum satırı boş lütfen yorum yazınız.");
             }
             return Ok(_commentService.AddComment(comment));
         }
