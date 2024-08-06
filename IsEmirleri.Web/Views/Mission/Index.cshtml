@@ -1,10 +1,13 @@
 ﻿<div class="row">
     <div class="col-12">
+        
         <div class="card">
             <div class="card-header bg-soft-success text-dark text-center d-flex">
+                <div><a class="btn btn-dark btn-sm" asp-controller="Mission" asp-action="Board"><i class="uil-clapper-board"></i><br />Board</a></div>
                 <div class="col-10 text-center fs-3 text-dark"><i class="dripicons-pencil"></i>   Görevler</div>
                 <div class="col-2 fs-3">
                     <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
+                    
                 </div>
             </div>
             <div class="card-body">
@@ -165,6 +168,7 @@
         $(document).ready(() => {
             DataTable = $("#tblMission").DataTable({
                 ajax: '/Mission/GetAll',
+                dataSrc: '',
                 columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'title', title: 'Başlık' },
@@ -394,30 +398,32 @@
             fillProjects();
             fillStatuses();
 
-            $("#btnSave").text("Kaydet").off().click(() => {
-                let data = {
-                    mission: {
-
+            $("#btnSave").text("Kaydet").off().click(()=> {
+                let mission = {
+                        
                         title: $("#txtTitle").val(),
                         description: $("#txtDescription").val(),
                         // fileId: $("#ddlFiles").val(),
                         priorityId: $("#ddlPriorities").val(),
                         statusId: $("#ddlStatuses").val(),
                         projectId: $("#ddlProjects").val(),
-                        userId: $("#ddlUsers").val(),
-                        endDate: $("#txtEndDate").val()
+                        endDate:$("#txtEndDate").val()
 
                     }
-                };
+               
+                let selectedUserIds = $("#ddlUsers").val();
 
                 $.ajax({
                     url: '/Mission/Add',
                     type: 'POST',
-                    data: data,
+                    data: {
+                        mission: mission,
+                        userIds:selectedUserIds
+                    },
                     success: function (res) {
                         $("#modalAdd").modal("hide");
                         res.project = { name: $("#ddlProjects option:selected").text() };
-
+                        res.status = { name: $("#ddlStatuses option:selected").text() };
                         res.priority = { name: $("#ddlPriorities option:selected").text() };
                         DataTable.row.add(res).draw();
                         toastr.success("Görev Başarıyla Oluşturuldu");

@@ -1,4 +1,5 @@
 ﻿using IsEmirleri.Business.Abstract;
+using IsEmirleri.Business.Concrete;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,23 +23,22 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetAll() {
 
-            return Json(new { data = _missionService.GetAll()});
+            return Json(new { data = _missionService.GetAll() });
 
         }
 
-        public IActionResult Add(Mission mission) 
+        public IActionResult GetAllCard()
         {
-            try
-            {
+            var item = _missionService.GetAllMission();
 
-                return Ok(_missionService.Add(mission));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        
-           
+            return Json( item);
+
+        }
+
+        [HttpPost]
+        public IActionResult Add(Mission mission, List<int> userIds)
+        {
+            return Ok(_missionService.AddMission(mission, userIds));
         }
         [HttpPost]
         public IActionResult UpdateDescription(int missionId, string description)
@@ -71,5 +71,12 @@ namespace IsEmirleri.Web.Controllers
         
             return Ok(_missionService.Delete(id));
         }
+
+        public IActionResult Board() {
+
+            return View();
+        }
+        
+        
     }
 }

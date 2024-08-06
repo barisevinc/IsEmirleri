@@ -72,6 +72,11 @@ namespace IsEmirleri.Web.Controllers
             return Ok(_status.GetById(id));
         }
 
+        [HttpGet]
+        public IActionResult GetAllLog()
+        {
+            return Json(new { data = _status.GetAllLoginStatus() });
+        }
 
     }
 }
