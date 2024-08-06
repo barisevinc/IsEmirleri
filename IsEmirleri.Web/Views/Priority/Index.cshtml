@@ -113,7 +113,7 @@
                 columns: [
                     { data: 'id', title: 'ID' },
                     { data: 'name', title: 'Öncelik Adı' },
-                    //{ data: 'taskCount', title: 'Bağlı Görev Sayısı' },
+                    { data: 'taskCount', title: 'Bağlı Görev Sayısı' },
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<a onclick="deletePriority(${data},this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updatePriority(${data},this)" class="btn uil-pen fs-6 btn-success"></a>`;

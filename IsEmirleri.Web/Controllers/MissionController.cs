@@ -22,11 +22,19 @@ namespace IsEmirleri.Web.Controllers
 
         public IActionResult GetAll() {
 
-            return Json(new { data = _missionService.GetAll()});
+            return Json(new { data = _missionService.GetAll() });
 
         }
 
-        public IActionResult Add(Mission mission) 
+        public IActionResult GetAllCard()
+        {
+            var item = _missionService.GetAllMission();
+
+            return Json( item);
+
+        }
+
+        public IActionResult Add(Mission mission)
         {
             try
             {
@@ -37,8 +45,8 @@ namespace IsEmirleri.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        
-           
+
+
         }
         [HttpPost]
         public IActionResult UpdateDescription(int missionId, string description)
@@ -57,6 +65,13 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
+        //[HttpPost]
+        //public IActionResult GetTaskBystatus(int ids)
+        //{
+        //    return Json(new { data = _missionService.GetTaskBystatus(ids) });
+        //}
+
+        
         public IActionResult GetById(int id) { 
         
             return Ok(_missionService.GetByMissionId(id));
@@ -71,5 +86,15 @@ namespace IsEmirleri.Web.Controllers
         
             return Ok(_missionService.Delete(id));
         }
+
+        public IActionResult Board() {
+
+            return View();
+        }
+        
+        //public IActionResult GetAllMission(List<int> ids)
+        //{
+        //    return Json(new { data = _missionService.GetAllMission(ids) });
+        //}
     }
 }

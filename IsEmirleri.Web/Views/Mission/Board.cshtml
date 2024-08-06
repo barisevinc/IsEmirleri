@@ -1,0 +1,137 @@
+﻿
+<div id="content" class="d-flex p-2"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Status/GetAll',
+                type: 'POST',
+                success: function (res) {
+                    let groupedData = res.data;
+
+                    var allStatusIds = [];
+
+                    groupedData.forEach(status => {
+                        $("#content").append(`
+                                            <div class="card col-3 me-2" id="status-card-${status.id}">
+                                                <div class="card-header text-center text-dark">${status.name} (${status.taskCount})</div>
+                                                <div class="card-body" id="tasks-${status.id}">
+
+
+                                                </div>
+                                            </div>
+                                        `);
+
+                        allStatusIds.push(status.id);
+
+
+                    });
+                    //  fillStatusTasks(allStatusIds);
+                }
+
+            });
+            fillCarMision()
+        });
+
+
+        function fillStatusTasks(statusIds) {
+
+            console.log(statusIds);
+            $.ajax({
+                url: '/Mission/GetAllOnBoard',
+                type: 'GET',
+                data: { ids: statusIds },
+                success: function (taskRes) {
+                    let taskItems = taskRes.data.map(t => `<div>${t.title}</div>`).join('');
+                    $(`#tasks-${statusId}`).html(taskItems);
+                }
+
+            });
+        }
+
+        function fillCarMision() {
+
+
+            $.ajax({
+                url: "/Mission/GetAllCard",
+                success: (data) => {
+
+                    for (var item of data) {
+
+                        $("#tasks-" + item.statusId).append(`
+
+                                          <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">${item.title} #${item.id}</h5>
+                        <p class="card-text">${item.description}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                      </div>
+                    </div>
+                  </div>
+
+
+                                    `)
+
+                    }
+
+                }
+            })
+        }
+
+    </script>
+}
+
+
+@* <div id="content" class="d-flex p-2"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Mission/GetAllOnBoard',
+                type: 'GET',
+                success: function (res) {
+                    let statusHtmlMap = {};
+
+                    // İlk döngüde her status için bir card oluşturuyoruz
+                    for (let item of res.data) {
+                        if (!statusHtmlMap[item.statusId]) {
+                            // Her bir status için kart oluşturma
+                            $("#content").append(`
+                                        <div class="card col-3 me-2" id="status-card-${item.statusId}">
+                                            <div class="card-header text-center">${item.statusName}</div>
+                                            <div class="card-body" id="tasks-${item.statusId}">
+                                            </div>
+                                        </div>
+                                    `);
+
+                            // Oluşturulan kartı kaydediyoruz
+                            statusHtmlMap[item.statusId] = `tasks-${item.statusId}`;
+                        }
+                    }
+
+                    // Sonra her bir mission'ı ilgili kartın body kısmına ekliyoruz
+                    for (let item of res.data) {
+                        let statusId = item.statusId;
+                        let tasksDivId = statusHtmlMap[statusId];
+
+                        for (let mission of item.missions) {
+                            let missionHtml = `
+                                        <div>
+                                            ${mission.title}<br />
+                                        </div>
+                                    `;
+                            $(`#${tasksDivId}`).append(missionHtml);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Mission/GetAllOnBoard error:", status, error);
+                }
+            });
+        });
+    </script>
+}
+ *@
