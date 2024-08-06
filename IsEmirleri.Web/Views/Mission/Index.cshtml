@@ -1,4 +1,4 @@
-﻿﻿<div class="row">
+﻿<div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-soft-success text-dark text-center d-flex">
@@ -26,37 +26,37 @@
                 <form id="formMission">
                     <div class="mb-3">
                         <label for="txtTitle" class="form-label">Başlık</label>
-                        <input type="text" class="form-control" id="txtTitle" >
+                        <input type="text" class="form-control" id="txtTitle">
                     </div>
                     <div class="mb-3">
                         <label for="txtDescription" class="form-label">Açıklama</label>
-                        <textarea class="form-control" id="txtDescription" ></textarea>
+                        <textarea class="form-control" id="txtDescription"></textarea>
                     </div>
                     @* <div class="mb-3">
-                        <label for="ddlFiles" class="form-label">Files</label>
-                        <select class="form-select" id="ddlFiles" ></select>
+                    <label for="ddlFiles" class="form-label">Files</label>
+                    <select class="form-select" id="ddlFiles" ></select>
                     </div> *@
                     <div class="mb-3">
                         <label for="ddlPriorities" class="form-label">Öncelik</label>
-                        <select class="form-select" id="ddlPriorities" ></select>
+                        <select class="form-select" id="ddlPriorities"></select>
                     </div>
                     <div class="mb-3">
                         <label for="ddlStatuses" class="form-label">Durum</label>
-                        <select class="form-select" id="ddlStatuses" ></select>
+                        <select class="form-select" id="ddlStatuses"></select>
                     </div>
                     <div class="mb-3">
                         <label for="ddlProjects" class="form-label">Görevin Ait Olduğu Proje</label>
-                        <select class="form-select" id="ddlProjects" ></select>
+                        <select class="form-select" id="ddlProjects"></select>
                     </div>
                     <div class="mb-3">
                         <label for="ddlUsers" class="form-label">Kullanıcılar</label>
-                        <select class="form-select" id="ddlUsers"  multiple></select>
+                        <select class="form-select" id="ddlUsers" multiple></select>
                     </div>
                     <div class="mb-3">
                         <label for="txtEndDate" class="form-label">Görevin Bitmesi Gereken Tarihi</label>
-                        <input type="date" class="form-control" id="txtEndDate" >
+                        <input type="date" class="form-control" id="txtEndDate">
                     </div>
-                    
+
                 </form>
 
             </div>
@@ -66,6 +66,96 @@
                 </button>
                 <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8 left-panel">
+                        <p><i class="bi bi-link"></i> İlişkili: <a href="/project/index" id="project"></a></p>
+                        <button class="btn btn-primary" id="start-timer"><i class="bi bi-play-circle"></i> Süre Başlat</button>
+                        <div class="mt-3">
+                            <h6>
+                                <i class="uil-info-circle"></i> Açıklama
+                                <i class="uil-comment-alt-edit ms-2" title="Düzenle" id="edit-description"></i>
+                            </h6>
+                            <div id="description-container">
+                                <p id="description"></p>
+                            </div>
+                            <div id="edit-description-container" style="display: none;">
+                                <textarea class="form-control" id="edit-description-text" placeholder="Açıklamayı buraya yazın..."></textarea>
+                                <button type="button" id="save-description" class="btn btn-primary btn-sm">Kaydet</button>
+                                <button type="button" id="close-description" class="btn btn-danger btn-sm">Kapat</button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h6><i class="bx bx-chat"></i> Yorumlar</h6>
+                                <p id="comments" ></p>
+                            <textarea class="form-control" id="newComment" placeholder="Yorum Yazınız" required></textarea>
+                            <div class="card border border-primary">
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-primary btn-sm " id="btnAddComment" >Yorum Ekle</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 right-panel">
+                        <div class="border-start ps-3">
+                            <h6><i class="bi bi-info-square"></i> Görev Bilgisi</h6>
+                            <p id="created-date">
+                                Oluşturuldu:
+                            </p>
+                            <p class="uil-clipboard-notes" id="statuss"> Durum</p>
+                            <p class="uil-calendar-alt" id="start-date"> Başlangıç Tarihi: </p>
+                            <p class="uil-calendar-slash" id="end-date">
+                               Bitiş Tarihi:
+                            </p>
+                            <p class="mdi mdi-priority-high" id="priority">Öncelik: </p>
+                            <p class="mdi mdi-timer-outline" id="logged-time">
+                                Girilen Süre:
+                            </p>
+                            <p class="mdi mdi-timer-off-outline" id="total-time">
+                                Girilen Toplam Süre:
+                            </p>
+                            <p id="emailNotification">
+                                <i class="uil-fast-mail"></i> E-posta Bildirimi: <span id="emailNotificationIcon"></span>
+                            </p>
+                            <p id="smsNotification">
+                                <i class="uil-calling"></i> SMS Bildirimi: <span id="smsNotificationIcon"></span>
+                            </p>
+
+                            <h6>
+                                <i class="uil-users-alt"></i> Atanan Üyeler
+                            </h6>
+                            <p id="assigned-users"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <h5 class="font-size-14 mb-3">Reviews : </h5>
+    <div class="border p-4 rounded">
+        <div class="border-bottom pb-3">
+            <p class="float-sm-end text-muted font-size-13">12 July, 2020</p>
+            <div class="badge bg-success mb-2"><i class="mdi mdi-star"></i> 4.1</div>
+            <p class="text-muted mb-4">It will be as simple as in fact, it will be Occidental. It will seem like simplified</p>
+            <div class="d-flex align-items-start">
+                <div class="flex-grow-1">
+                    <h5 class="font-size-15 mb-0">Samuel</h5>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -83,20 +173,216 @@
                     { data: 'status.name', title: 'Durum' },
                     { data: 'priority.name', title: 'Öncelik' },
                     {
+                        data: 'assignees', title: 'Görev Sahibi', render: (data) => {
+                            let assignees = "";
+                            for (var item of data) {
+                                assignees += item.email + "<br/>"
+                            }
+                            return assignees;
+                        }
+                    },
+                    {
                         data: 'id',
                         title: 'İşlemler',
-                        orderable:false,
-                        render: (data) => {    
+                        orderable: false,
+                        render: (data) => {
 
-                                return `
-                                <a href="Mission/GetById/${data}" title="Kullanıcıları Görüntüle" class="btn uil-users-alt fs-6 btn-info"></a>`
+                            return `
+                                    <button onclick="showMissionDetails(${data},this)" class="btn uil-eye fs-6 btn-info" ></button > `;
                         }
                     }
                 ],
             });
-
         });
+        showMissionDetails = function (missionId, button) {
+            $("#edit-description").off("click");
+            $("#save-description").off("click");
+            $("#close-description").off("click");
+            $.ajax({
+                url: `/Mission/GetById/${missionId}`,
+                type: 'POST',
+                data: { id: missionId },
+                success: function (res) {
 
+                    $("#modalDetail").modal("show");
+                    $("#taskModalLabel").text(res.title);
+                    $("#statuss").text(`Durum: ${res.statusName}`);
+                    $("#description").text(res.description);
+                    $("#project").text(`#${res.projectId} - ${res.projectName}`);
+                    $("#created-date").text(`Oluşturuldu: ${formatDate(res.dateCreated)}`);
+                    $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
+                    $("#start-date").text(res.startDate ? `Başlangıç Tarihi: ${formatDate(res.startDate)}` : 'Başlangıç Tarihi: Başlamadı');
+                    $("#priority").text(`Öncelik: ${res.priorityName}`);
+                    
+                    //$("#logged-time").text(`Girilen Süre: ${formatDuration(res.loggedTime)}`);
+                     //$("#total-time").text(`Girilen Toplam Süre: ${formatDuration(res.totalTime)}`);
+                    let assigneesText = "";
+                    if (res.assigneeEmails && res.assigneeEmails.length > 0) {
+                        for (var email of res.assigneeEmails) {
+                            assigneesText += email + "<br/>";
+                        }
+                    } else {
+                        assigneesText = "Atanan üye yok";
+                    }
+                    $("#assigned-users").html(assigneesText); // .text yerine .html kullanıldı
+                    $("#emailNotificationIcon").html(res.emailNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
+                    $("#smsNotificationIcon").html(res.smsNotification ? '<i class="class=uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
+                    let commentsText = "";
+                    if (res.comments && res.comments.length > 0) {
+                        for (var comment of res.comments) {
+                            commentsText += `
+                                    <div class="mt-4">
+                                       <div>
+                                          <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                       </div>
+                                    <div class="border p-4 rounded">
+                                      <div class="border-bottom pb-3">     
+                                        <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                        <div class="d-flex align-items-start">
+                                          <div class="flex-grow-1 d-flex justify-content-between">
+                                            <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                            <div class="text-end">
+                                              <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                       </div>
+                                      </div>
+                                      </div>
+                                      <style>
+                                            .comment-description {
+                                      word-break: break-word;
+                                      overflow-wrap: break-word;
+                                      white-space: pre-wrap;
+                                      }
+                                      </style>
+                            `;
+                        }
+                    } else {
+                        commentsText = "<p>Henüz yorum yapılmamış.</p>";
+                    }
+                    $("#comments").html(commentsText);
+                    $("#modalDetail").data('missionId', missionId);
+                },
+                error: function (err) {
+                    console.error("Görev detayları yüklenirken hata oluştu:", err);
+                }   
+            });
+            $("#edit-description").click(function () {
+                $("#description-container").hide();
+                $("#edit-description-container").show();
+                $("#edit-description-text").val($("#description").text().trim());
+            });
+
+            $("#save-description").click(function () {
+                const updatedDescription = $("#edit-description-text").val().trim();
+                if (updatedDescription === "") {
+                    toastr.error('Açıklama boş olamaz. Lütfen bir açıklama girin.');
+                    return; // İşlem yapılmadan çıkış yap
+                }
+                $.ajax({
+                    url: `/Mission/UpdateDescription/${missionId}`,
+                    type: 'POST',
+                    data: { missionId: missionId, description: updatedDescription },
+                    success: function (res) {
+                        if (res.success) {
+                            $("#description").text(updatedDescription);
+                            $("#edit-description-container").hide();
+                            $("#description-container").show();
+                            toastr.success('Açıklama başarıyla güncellendi.');
+
+                        } else {
+                            toastr.error('Açıklama güncellenirken hata oluştu: ' + res.message);
+                        }
+                    },
+                    error: function (err) {
+                        toastr.error('Açıklama güncellenirken bir hata oluştu.', err);
+                    }
+                });
+            });
+            $("#close-description").click(function () {
+                $("#edit-description-container").hide();
+                $("#description-container").show();
+            });
+        };
+        
+        //tarih
+        function formatDate(dateString) {
+            if (!dateString) return "";
+            let date = new Date(dateString);
+            return date.toLocaleString('tr-TR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+         //saatisz
+        // function formatDate(dateString) {
+        //     if (!dateString) return "";
+        //     let date = new Date(dateString);
+        //     return date.toLocaleDateString();
+        // }
+
+
+        //sonra bakılcak
+        // function formatDuration(duration) {
+        //     return duration; // Uygun formatlama ekleyin
+        // }
+        $("#btnAddComment").click(function () {
+            let missionId = $("#modalDetail").data('missionId'); 
+            let comment = {
+                description: $("#newComment").val(),
+                taskId: missionId,
+            }
+            $.ajax({
+                url: '/Comment/Add',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(comment),
+                success: function (res) {
+                    $("#newComment").val("");
+                    let commentsText = "";
+                        for (var comment of res.comments) {
+                            commentsText += `
+                                   <div class="mt-4">
+                                     <div>
+                                        <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                     </div>
+                                        <div class="border p-4 rounded">
+                                          <div class="border-bottom pb-3">
+                                            <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                              <div class="d-flex align-items-start">
+                                                <div class="flex-grow-1 d-flex justify-content-between">
+                                                  <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                  <div class="text-end">
+                                                   <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <style>
+                                        .comment-description {
+                                    word-break: break-word; 
+                                    overflow-wrap: break-word; 
+                                    white-space: pre-wrap; 
+                                    }
+                                    </style>
+                                    `;
+                        }
+                        $("#comments").html(commentsText);
+                    
+                },
+                error: function (err) {
+                    console.error("Yorum eklenirken hata oluştu:", err);
+                }
+            });
+        });
         $("#btnAdd").click(function () {
             $("#modalAdd").modal("show");
             $("#deletedRow").hide();
@@ -108,10 +394,10 @@
             fillProjects();
             fillStatuses();
 
-            $("#btnSave").text("Kaydet").off().click(()=> {
+            $("#btnSave").text("Kaydet").off().click(() => {
                 let data = {
                     mission: {
-                        
+
                         title: $("#txtTitle").val(),
                         description: $("#txtDescription").val(),
                         // fileId: $("#ddlFiles").val(),
@@ -119,7 +405,7 @@
                         statusId: $("#ddlStatuses").val(),
                         projectId: $("#ddlProjects").val(),
                         userId: $("#ddlUsers").val(),
-                        endDate:$("#txtEndDate").val()
+                        endDate: $("#txtEndDate").val()
 
                     }
                 };
@@ -131,7 +417,7 @@
                     success: function (res) {
                         $("#modalAdd").modal("hide");
                         res.project = { name: $("#ddlProjects option:selected").text() };
-                       
+
                         res.priority = { name: $("#ddlPriorities option:selected").text() };
                         DataTable.row.add(res).draw();
                         toastr.success("Görev Başarıyla Oluşturuldu");
@@ -141,14 +427,23 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Hata',
-                            text:res
+                            text: res
 
                         });
                     }
                 });
             });
         });
-
+        function formatCommentDate(dateString) {
+            if (!dateString) return "";
+            let date = new Date(dateString);
+            return date.toLocaleString('tr-TR', {
+                day: 'numeric',
+                month: 'long',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
         function fillStatuses() {
             $.ajax({
                 url: '/Status/GetAll',
@@ -162,7 +457,7 @@
                     $("#ddlStatuses").select2({
                         dropdownParent: $('#modalAdd'),
                         width: "100%"
-                        
+
 
                     });
 
@@ -183,7 +478,7 @@
                     $("#ddlProjects").select2({
                         dropdownParent: $('#modalAdd'),
                         width: "100%"
-                        
+
 
                     });
 
@@ -239,11 +534,12 @@
                     $("#ddlPriorities").select2({
                         dropdownParent: $('#modalAdd'),
                         width: "100%"
-                      
+
                     });
                 }
             });
         }
+
     </script>
 
 }
