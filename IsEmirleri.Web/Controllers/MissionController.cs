@@ -113,10 +113,7 @@ namespace IsEmirleri.Web.Controllers
 
             return View();
         }
-        
-        //public IActionResult GetAllMission(List<int> ids)
-        //{
-        //    return Json(new { data = _missionService.GetAllMission(ids) });
-        //}
+
+
     }
 }
