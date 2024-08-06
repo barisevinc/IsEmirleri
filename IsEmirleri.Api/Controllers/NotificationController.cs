@@ -53,7 +53,7 @@ namespace IsEmirleri.Api.Controllers
         [HttpGet("NotificationWithNotRead/{id}")]
         public IActionResult NotificationWithNotRead( int id)
         {
-            ;
+            
             return Ok(notificationService.NotificationWithNotRead(id));
 
         }

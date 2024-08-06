@@ -2,17 +2,22 @@
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace IsEmirleri.Web.Controllers
 {
     [Authorize]
     public class MissionController : Controller
     {
+        private readonly IHttpClientFactory httpClientFactory;
         private readonly IMissionService _missionService;
 
-        public MissionController(IMissionService missionService)
+
+        public MissionController(IMissionService missionService, IHttpClientFactory httpClientFactory = null)
         {
             _missionService = missionService;
+            this.httpClientFactory = httpClientFactory;
         }
 
         public IActionResult Index()
@@ -20,7 +25,24 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
 
-        public IActionResult GetAll() {
+        public async Task<IActionResult> GetAll() {
+
+
+            try
+            {
+                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var client = httpClientFactory.CreateClient();
+                var response = await client.GetAsync($"https://localhost:7207/api/Mission/" + id);
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonData = await response.Content.ReadAsStringAsync();
+                    var values = JsonConvert.DeserializeObject<List<Mission>>(jsonData);
+                    return Json(new { data = values });
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest("apiKapalı");
+            }
 
             return Json(new { data = _missionService.GetAll() });
 
