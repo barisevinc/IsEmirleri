@@ -26,34 +26,9 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetAll() {
+        public IActionResult GetAll() {
 
-
-            try
-            {
-                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                var client = httpClientFactory.CreateClient();
-                var response = await client.GetAsync($"https://localhost:7207/api/Mission/" + id);
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonData = await response.Content.ReadAsStringAsync();
-                    var values = JsonConvert.DeserializeObject<List<Mission>>(jsonData);
-                    return Json(new { data = values });
-                }
-            }
-            catch (Exception ex) {
-                return BadRequest("apiKapalı");
-            }
-
-            return Json(new { data = _missionService.GetAll() });
-
-        }
-
-        public IActionResult GetAllCard()
-        {
-            var item = _missionService.GetAllMission();
-
-            return Json( item);
+            return Json(new { data = _missionService.GetAll()});
 
         }
 

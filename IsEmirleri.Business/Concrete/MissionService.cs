@@ -33,7 +33,7 @@ namespace IsEmirleri.Business.Concrete
         public Mission AddMission(Mission mission, List<int> userIds)
         {
             var addedMission = _repository.Add(mission);
-           
+
 
             if (userIds != null && userIds.Count > 0)
             {
@@ -49,26 +49,49 @@ namespace IsEmirleri.Business.Concrete
 
             return addedMission;
         }
-
         public IQueryable<Mission> GetAll()
         {
-            return _repository.GetAll().Include(x => x.Project).Include(x=>x.Priority).Select(x => new Mission
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            return _repository.GetAll().Include(x => x.Assignees).Where(x => x.Project.CustomerId == customerId).Select(x => new Mission
             {
-              Id = x.Id,
-              Title= x.Title,
-              Description = x.Description,
-              StartDate = x.StartDate, 
-              EndDate = x.EndDate,
-              Project = x.Project,
-              Priority= x.Priority,
-              Status= x.Status
-
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                Project = x.Project,
+                Priority = x.Priority,
+                Status = x.Status,
+                Assignees = x.Assignees.ToList(),
+                TaskHistory = x.TaskHistory.ToList(),
+                Files = x.Files.ToList(),
+                Comments = x.Comments.ToList(),
             });
+
+
         }
 
-       
+
 
         public List<MissionDto> GetAllMission()
+        {
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+
+            return _repository.GetAll()
+                .Include(x => x.Assignees)
+                .Where(x => x.Project.CustomerId == customerId)
+                .Select(x => new MissionDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    StatusId = x.StatusId,
+                    Assignees = x.Assignees.ToList(),
+                })
+                .ToList();
+        }
+
+        public MissionGetByDto GetByMissionId(int missionId)
         {
             var mission = _repository.GetAll()
            .Include(p => p.Assignees)
@@ -99,6 +122,21 @@ namespace IsEmirleri.Business.Concrete
 
            })
            .FirstOrDefault();
+
+            return mission;
+        }
+
+        public bool UpdateMissionDescription(int missionId, string description)
+        {
+            var mission = _repository.GetAll().FirstOrDefault(m => m.Id == missionId);
+            if (mission != null)
+            {
+                mission.Description = description;
+                _repository.Update(mission);
+                return true;
+            }
+            return false;
+        }
 
 
     }
