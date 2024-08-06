@@ -3,22 +3,17 @@ using IsEmirleri.Business.Concrete;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Security.Claims;
 
 namespace IsEmirleri.Web.Controllers
 {
     [Authorize]
     public class MissionController : Controller
     {
-        private readonly IHttpClientFactory httpClientFactory;
         private readonly IMissionService _missionService;
 
-
-        public MissionController(IMissionService missionService, IHttpClientFactory httpClientFactory = null)
+        public MissionController(IMissionService missionService)
         {
             _missionService = missionService;
-            this.httpClientFactory = httpClientFactory;
         }
 
         public IActionResult Index()
@@ -26,9 +21,18 @@ namespace IsEmirleri.Web.Controllers
             return View();
         }
 
-        public IActionResult GetAll() {
+        public IActionResult GetAll()
+        {
 
-            return Json(new { data = _missionService.GetAll()});
+            return Json(new { data = _missionService.GetAll() });
+
+        }
+
+        public IActionResult GetAllCard()
+        {
+            var item = _missionService.GetAllMission();
+
+            return Json(item);
 
         }
 
@@ -54,22 +58,26 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
-        public IActionResult GetById(int id) { 
-        
+        public IActionResult GetById(int id)
+        {
+
             return Ok(_missionService.GetByMissionId(id));
         }
 
-        public IActionResult Update(Mission mission) { 
+        public IActionResult Update(Mission mission)
+        {
 
             return Ok(_missionService.Update(mission));
         }
 
-        public IActionResult Delete(int id) { 
-        
+        public IActionResult Delete(int id)
+        {
+
             return Ok(_missionService.Delete(id));
         }
 
-        public IActionResult Board() {
+        public IActionResult Board()
+        {
 
             return View();
         }

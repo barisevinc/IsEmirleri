@@ -1,8 +1,8 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
-using IsEmirleri.DTO.MissionDTO;
 using IsEmirleri.DTO.MissionDTOs;
+using IsEmirleri.DTO.MissionDTO;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +28,7 @@ namespace IsEmirleri.Business.Concrete
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _statusService = statusService;
+            _userService = userService;
         }
 
         public Mission AddMission(Mission mission, List<int> userIds)
@@ -49,6 +50,7 @@ namespace IsEmirleri.Business.Concrete
 
             return addedMission;
         }
+
         public IQueryable<Mission> GetAll()
         {
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
@@ -70,7 +72,6 @@ namespace IsEmirleri.Business.Concrete
 
 
         }
-
 
 
         public List<MissionDto> GetAllMission()
@@ -137,7 +138,5 @@ namespace IsEmirleri.Business.Concrete
             }
             return false;
         }
-
-
     }
 }
