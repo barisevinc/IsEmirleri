@@ -73,6 +73,7 @@ namespace IsEmirleri.Business.Concrete
                EmailNotification = p.EmailNotification,
                SmsNotification = p.SmsNotification,
                Comments = p.Comments.ToList()
+
            })
            .FirstOrDefault();
 
