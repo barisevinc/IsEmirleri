@@ -1,4 +1,5 @@
 ﻿using IsEmirleri.Business.Abstract;
+using IsEmirleri.Business.Concrete;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,19 +57,10 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
-        public IActionResult Add(Mission mission)
+        [HttpPost]
+        public IActionResult Add(Mission mission, List<int> userIds)
         {
-            try
-            {
-
-                return Ok(_missionService.Add(mission));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-
+            return Ok(_missionService.AddMission(mission, userIds));
         }
         [HttpPost]
         public IActionResult UpdateDescription(int missionId, string description)
@@ -87,13 +79,6 @@ namespace IsEmirleri.Web.Controllers
 
         }
 
-        //[HttpPost]
-        //public IActionResult GetTaskBystatus(int ids)
-        //{
-        //    return Json(new { data = _missionService.GetTaskBystatus(ids) });
-        //}
-
-        
         public IActionResult GetById(int id) { 
         
             return Ok(_missionService.GetByMissionId(id));

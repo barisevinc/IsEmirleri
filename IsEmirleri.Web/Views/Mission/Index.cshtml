@@ -412,14 +412,14 @@
                         endDate:$("#txtEndDate").val()
 
                     }
-                };
+               
                 let selectedUserIds = $("#ddlUsers").val();
 
                 $.ajax({
                     url: '/Mission/Add',
                     type: 'POST',
                     data: {
-                        data:data,
+                        mission: mission,
                         userIds:selectedUserIds
                     },
                     success: function (res) {
