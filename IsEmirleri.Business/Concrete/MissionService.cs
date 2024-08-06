@@ -72,6 +72,7 @@ namespace IsEmirleri.Business.Concrete
 
         }
 
+
         public List<MissionDto> GetAllMission()
         {
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
