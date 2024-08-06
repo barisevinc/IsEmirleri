@@ -17,5 +17,9 @@ namespace IsEmirleri.Business.Abstract
         bool UpdateMissionDescription(int missionId, string description);
         List<MissionDto> GetAllMission();
         Mission AddMission(Mission mission, List<int> userIds);
+    
+
+
+
     }
 }
