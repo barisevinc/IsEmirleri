@@ -92,7 +92,7 @@
     <div class="card-header text-center text-dark" style="background-color: #e9ecef;">
         <h4>Görev Yönetim Sayfası</h4>
     </div>
-    <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
+        <div id="content" ondrop="drop(event)" ondragover="allowDrop(event)" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
         
     </div>
 </div>
@@ -148,9 +148,17 @@
             </div>
         </div>
     </div>
+</body>
+</html>
+
+
 @section Scripts {
     <script>
+
+      
         $(document).ready(function () {
+
+           
             $.ajax({
                 url: '/Status/GetAll',
                 type: 'POST',
@@ -159,7 +167,7 @@
 
                     groupedData.forEach(status => {
                         $("#content").append(`
-                            <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
+                                        <div class="card col-3 me-2" id="status-card-${status.id}"  style="background-color: #e9ecef;">
                                 <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0 d-flex align-items-center">
@@ -171,9 +179,10 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="card-body" id="tasks-${status.id}">
+                                <div class="card-body" id="tasks-${status.id}"  >
+                              
                                 </div>
-                                <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
+                                        <div  class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
                                         <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
                                 </div>
                             </div>
@@ -222,7 +231,7 @@
                             let emails = res.assignees.map(user => user.email).join("<br/>");
 
                             let newTask = `
-                                    <div class="col-sm-12">
+                                                        <div class="col-sm-12" >
                                         <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
                                             <div class="card-body">
                                                 <h5 class="card-title">#${res.id} ${res.title}</h5>
@@ -253,7 +262,7 @@
                         }
 
                         $("#tasks-" + item.statusId).append(`
-                            <div class="col-sm-12">
+                                    <div class="col-sm-12" id="${item.id}" draggable="true" ondragstart="drag(event)">
                                 <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
                                     <div class="card-body">
                                                 <div class="d-flex align-items-start justify-content-between">
@@ -361,8 +370,24 @@
                     }
                 });
             }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+         
+
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+
     </script>
 }
 
-</body>
-</html>
+
