@@ -136,6 +136,7 @@ namespace IsEmirleri.Business.Concrete
                 return false;
                 
             }
+            _appUserRepository.Update(appUser);
             return true;
             
         }
