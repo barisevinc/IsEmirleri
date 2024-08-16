@@ -148,6 +148,29 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalStatus" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <form id="statusForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 row">
+                            <input type="text" class="form-control" id="txtStatusname" placeholder="Durum adı giriniz" required>
+                        
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                        <button type="button" id="btnSavee" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -166,7 +189,7 @@
                                             ${status.name}
                                             <span class="badge bg-secondary ms-2">${status.taskCount}</span>
                                         </h5>
-                                        <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
+                                                                <a onclick="updateStatus(${status.id},this);" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
                                             ⋮
                                         </a>
                                     </div>
@@ -241,6 +264,47 @@
                     });
                 }
         });
+            function updateStatus(statusId, button) {
+
+                $.ajax({
+                    url: '/Status/GetById',
+                    type: 'POST',
+                    data: { id: statusId },
+                    success: function (res) {
+
+                        $("#modalStatus").modal("show");
+                        $("#modalTitle").text("Durum Düzenle");
+                        $("#txtStatusname").val(res.name);
+                       
+                        $("#btnSavee").text("Düzenle").off().click(function () {
+                       
+                            res.name = $("#txtStatusname").val();
+
+                            $.ajax({
+                                url: '/Status/Update',
+                                type: 'POST',
+                                data: {
+                                    missionStatus: res
+                                },
+                                success: function (res1) {
+                                    $("#modalStatus").modal("hide");
+
+
+                                    $(`#status-card-${statusId} .card-header h5`).text(res1.name);
+                                    toastr.success("Durum başarıyla güncellendi!");
+
+                                }
+                            });
+
+
+                        });
+
+                    }
+
+                });
+
+            }
+
 
         function fillCardMision() {
             $.ajax({
