@@ -79,16 +79,67 @@
                 background-color: #f8f9fa;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+            .card-header h4 {
+                margin-bottom: 0; /* Başlık ve buton arasındaki boşluğu kaldırmak için */
+            }
+
+        #btnStatusadd {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%); /* Butonu başlığın ortasında hizalamak için */
+        }
+
     </style>
 </head>
 <body>
 
     <div class="card col-12 p-3" style="background-color: #f8f9fa;">
-        <div class="card-header text-center text-dark" style="background-color: #e9ecef;">
-            <h4>Görev Yönetim Sayfası</h4>
+        <div class="card-header d-flex align-items-center" style="background-color: #e9ecef; position: relative;">
+            <h4 class="mb-0 mx-auto">Görev Yönetim Sayfası</h4>
+            <a href="#" title="Yeni Durum Ekle" id="btnStatusadd" class="btn btn-dark" style="position: absolute; right: 0;">
+                <i class="bx bxs-plus-circle"></i>
+            </a>
         </div>
-        <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
-            <!-- AJAX ile doldurulacak -->
+        <div class="d-flex col-12">
+            <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
+               
+            </div>
+        </div>
+    </div>
+
+
+   
+
+
+    <div class="modal fade" id="modalStatus" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <form id="statusForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 row">
+                            <input type="text" class="form-control" id="txtStatusname" placeholder="Durum adı giriniz" required>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                        <button type="button" id="btnSavee" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -135,6 +186,7 @@
             </div>
         </div>
     </div>
+   
 
     @section Scripts {
         <script>
@@ -159,6 +211,7 @@
                                                 </a>
                                             </div>
                                         </div>
+                                                    
                                         <div class="card-body" id="tasks-${status.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
                                         </div>
                                         <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
@@ -226,6 +279,34 @@
                     });
                 }
             });
+
+            $("#btnStatusadd").click(function () {
+                $("#modalStatus").modal("show");
+                $("#modalStatus").trigger("reset");
+                $("#modalTitle").text("Yeni Durum Kaydı");
+
+                $("#btnSavee").text("Kaydet").off().click(function () {
+                    let data = {
+                        missionStatus: {
+                            name: $("#txtStatusname").val()
+
+
+                        }
+                    }
+
+                        $.ajax({
+                            url: '/Status/Add',
+                            type: 'POST',
+                            data: data,
+                        success: function (res1) {
+                            $("#modalStatus").modal("hide");
+                            $(`#status-card-${statusId} .card-header h5`).text(res1.name);
+                            toastr.success("Durum başarıyla eklendi!");
+
+                        }
+                        });
+                })
+            })
 
             function fillCardMision() {
                 $.ajax({

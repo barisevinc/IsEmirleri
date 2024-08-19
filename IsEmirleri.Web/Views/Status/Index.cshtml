@@ -55,7 +55,7 @@
                         $("#statusNameValidation").hide();
                         let data = {
                             missionStatus: {
-                                name: $("#txtStatusname").val(),
+                                name: $("#txtStatusname").val()
                             }
                         };
                         let action = $("#modalTitle").text().includes("Yeni") ? '/Status/Add' : '/Status/Update';
