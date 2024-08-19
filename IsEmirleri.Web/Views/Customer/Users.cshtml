@@ -73,7 +73,9 @@
                         columns: [
                             {
                                 data: 'picture', title: 'Fotoğraf', render: function (data) {
-                                    return `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px;border-radius:50%" />`;
+                                    return data ? `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px; border-radius:50%" />`
+                                        : `<div class="rounded-circle header-profile-user" style="width:50px; height:50px; background-color:#ccc; display:flex; align-items:center; justify-content:center;">
+                         <i class="fa fa-user" style="color:#fff;"></i> </div>`;
                                 }
                             },
                             { data: 'id', title: 'ID' },
@@ -151,7 +153,7 @@
                 });
             });
 
-            updateUser=(userId, button)=> {
+            updateUser = (userId, button) => {
                 fillUserTypes();
                 $("#modalAdd").modal("show");
                 $("#deletedRow").show();
@@ -184,7 +186,7 @@
                     $.ajax({
                         url: '/Customer/UpdateUserWithCustomer',
                         type: 'POST',
-                        data:{user:user},
+                        data: { user: user },
                         success: function (res) {
 
                             if (res.result) {
@@ -192,19 +194,19 @@
                                 DataTable.row(row).data(user).draw();
                                 toastr.success(res.message);
                                 $("#modalAdd").modal("hide");
-                            }else{
-                               // user.isDeleted = true;
+                            } else {
+                                // user.isDeleted = true;
                                 let row = $(button).parent().parent();
                                 DataTable.row(row).data(user).draw();
                                 toastr.warning(res.message);
                                 $("#modalAdd").modal("hide");
                             }
 
-                           
 
 
 
-                        },error:function (){
+
+                        }, error: function () {
                             toastr.error("hata");
                         }
                     });

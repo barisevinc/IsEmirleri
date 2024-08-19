@@ -117,28 +117,39 @@ namespace IsEmirleri.Business.Concrete
         public bool UpdateCustomerUsers(AppUser user)
         {
             var appUser = _appUserRepository.GetById(user.Id);
-            if (IsLimitAvailable(appUser.CustomerId.Value))
+            bool isLimitAvailable = IsLimitAvailable(appUser.CustomerId.Value);
+
+            //adminden usera kullanıcı geçirmek istersek
+            if (appUser.UserTypeId == 2 && user.UserTypeId == 3 && !isLimitAvailable)
             {
+                appUser.IsDeleted = true;
                 appUser.Email = user.Email;
                 appUser.Password = user.Password;
-                appUser.IsDeleted = user.IsDeleted;
                 appUser.UserTypeId = user.UserTypeId;
+                _appUserRepository.Update(appUser);
+                return false;
+            }
+            //kotası dolu olduğunda 
+            if (appUser.UserTypeId == 3 && !isLimitAvailable && appUser.UserTypeId != user.UserTypeId)
+            {
+                appUser.IsDeleted = true;
+                appUser.Email = user.Email;
+                appUser.Password = user.Password;
+                appUser.UserTypeId = user.UserTypeId;
+                _appUserRepository.Update(appUser);
+                return false;
+            }
+            else
+            {
+                //mevcut kullanıcıyı güncelleme durumu (limit dolmuş olsa bile)
+                appUser.Email = user.Email;
+                appUser.Password = user.Password;
+                appUser.UserTypeId = user.UserTypeId;
+                appUser.IsDeleted = user.IsDeleted;
                 _appUserRepository.Update(appUser);
                 return true;
             }
-            else if(user.IsDeleted)
-            {
-                appUser.UserTypeId=user.UserTypeId;
-                appUser.IsDeleted= true;
-                appUser.Email = user.Email;
-                appUser.Password = user.Password;
-                _appUserRepository.Update(appUser);
-                return false;
-                
-            }
-            _appUserRepository.Update(appUser);
-            return true;
-            
         }
-    }
+
+        }
 }
