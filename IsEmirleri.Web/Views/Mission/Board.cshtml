@@ -1,7 +1,5 @@
-﻿
-<html>
+﻿<html>
 <head>
-   
     <title>Görev Yönetim Sayfası</title>
     <style>
         body {
@@ -36,9 +34,9 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
 
         .card-container {
             display: flex;
@@ -55,53 +53,50 @@
             margin-bottom: 10px;
         }
 
-        .card-item .card-header,
-        .card-item .card-body,
-        .card-item .card-footer {
-            flex-grow: 0;
-        }
+            .card-item .card-header,
+            .card-item .card-body,
+            .card-item .card-footer {
+                flex-grow: 0;
+            }
 
-        .card-item .card-footer {
-            cursor: pointer;
-            background-color: #e2e6ea;
-            transition: background-color 0.3s;
-            margin-top: auto; 
-        }
+            .card-item .card-footer {
+                cursor: pointer;
+                background-color: #e2e6ea;
+                transition: background-color 0.3s;
+                margin-top: auto;
+            }
 
-        .card-item .card-footer:hover {
-            background-color: #d6d8db;
-        }
+                .card-item .card-footer:hover {
+                    background-color: #d6d8db;
+                }
 
         .card-clickable {
             cursor: pointer;
             transition: background-color 0.3s, box-shadow 0.3s;
         }
 
-        .card-clickable:hover {
-            background-color: #f8f9fa;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-       
+            .card-clickable:hover {
+                background-color: #f8f9fa;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
     </style>
-   
 </head>
 <body>
 
-<div class="card col-12 p-3" style="background-color: #f8f9fa;">
-    <div class="card-header text-center text-dark" style="background-color: #e9ecef;">
-        <h4>Görev Yönetim Sayfası</h4>
+    <div class="card col-12 p-3" style="background-color: #f8f9fa;">
+        <div class="card-header text-center text-dark" style="background-color: #e9ecef;">
+            <h4>Görev Yönetim Sayfası</h4>
+        </div>
+        <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
+            <!-- AJAX ile doldurulacak -->
+        </div>
     </div>
-    <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
-        
-    </div>
-</div>
+
     <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">
-                    </h5>
+                    <h5 class="modal-title" id="modalTitle"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -114,10 +109,6 @@
                             <label for="txtDescription" class="form-label">Açıklama</label>
                             <textarea class="form-control" id="txtDescription"></textarea>
                         </div>
-                        @* <div class="mb-3">
-                        <label for="ddlFiles" class="form-label">Files</label>
-                        <select class="form-select" id="ddlFiles" ></select>
-                        </div> *@
                         <div class="mb-3">
                             <label for="ddlPriorities" class="form-label">Öncelik</label>
                             <select class="form-select" id="ddlPriorities"></select>
@@ -135,54 +126,52 @@
                             <input type="date" class="form-control" id="txtEndDate">
                         </div>
                         <input type="hidden" id="hiddenStatusId" value="">
-
                     </form>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Kapat
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                     <button type="button" id="btnSave" class="btn btn-primary">Kaydet</button>
                 </div>
             </div>
         </div>
     </div>
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $.ajax({
-                url: '/Status/GetAll',
-                type: 'POST',
-                success: function (res) {
-                    let groupedData = res.data;
 
-                    groupedData.forEach(status => {
-                        $("#content").append(`
-                            <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
-                                <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0 d-flex align-items-center">
-                                            ${status.name}
-                                            <span class="badge bg-secondary ms-2">${status.taskCount}</span>
-                                        </h5>
-                                        <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
-                                            ⋮
-                                        </a>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/Status/GetAll',
+                    type: 'POST',
+                    success: function (res) {
+                        let groupedData = res.data;
+
+                        groupedData.forEach(status => {
+                            $("#content").append(`
+                                    <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
+                                        <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0 d-flex align-items-center">
+                                                    ${status.name}
+                                                    <span class="badge bg-secondary ms-2">${status.taskCount}</span>
+                                                </h5>
+                                                <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
+                                                    ⋮
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" id="tasks-${status.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                        </div>
+                                        <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
+                                            <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="card-body" id="tasks-${status.id}">
-                                </div>
-                                <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
-                                        <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
-                                </div>
-                            </div>
-                        `);
-                    });
-                    fillCardMision();
-                }
-            });
-                 addMission=(statusId) => {
+                                `);
+                        });
+                        fillCardMision();
+                    }
+                });
+
+                addMission = (statusId) => {
                     console.log(statusId);
                     $("#hiddenStatusId").val(statusId);
                     $("#modalAdd").modal("show");
@@ -190,24 +179,21 @@
                     $("#formMission").trigger('reset');
                     $("#modalTitle").text("Yeni Görev Ekleme");
                     fillUsers();
-                    // fillFiles();
                     fillPriorities();
                     fillProjects();
-                
+
                     $("#btnSave").text("Kaydet").off().click(() => {
                         let statusId = $("#hiddenStatusId").val();
 
                         let mission = {
-                                title: $("#txtTitle").val(),
-                                description: $("#txtDescription").val(),
-                                // fileId: $("#ddlFiles").val(),
-                                priorityId: $("#ddlPriorities").val(),
-                                projectId: $("#ddlProjects").val(),
-                                statusId: statusId,
-                                endDate: $("#txtEndDate").val()
+                            title: $("#txtTitle").val(),
+                            description: $("#txtDescription").val(),
+                            priorityId: $("#ddlPriorities").val(),
+                            projectId: $("#ddlProjects").val(),
+                            statusId: statusId,
+                            endDate: $("#txtEndDate").val()
+                        };
 
-                        }
-                      
                         let selectedUserIds = $("#ddlUsers").val();
 
                         $.ajax({
@@ -219,150 +205,93 @@
                             },
                             success: function (res) {
                                 $("#modalAdd").modal("hide");
-                            let emails = res.assignees.map(user => user.email).join("<br/>");
+                                let emails = res.assignees.map(user => user.email).join("<br/>");
 
-                            let newTask = `
-                                    <div class="col-sm-12">
-                                        <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                            <div class="card-body">
-                                                <h5 class="card-title">#${res.id} ${res.title}</h5>
-                                                <p class="card-text">${res.description}</p>
-                                                <h6 class="card-text">${emails}</h6>
+                                let newTask = `
+                                        <div class="col-sm-12">
+                                            <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">#${res.id} ${res.title}</h5>
+                                                    <p class="card-text">${res.description}</p>
+                                                    <h6 class="card-text">${emails}</h6>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                `;
+                                    `;
 
-                            $(`#tasks-${statusId}`).append(newTask);
+                                $(`#tasks-${statusId}`).append(newTask);
                                 toastr.success("Görev Başarıyla Oluşturuldu");
-
                             }
                         });
                     });
                 }
-        });
+            });
 
-        function fillCardMision() {
-            $.ajax({
-                url: "/Mission/GetAllCard",
-                success: (data) => {
-                    for (var item of data) {
-                        let emails = "";
-                        for (var user of item.assignees) {
-                                emails += `<i title="${user.email}" class="uil-user-circle" > </i>`;
-                        }
+            function fillCardMision() {
+                $.ajax({
+                    url: "/Mission/GetAllCard",
+                    success: (data) => {
+                        for (var item of data) {
+                            let emails = "";
+                            for (var user of item.assignees) {
+                                emails += `<i title="${user.email}" class="uil-user-circle"></i>`;
+                            }
 
-                        $("#tasks-" + item.statusId).append(`
-                            <div class="col-sm-12">
-                                <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                    <div class="card-body">
+                            $("#tasks-" + item.statusId).append(`
+                                    <div class="col-sm-12">
+                                        <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                            <div class="card-body">
                                                 <div class="d-flex align-items-start justify-content-between">
-                                        <h5 class="card-title">#${item.id} ${item.title}</h5>
-                                       
-                                        <div class="email-icons">
-                                            ${emails}
+                                                    <h5 class="card-title">#${item.id} ${item.title}</h5>
+                                                    <div class="email-icons">
+                                                        ${emails}
+                                                    </div>
+                                                </div>
+                                                <p class="card-text">${item.description}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                   <p class="card-text">${item.description}</p>
-                                </div>
-                            </div>
-                            </div>
-                            <style>
-                                .card-clickable:hover {
-                                    background-color: #f8f9fa;
-                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                                }
-                                .email-icons {
-                                position: absolute;
-                                top: 10px;
-                                right: 10px;
-                                display: flex;
-                                gap: 5px;
-                                }
-                            </style>
-                        `);
+                                `);
+                        }
                     }
+                });
+            }
+
+            function drag(ev) {
+                ev.dataTransfer.setData("text", ev.target.id);
+            }
+
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
+            function drop(ev) {
+                ev.preventDefault();
+                var data = ev.dataTransfer.getData("text");
+                var taskElement = document.getElementById(data);
+
+                // Sadece card-body alanlarına bırakılmasına izin ver
+                if (ev.target.classList.contains('card-body')) {
+                    var newStatusId = ev.target.id.split('-')[1];
+
+                    // Statü kartına görevi ekleyin
+                    ev.target.appendChild(taskElement);
+
+                    // Görevin yeni statüsünü backend'e gönderin
+                    $.ajax({
+                        url: '/Mission/UpdateStatus',
+                        type: 'POST',
+                        data: {
+                            taskId: data.split('-')[1],
+                            statusId: newStatusId
+                        },
+                        success: function (res) {
+                            toastr.success("Görev başarıyla güncellendi.");
+                        }
+                    });
                 }
-            });
-        }
-
-           
-            function fillProjects() {
-                $.ajax({
-                    url: '/Project/GetAll',
-                    type: 'GET',
-                    success: (res) => {
-                        $("#ddlProjects").empty();
-
-                        for (var item of res.data) {
-                            $("#ddlProjects").append(new Option(item.name, item.id));
-                        }
-                        $("#ddlProjects").select2({
-                            dropdownParent: $('#modalAdd'),
-                            width: "100%"
-
-
-                        });
-
-                    }
-                });
             }
 
-            function fillUsers() {
-                $.ajax({
-                    url: '/Project/FillUsers',
-                    type: 'GET',
-                    success: (res) => {
-                        $("#ddlUsers").empty();
-
-                        for (var item of res.data) {
-                            $("#ddlUsers").append(new Option(item.email, item.id));
-                        }
-                        $("#ddlUsers").select2({
-                            dropdownParent: $('#modalAdd'),
-                            width: "100%",
-                            placeholder: "Göreve Dahil olacak Kullanıcıları Seçiniz"
-
-                        });
-                    }
-                });
-            }
-
-            function fillFiles() {
-                $.ajax({
-                    url: '/TaskFile/GetAll',
-                    type: 'GET',
-                    success: (res) => {
-                        $("#ddlFiles").empty();
-
-                        for (var item of res.data) {
-                            $("#ddlFiles").append(new Option(item.name, item.id));
-                        }
-
-                    }
-                });
-            }
-
-            function fillPriorities() {
-                $.ajax({
-                    url: '/Priority/GetAll',
-                    type: 'GET',
-                    success: (res) => {
-                        $("#ddlPriorities").empty();
-
-                        for (var item of res.data) {
-                            $("#ddlPriorities").append(new Option(item.name, item.id));
-                        }
-                        $("#ddlPriorities").select2({
-                            dropdownParent: $('#modalAdd'),
-                            width: "100%"
-
-                        });
-                    }
-                });
-            }
-    </script>
-}
-
+        </script>
+    }
 </body>
 </html>
