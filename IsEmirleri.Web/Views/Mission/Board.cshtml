@@ -256,11 +256,9 @@
                     }
                 });
             }
-
             function drag(ev) {
                 ev.dataTransfer.setData("text", ev.target.id);
             }
-
             function allowDrop(ev) {
                 ev.preventDefault();
             }
@@ -269,14 +267,10 @@
                 var data = ev.dataTransfer.getData("text");
                 var taskElement = document.getElementById(data);
 
-                // Sadece card-body alanlarına bırakılmasına izin ver
+
                 if (ev.target.classList.contains('card-body')) {
                     var newStatusId = ev.target.id.split('-')[1];
-
-                    // Statü kartına görevi ekleyin
                     ev.target.appendChild(taskElement);
-
-                    // Görevin yeni statüsünü backend'e gönderin
                     $.ajax({
                         url: '/Mission/UpdateStatus',
                         type: 'POST',
@@ -289,6 +283,78 @@
                         }
                     });
                 }
+            }
+            function fillProjects() {
+                $.ajax({
+                    url: '/Project/GetAll',
+                    type: 'GET',
+                    success: (res) => {
+                        $("#ddlProjects").empty();
+
+                        for (var item of res.data) {
+                            $("#ddlProjects").append(new Option(item.name, item.id));
+                        }
+                        $("#ddlProjects").select2({
+                            dropdownParent: $('#modalAdd'),
+                            width: "100%"
+                        });
+
+                    }
+                });
+            }
+
+            function fillUsers() {
+                $.ajax({
+                    url: '/Project/FillUsers',
+                    type: 'GET',
+                    success: (res) => {
+                        $("#ddlUsers").empty();
+
+                        for (var item of res.data) {
+                            $("#ddlUsers").append(new Option(item.email, item.id));
+                        }
+                        $("#ddlUsers").select2({
+                            dropdownParent: $('#modalAdd'),
+                            width: "100%",
+                            placeholder: "Göreve Dahil olacak Kullanıcıları Seçiniz"
+
+                        });
+                    }
+                });
+            }
+
+            function fillFiles() {
+                $.ajax({
+                    url: '/TaskFile/GetAll',
+                    type: 'GET',
+                    success: (res) => {
+                        $("#ddlFiles").empty();
+
+                        for (var item of res.data) {
+                            $("#ddlFiles").append(new Option(item.name, item.id));
+                        }
+
+                    }
+                });
+            }
+
+            function fillPriorities() {
+                $.ajax({
+                    url: '/Priority/GetAll',
+                    type: 'GET',
+                    success: (res) => {
+                        $("#ddlPriorities").empty();
+
+                        for (var item of res.data) {
+                            $("#ddlPriorities").append(new Option(item.name, item.id));
+                        }
+                        $("#ddlPriorities").select2({
+                            dropdownParent: $('#modalAdd'),
+                            width: "100%"
+
+                        });
+                    }
+                });
             }
 
         </script>

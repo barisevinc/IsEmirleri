@@ -81,7 +81,19 @@ namespace IsEmirleri.Web.Controllers
 
             return View();
         }
-
+        [HttpPost]
+        public IActionResult UpdateStatus(int taskId, int statusId)
+        {
+            var result = _missionService.UpdateStatus(taskId, statusId);
+            if (result)
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Durum güncellenirken bir hata oluştu." });
+            }
+        }
 
     }
 }
