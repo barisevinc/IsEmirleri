@@ -2,34 +2,291 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İş Emirleri | Yönetim Sistemi</title>
-    <link rel="stylesheet" href="~/css/HomePage.css">
-</head>
-<body>
-    <div class="outer">
+<html lang="en">
 
-        <div class="inner">
-            <div class="prod-left">
-                <h1 class="prod-head">İş Emirleri Yönetim Sistemi</h1>
-                <p class="prod-description">
-                    İş Emirleri Yönetim Sistemi, iş süreçlerinizi etkin bir şekilde yönetmenize yardımcı olacak kapsamlı bir yazılım çözümüdür. Proje ve görev yönetimi konularında ihtiyaç duyduğunuz tüm araçları sunar. Bu sistem, projelerinizi ve görevlerinizi düzenli ve sistematik bir şekilde takip etmenizi sağlar, performansınızı artırır ve iş birliğini kolaylaştırır.
-                </p>
-                <p class="prod-description">
-                    Gelişmiş takip ve raporlama araçları sayesinde projelerinizin her aşamasında detaylı kontrol ve şeffaflık elde edin. Kullanıcı dostu arayüzü ve özelleştirilebilir iş akışlarıyla, işlerinizi daha verimli ve etkili bir şekilde yönetmenizi sağlar.
-                </p>
-                <div class="button-container">
-                    <a href="/User/Login" class="btn-primary">Giriş Yap</a>
-                    <a href="/register" class="btn-secondary">İletişime Geç</a>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>İş Emirleri</title>
+    <meta name="description" content="İş Emirleri projesi, müşteri ihtiyaçlarına uygun etkili ve düzenli iş yönetimi çözümleri sunar.">
+    <meta name="keywords" content="İş Emirleri, iş yönetimi, proje yönetimi, müşteri ilişkileri">
+
+    <!-- Favicons -->
+    <link href="~/assets-home/img/favicon.png" rel="icon">
+    <link href="~/assets-home/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets-home/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets-home/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets-home/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets-home/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/assets-home/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/assets-home/css/main.css" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: Techie
+    * Template URL: https://bootstrapmade.com/techie-free-skin-bootstrap-3/
+    * Updated: Aug 07 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body class="index-page">
+
+    <header id="header" class="header d-flex align-items-center fixed-top">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+            <a href="index.html" class="logo d-flex align-items-center me-auto">
+                <h1 class="sitename">İş Emirleri</h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="#hero" class="active">Ana Sayfa</a></li>
+                    <li><a href="#about">Hakkımızda</a></li>
+                    <li><a href="#services">Hizmetlerimiz</a></li>
+                    <li><a href="#contact">İletişim</a></li>
+                    <li><a href="/user/login">Giriş Yap</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero section accent-background">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                        <h1>İş Yönetiminde Yeni Bir Dönem Başlatın</h1>
+                        <p>İş Emirleri, projelerinizi yönetmenizi ve müşteri taleplerini etkin bir şekilde takip etmenizi sağlar. Hedeflerinize ulaşmanın en kolay yolunu sunuyoruz.</p>
+                        <div class="d-flex">
+                            <a href="#contact" class="btn-get-started">Başlayın</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-1 order-lg-2 hero-img">
+                        <img src="~/assets-home/img/hero-img.png" class="img-fluid animated" alt="İş Emirleri Projesi">
+                    </div>
                 </div>
             </div>
-            <div class="prod-right">
-                <img src="https://github.com/abhinanduN/codepen/blob/master/human-image.png?raw=true" class="prod-human-img" alt="uygulama görseli" />
+        </section><!-- /Hero Section -->
+        <!-- About Section -->
+        <section id="about" class="about section">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="100">
+                        <img src="~/assets-home/img/about.jpg" class="img-fluid" alt="Hakkımızda">
+                    </div>
+                    <div class="col-lg-6 order-2 order-lg-1 content" data-aos="fade-up" data-aos-delay="200">
+                        <h3>İş Emirleri Projesi Hakkında</h3>
+                        <p class="fst-italic">İş Emirleri, iş süreçlerinizi yönetmek ve müşteri taleplerini organize etmek için geliştirilmiş modern bir platformdur. Proje yönetimi, görev atamaları ve müşteri ilişkilerini kolaylaştırarak iş verimliliğinizi artırır.</p>
+                        <ul>
+                            <li><i class="bi bi-check-circle"></i> <span>Verimli iş yönetimi ve kolay görev atamaları.</span></li>
+                            <li><i class="bi bi-check-circle"></i> <span>Proje ilerlemesini gerçek zamanlı izleme.</span></li>
+                            <li><i class="bi bi-check-circle"></i> <span>Müşteri ilişkilerini düzenli ve etkili bir şekilde yönetme.</span></li>
+                        </ul>
+                        <a href="#" class="read-more"><span>Daha Fazla Bilgi</span><i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
             </div>
+        </section><!-- /About Section -->
+        <!-- Services Section -->
+        <section id="services" class="services section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Hizmetlerimiz</h2>
+                <p>İş Emirleri olarak, iş süreçlerinizi daha etkili yönetmeniz için çeşitli hizmetler sunuyoruz.</p>
+            </div>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-item d-flex">
+                            <div class="icon flex-shrink-0"><i class="bi bi-briefcase"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Görev Yönetimi</a></h4>
+                                <p class="description">Görevlerinizi kolayca oluşturun, atayın ve takip edin. İş süreçlerinizi organize edin.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="service-item d-flex">
+                            <div class="icon flex-shrink-0"><i class="bi bi-card-checklist"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Proje Takibi</a></h4>
+                                <p class="description">Projelerinizin ilerlemesini izleyin ve gereken müdahaleleri hızlıca yapın.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="service-item d-flex">
+                            <div class="icon flex-shrink-0"><i class="bi bi-binoculars"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Müşteri İlişkileri</a></h4>
+                                <p class="description">Müşteri taleplerini düzenli ve etkili bir şekilde yönetin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /Services Section -->
+        <!-- Features Section -->
+        <section id="features" class="features section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Özellikler</h2>
+                <p>İş Emirleri'nin sunduğu özellikler ile iş süreçlerinizi daha verimli hale getirin.</p>
+            </div>
+            <div class="container">
+                <div class="row gy-4 justify-content-between">
+                    <div class="features-image col-lg-5 order-lg-2 d-flex align-items-center" data-aos="fade-up" data-aos-delay="100">
+                        <img src="~/assets-home/img/features.svg" class="img-fluid" alt="Özellikler">
+                    </div>
+                    <div class="col-lg-6 d-flex flex-column justify-content-center">
+                        <div class="features-item d-flex ps-0 ps-lg-3 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="200">
+                            <div class="features-icon flex-shrink-0"><i class="bi bi-gear"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Kullanıcı Dostu Arayüz</a></h4>
+                                <p class="description">Basit ve sezgisel bir arayüz ile iş süreçlerinizi hızlıca yönetebilirsiniz.</p>
+                            </div>
+                        </div>
+                        <div class="features-item d-flex ps-0 ps-lg-3" data-aos="fade-up" data-aos-delay="300">
+                            <div class="features-icon flex-shrink-0"><i class="bi bi-shield-check"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Güvenli Veri Yönetimi</a></h4>
+                                <p class="description">Verilerinizin güvenliğini sağlayan gelişmiş güvenlik önlemleri.</p>
+                            </div>
+                        </div>
+                        <div class="features-item d-flex ps-0 ps-lg-3" data-aos="fade-up" data-aos-delay="400">
+                            <div class="features-icon flex-shrink-0"><i class="bi bi-people"></i></div>
+                            <div>
+                                <h4 class="title"><a href="#" class="stretched-link">Takım İşbirliği</a></h4>
+                                <p class="description">Takım üyelerinizle etkili işbirliği ve iletişim sağlayarak projeleri daha verimli yönetin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section><!-- /Features Section -->
+        <!-- Contact Section -->
+        <section id="contact" class="contact section">
+
+            <!-- Section Title -->
+            <div class="container section-title" data-aos="fade-up">
+                <h2>İletişim</h2>
+            </div><!-- End Section Title -->
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="row gy-4">
+
+                    <div class="col-lg-6">
+
+                        <div class="row gy-4">
+
+
+                            <div class="col-md-6">
+                                <div class="info-item" data-aos="fade" data-aos-delay="300">
+                                    <i class="bi bi-telephone"></i>
+                                    <h3>Call Us</h3>
+                                    <p>+1 5589 55488 55</p>
+                                    <p>+1 6678 254445 41</p>
+                                </div>
+                            </div><!-- End Info Item -->
+
+                            <div class="col-md-6">
+                                <div class="info-item" data-aos="fade" data-aos-delay="400">
+                                    <i class="bi bi-envelope"></i>
+                                    <h3>Email Us</h3>
+                                    <p>info@example.com</p>
+                                    <p>contact@example.com</p>
+                                </div>
+                            </div><!-- End Info Item -->
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6">
+                        <form action="" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                            <div class="row gy-4">
+
+                                <div class="col-md-6">
+                                    <input type="text" name="name" class="form-control" placeholder="Adınızı Giriniz" required="">
+                                </div>
+
+                                <div class="col-md-6 ">
+                                    <input type="email" class="form-control" name="email" placeholder="Email Adresiniz" required="">
+                                </div>
+
+                                <div class="col-12">
+                                    <input type="text" class="form-control" name="subject" placeholder="Konu" required="">
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea class="form-control" name="message" rows="6" placeholder="Mesajınız" required=""></textarea>
+                                </div>
+
+                                <div class="col-12 text-center">
+
+                                    <button type="submit">Mesajınızı Gönderiniz</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div><!-- End Contact Form -->
+
+                </div>
+
+            </div>
+
+        </section><!-- /Contact Section -->
+
+    </main>
+
+    <footer id="footer" class="footer accent-background">
+
+
+        <div class="container copyright text-center mt-4">
+            <div class="copyright">
+                &copy; 2024 <strong><span>İş Emirleri</span></strong>. Tüm Hakları Saklıdır.
+            </div>
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you've purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+
         </div>
-    </div>
+        </div>
+
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets-home/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets-home/vendor/aos/aos.js"></script>
+    <script src="~/assets-home/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/assets-home/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="~/assets-home/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/assets-home/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/assets-home/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="~/assets-home/js/main.js"></script>
+
 </body>
+
 </html>

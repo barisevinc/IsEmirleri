@@ -12,6 +12,53 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\assets-home\img\features.svg" />
+    <None Include="wwwroot\assets-home\img\team-shape.svg" />
+    <None Include="wwwroot\assets-home\js\main.js" />
+    <None Include="wwwroot\assets-home\vendor\aos\aos.cjs.js" />
+    <None Include="wwwroot\assets-home\vendor\aos\aos.esm.js" />
+    <None Include="wwwroot\assets-home\vendor\aos\aos.js" />
+    <None Include="wwwroot\assets-home\vendor\aos\aos.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap-icons\bootstrap-icons.scss" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap-icons\fonts\bootstrap-icons.woff2" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-grid.rtl.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-grid.rtl.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-reboot.rtl.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-reboot.rtl.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-utilities.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-utilities.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-utilities.rtl.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap-utilities.rtl.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap.rtl.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\css\bootstrap.rtl.min.css.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.esm.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.esm.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.esm.min.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.js.map" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\assets-home\vendor\bootstrap\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\assets-home\vendor\glightbox\js\glightbox.js" />
+    <None Include="wwwroot\assets-home\vendor\glightbox\js\glightbox.min.js" />
+    <None Include="wwwroot\assets-home\vendor\imagesloaded\imagesloaded.pkgd.min.js" />
+    <None Include="wwwroot\assets-home\vendor\isotope-layout\isotope.pkgd.js" />
+    <None Include="wwwroot\assets-home\vendor\isotope-layout\isotope.pkgd.min.js" />
+    <None Include="wwwroot\assets-home\vendor\php-email-form\validate.js" />
+    <None Include="wwwroot\assets-home\vendor\purecounter\purecounter_vanilla.js" />
+    <None Include="wwwroot\assets-home\vendor\purecounter\purecounter_vanilla.js.map" />
+    <None Include="wwwroot\assets-home\vendor\swiper\swiper-bundle.min.js" />
+    <None Include="wwwroot\assets-home\vendor\swiper\swiper-bundle.min.js.map" />
     <None Include="wwwroot\lib\microsoft-signalr\signalr.js" />
     <None Include="wwwroot\lib\microsoft-signalr\signalr.min.js" />
   </ItemGroup>
