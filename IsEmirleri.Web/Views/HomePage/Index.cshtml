@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Contact
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -26,6 +27,8 @@
     <link href="~/assets-home/vendor/aos/aos.css" rel="stylesheet">
     <link href="~/assets-home/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="~/assets-home/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="~/assets/libs/toastr/build/toastr.min.css">
 
     <!-- Main CSS File -->
     <link href="~/assets-home/css/main.css" rel="stylesheet">
@@ -216,23 +219,21 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <form action="" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                        <form asp-action="Index" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                             <div class="row gy-4">
 
-                                <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" placeholder="Adınızı Giriniz" required="">
-                                </div>
+                            
 
                                 <div class="col-md-6 ">
-                                    <input type="email" class="form-control" name="email" placeholder="Email Adresiniz" required="">
+                                    <input asp-for="Mail" type="email" class="form-control" name="mail" placeholder="Email Adresiniz" required="">
                                 </div>
 
                                 <div class="col-12">
-                                    <input type="text" class="form-control" name="subject" placeholder="Konu" required="">
+                                    <input asp-for="Subject" type="text" class="form-control" name="subject" placeholder="Konu" required="">
                                 </div>
 
                                 <div class="col-12">
-                                    <textarea class="form-control" name="message" rows="6" placeholder="Mesajınız" required=""></textarea>
+                                    <textarea asp-for="Message" class="form-control" name="message" rows="6" placeholder="Mesajınız" required=""></textarea>
                                 </div>
 
                                 <div class="col-12 text-center">
@@ -290,3 +291,41 @@
 </body>
 
 </html>
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/toastr/build/toastr.min.js"></script>
+
+
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    @if (TempData["error"] != null)
+    {
+        <text>
+            toastr["error"]("@TempData["error"].ToString()");
+        </text>
+    }
+    @if (TempData["success"] != null)
+    {
+        <text>
+            toastr["success"]("@TempData["success"].ToString()");
+        </text>
+    }
+
+
+</script>
+

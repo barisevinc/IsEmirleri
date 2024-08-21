@@ -14,11 +14,16 @@ namespace IsEmirleri.Utility
         {
             try
             {
-                MailMessage mailMessage = new MailMessage("thisrakyazilim@gmail.com", mail, subject, message);
+                //MailMessage mailMessage = new MailMessage("thisrakyazilim@gmail.com", mail, subject, message);
+                MailMessage mailMessage = new MailMessage("testyazilim6868@gmail.com", mail, subject, message);
+
                 mailMessage.IsBodyHtml = true;
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
-                smtpClient.Credentials = new NetworkCredential("thisrakyazilim@gmail.com", "hmjetfghndyljvxm");
+               // smtpClient.Credentials = new NetworkCredential("thisrakyazilim@gmail.com", "hmjetfghndyljvxm");
+                smtpClient.Credentials = new NetworkCredential("testyazilim6868@gmail.com", "dzjv xsya fbpy svpv");
+                
+
                 await smtpClient.SendMailAsync(mailMessage);
                 return true;
             }
