@@ -138,5 +138,21 @@ namespace IsEmirleri.Business.Concrete
             }
             return false;
         }
+        public bool UpdateStatus(int missionId, int statusId)
+        {
+            
+            var mission = _repository.GetAll().FirstOrDefault(m => m.Id == missionId);
+
+            if (mission != null)
+            {
+                
+                mission.StatusId = statusId;
+                _repository.Update(mission);
+
+                return true; 
+            }
+
+            return false; 
+        }
     }
 }
