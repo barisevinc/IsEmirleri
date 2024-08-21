@@ -91,28 +91,28 @@
                 margin-bottom: 0; /* Başlık ve buton arasındaki boşluğu kaldırmak için */
             }
 
+
         #btnStatusadd {
             position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%); /* Butonu başlığın ortasında hizalamak için */
+            left: 74.2%;
+            top: 7.5%;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="card col-12 p-3" style="background-color: #f8f9fa;">
+    <div class="card col-12 p-3" style="background-color: #f8f9fa; position: relative;">
         <div class="card-header d-flex align-items-center" style="background-color: #e9ecef; position: relative;">
             <h4 class="mb-0 mx-auto">Görev Yönetim Sayfası</h4>
-            <a href="#" title="Yeni Durum Ekle" id="btnStatusadd" class="btn btn-dark" style="position: absolute; right: 0;">
-                <i class="bx bxs-plus-circle"></i>
-            </a>
         </div>
-        <div class="d-flex col-12">
+        <div class="d-flex ">
             <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
-               
             </div>
+            <a href="#" title="Yeni Durum Ekle" id="btnStatusadd" class="btn btn-lg">
+                <i class="uil-plus" style="font-size: 2rem;"></i>
+            </a>
+
         </div>
     </div>
 
