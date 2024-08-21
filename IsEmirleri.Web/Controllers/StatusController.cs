@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace IsEmirleri.Web.Controllers
 {
-    [Authorize(Roles = "Admin, Superadmin")]
+    [Authorize(Roles = "Admin, Superadmin, User")]
     public class StatusController : Controller
     {
         private readonly IStatusService _status;
