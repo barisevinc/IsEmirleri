@@ -29,19 +29,20 @@
                 <form id="formMission">
                     <div class="mb-3">
                         <label for="txtTitle" class="form-label">Başlık</label>
-                        <input type="text" class="form-control" id="txtTitle">
+                        <input type="text" class="form-control" id="txtTitle" placeholder="Lütfen Görev Başlığı Ekleyiniz">
                     </div>
                     <div class="mb-3">
-                        <label for="txtDescription" class="form-label">Açıklama</label>
-                        <textarea class="form-control" id="txtDescription"></textarea>
+                        <label for="txtDescription" class="form-label" >Açıklama</label>
+                        <textarea class="form-control" id="txtDescription" placeholder="Lütfen Görev Açıklaması Ekleyiniz"></textarea>
                     </div>
                     @* <div class="mb-3">
                     <label for="ddlFiles" class="form-label">Files</label>
                     <select class="form-select" id="ddlFiles" ></select>
                     </div> *@
+                   
                     <div class="mb-3">
                         <label for="ddlPriorities" class="form-label">Öncelik</label>
-                        <select class="form-select" id="ddlPriorities"></select>
+                        <select class="form-select" id="ddlPriorities" ></select>
                     </div>
                     <div class="mb-3">
                         <label for="ddlStatuses" class="form-label">Durum</label>
@@ -431,6 +432,9 @@
                 });
             });
         });
+
+        
+
         function formatCommentDate(dateString) {
             if (!dateString) return "";
             let date = new Date(dateString);
@@ -446,18 +450,18 @@
                 url: '/Status/GetAll',
                 type: 'GET',
                 success: (res) => {
-                    $("#ddlStatuses").empty();
-
+                    $("#ddlStatuses").empty(); 
+                    $("#ddlStatuses").append(new Option("Lütfen Görev Durumu Seçiniz", "", true, true));
                     for (var item of res.data) {
                         $("#ddlStatuses").append(new Option(item.name, item.id));
                     }
                     $("#ddlStatuses").select2({
                         dropdownParent: $('#modalAdd'),
-                        width: "100%"
-
-
+                        placeholder: "Lütfen Görev Durumu Seçiniz",
+                        allowClear: true,
+                        width: "100%"  
                     });
-
+                    $("#ddlStatuses").val(null).trigger('change');
                 }
             });
         }
@@ -468,17 +472,17 @@
                 type: 'GET',
                 success: (res) => {
                     $("#ddlProjects").empty();
-
+                    $("#ddlProjects").append(new Option("Lütfen Eklenecek Projeyi Seçiniz", "", true, true));
                     for (var item of res.data) {
                         $("#ddlProjects").append(new Option(item.name, item.id));
                     }
                     $("#ddlProjects").select2({
                         dropdownParent: $('#modalAdd'),
+                        placeholder: "Lütfen Eklenecek Projeyi Seçiniz",
+                        allowClear: true,
                         width: "100%"
-
-
                     });
-
+                    $("#ddlProjects").val(null).trigger('change');
                 }
             });
         }
@@ -520,19 +524,21 @@
 
         function fillPriorities() {
             $.ajax({
-                url: '/Priority/GetAll',
+                url: '/Priority/GetAll',  
                 type: 'GET',
                 success: (res) => {
-                    $("#ddlPriorities").empty();
-
+                    $("#ddlPriorities").empty(); 
+                    $("#ddlPriorities").append(new Option("Lütfen Öncelik Seçiniz", "", true, true));
                     for (var item of res.data) {
                         $("#ddlPriorities").append(new Option(item.name, item.id));
                     }
                     $("#ddlPriorities").select2({
                         dropdownParent: $('#modalAdd'),
+                        placeholder: "Lütfen Öncelik Seçiniz",
+                        allowClear: true,
                         width: "100%"
-
                     });
+                    $("#ddlPriorities").val(null).trigger('change');
                 }
             });
         }
