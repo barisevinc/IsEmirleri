@@ -20,6 +20,7 @@ namespace IsEmirleri.Business.Concrete
         private readonly IRepository<AppUser> _appUserRepository;
         private readonly IRepository<Customer> _repository;
 
+
         public CustomerService(IRepository<Customer> repository, IRepository<AppUser> appUserRepository) : base(repository)
         {
             _repository = repository;
