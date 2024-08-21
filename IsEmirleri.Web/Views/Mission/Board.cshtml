@@ -114,10 +114,11 @@
             </a>
 
         </div>
+
     </div>
 
 
-   
+
 
 
     <div class="modal fade" id="modalStatus" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
@@ -139,6 +140,7 @@
                         <button type="button" id="btnSavee" class="btn btn-primary">Kaydet</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -186,41 +188,46 @@
             </div>
         </div>
     </div>
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $.ajax({
-                url: '/Status/GetAll',
-                type: 'POST',
-                success: function (res) {
-                    let groupedData = res.data;
 
-                    groupedData.forEach(status => {
-                        $("#content").append(`
-                            <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
-                                <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0 d-flex align-items-center">
-                                            ${status.name}
-                                            <span class="badge bg-secondary ms-2">${status.taskCount}</span>
-                                        </h5>
-                                        <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
-                                            ⋮
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body" id="tasks-${status.id}">
-                                </div>
-                                <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
-                                        <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
-                                </div>
-                            </div>
-                        `);
-                    });
-                    fillCardMision();
-                }
-            });
-                 addMission=(statusId) => {
+
+    @section Scripts {
+
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/Status/GetAll',
+                    type: 'POST',
+                    success: function (res) {
+                        let groupedData = res.data;
+
+                        groupedData.forEach(status => {
+                            $("#content").append(`
+                                                <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
+                                                    <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h5 class="mb-0 d-flex align-items-center">
+                                                                ${status.name}
+                                                                <span class="badge bg-secondary ms-2">${status.taskCount}</span>
+                                                            </h5>
+                                                            <a href="/Status/Update" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
+                                                                ⋮
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body" id="tasks-${status.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                                    </div>
+                                                    <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
+                                                        <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
+                                                    </div>
+                                                </div>
+                                            `);
+                        });
+                        fillCardMision();
+                    }
+                });
+
+                addMission = (statusId) => {
                     console.log(statusId);
                     $("#hiddenStatusId").val(statusId);
                     $("#modalAdd").modal("show");
@@ -256,17 +263,17 @@
                                 $("#modalAdd").modal("hide");
                                 let emails = res.assignees.map(user => user.email).join("<br/>");
 
-                            let newTask = `
-                                    <div class="col-sm-12">
-                                        <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                            <div class="card-body">
-                                                <h5 class="card-title">#${res.id} ${res.title}</h5>
-                                                <p class="card-text">${res.description}</p>
-                                                <h6 class="card-text">${emails}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
+                                let newTask = `
+                                                    <div class="col-sm-12">
+                                                        <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">#${res.id} ${res.title}</h5>
+                                                                <p class="card-text">${res.description}</p>
+                                                                <h6 class="card-text">${emails}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
 
                                 $(`#tasks-${statusId}`).append(newTask);
                                 toastr.success("Görev Başarıyla Oluşturuldu");
@@ -274,33 +281,61 @@
                         });
                     });
                 }
-        });
+            });
 
-        function fillCardMision() {
-            $.ajax({
-                url: "/Mission/GetAllCard",
-                success: (data) => {
-                    for (var item of data) {
-                        let emails = "";
-                        for (var user of item.assignees) {
-                                emails += `<i title="${user.email}" class="uil-user-circle" > </i>`;
+            $("#btnStatusadd").click(function () {
+                $("#modalStatus").modal("show");
+                $("#modalStatus").trigger("reset");
+                $("#modalTitle").text("Yeni Durum Kaydı");
+
+                $("#btnSavee").text("Kaydet").off().click(function () {
+                    let data = {
+                        missionStatus: {
+                            name: $("#txtStatusname").val()
+
+
                         }
+                    }
 
-                        $("#tasks-" + item.statusId).append(`
-                            <div class="col-sm-12">
-                                <div class="card card-clickable" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                    <div class="card-body">
-                                                <div class="d-flex align-items-start justify-content-between">
-                                                    <h5 class="card-title">#${item.id} ${item.title}</h5>
-                                                    <div class="email-icons">
-                                                        ${emails}
+                    $.ajax({
+                        url: '/Status/Add',
+                        type: 'POST',
+                        data: data,
+                        success: function (res1) {
+                            $("#modalStatus").modal("hide");
+                            $(`#status-card-${statusId} .card-header h5`).text(res1.name);
+                            toastr.success("Durum başarıyla eklendi!");
+
+                        }
+                    });
+                })
+            })
+
+            function fillCardMision() {
+                $.ajax({
+                    url: "/Mission/GetAllCard",
+                    success: (data) => {
+                        for (var item of data) {
+                            let emails = "";
+                            for (var user of item.assignees) {
+                                emails += `<i title="${user.email}" class="uil-user-circle"></i>`;
+                            }
+
+                            $("#tasks-" + item.statusId).append(`
+                                                <div class="col-sm-12">
+                                                    <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-start justify-content-between">
+                                                                <h5 class="card-title">#${item.id} ${item.title}</h5>
+                                                                <div class="email-icons">
+                                                                    ${emails}
+                                                                </div>
+                                                            </div>
+                                                            <p class="card-text">${item.description}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <p class="card-text">${item.description}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
+                                            `);
                         }
                     }
                 });
@@ -405,8 +440,8 @@
                     }
                 });
             }
-    </script>
-}
 
+        </script>
+    }
 </body>
 </html>
