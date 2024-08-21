@@ -70,7 +70,7 @@ namespace IsEmirleri.Web.Controllers
             return Ok(new {result=true,message="Kullanıcı Güncellemesi Başarıyla Yapılmıştır."});
 
             }
-            return Ok(new { result = false, message = "Kullanıcı Güncellemesi Başarıyla Yapılmıştır.Limitinizden Dolayı Kullanıcınız Aktif Edilememiştir." ,isDeleted=false});
+            return Ok(new { result = false, message = "Kullanıcı Güncellemesi Başarıyla Yapılmıştır.Limitinizden Dolayı Kullanıcınız Aktif Edilememiştir." });
 
         }
     }
