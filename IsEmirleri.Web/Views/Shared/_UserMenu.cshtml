@@ -1,4 +1,5 @@
-﻿ <!--- Sidemenu -->
+﻿@using System.Security.Claims
+ <!--- Sidemenu -->
 <div id="sidebar-menu">
     <!-- Left Menu Start -->
     <ul class="metismenu list-unstyled" id="side-menu">
@@ -9,9 +10,38 @@
         </li>
 
         <li>
-            <a asp-controller="Mission" asp-action="Index"> <i class="dripicons-pencil"></i><span>Görevler</span></a>
+            <a asp-controller="Mission" asp-action="Index">
+                <i class="dripicons-pencil"></i>
+                <span>Görevler</span>
+                <span id="userInformationCounts" class="badge rounded-pill bg-info float-end"></span>
+            </a>
         </li>
 
     </ul>
 </div>
 <!-- Sidebar -->
+<script>
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7207/SignalRHub")
+        .build();
+
+    connection.start()
+        .then(() => {
+            setInterval(() => {
+                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                    .catch(err => console.error("Error invoking GetUserInformationCounts:", err));
+            }, 5000);
+        })
+        .catch((err) => {
+            console.error("Error starting SignalR connection:", err);
+        });
+
+    connection.on("UserInformationCounts", (value) => {
+        $("#userInformationCounts").empty();
+
+        $("#userInformationCounts").append(`
+                    <span class="badge rounded-pill bg-info float-end">${value.taskCount}</span>
+                `);
+    });
+</script>

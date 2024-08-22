@@ -13,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using IsEmirleri.DTO.UserDTOs;
 
 namespace IsEmirleri.Business.Concrete
 {
@@ -125,6 +126,29 @@ namespace IsEmirleri.Business.Concrete
            .FirstOrDefault();
 
             return mission;
+        }
+
+        public UserCountDto GetCustomerInformationCounts(int userId)
+        {
+            var taskCount = _repository.GetAll()
+                .Where(x => x.Project.CustomerId == userId).Count();
+
+            return new UserCountDto
+            {
+                TaskCount = taskCount,
+            };
+        }
+
+        public UserCountDto GetUserInformationCounts(int userId)
+        {
+            var taskCount = _repository.GetAll()
+                                .Include(m => m.Assignees) 
+                                .Where(m => m.Assignees.Any(a => a.Id == userId)) 
+                                .Count();
+            return new UserCountDto
+            {
+                TaskCount = taskCount
+            };
         }
 
         public bool UpdateMissionDescription(int missionId, string description)

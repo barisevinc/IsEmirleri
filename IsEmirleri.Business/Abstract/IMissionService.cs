@@ -2,6 +2,7 @@
 using IsEmirleri.DTO.CustomerDTOs;
 using IsEmirleri.DTO.MissionDTO;
 using IsEmirleri.DTO.MissionDTOs;
+using IsEmirleri.DTO.UserDTOs;
 using IsEmirleri.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,8 @@ namespace IsEmirleri.Business.Abstract
         Mission AddMission(Mission mission, List<int> userIds);
 
         bool UpdateStatus(int missionId, int statusId);
-
+        UserCountDto GetCustomerInformationCounts(int userId);
+        UserCountDto GetUserInformationCounts(int userId);
 
     }
 }

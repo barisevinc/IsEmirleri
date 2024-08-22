@@ -1,44 +1,69 @@
-﻿     <!--- Sidemenu -->
+﻿﻿@using System.Security.Claims
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
+<!-- Sidemenu -->
 <div id="sidebar-menu">
     <!-- Left Menu Start -->
     <ul class="metismenu list-unstyled" id="side-menu">
         <li class="menu-title">Menu</li>
 
-       
-       
-            <li>
-                <a asp-action="Index" asp-controller="User">
-                    <i class="fas fa-user-friends"></i>
-                    <span>Kullanıcılar</span>
-                </a>
-            </li>
-
-
         <li>
-            <a asp-controller="Project" asp-action="Index"> <i class="fas fa-project-diagram"></i><span>Projeler</span></a>
+            <a asp-action="Index" asp-controller="User">
+                <i class="fas fa-user-friends"></i>
+                <span>Kullanıcılar</span>
+            </a>
         </li>
 
         <li>
-            <a asp-controller="Mission" asp-action="Index"> <i class="dripicons-pencil"></i></i><span>Görevler</span></a>
+            <a asp-controller="Project" asp-action="Index">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projeler</span>
+            </a>
         </li>
 
         <li>
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
+            <a asp-controller="Mission" asp-action="Index">
+                <i class="dripicons-pencil"></i>
+                <span>Görevler</span>
+                <span id="userInformationCounts" class="badge rounded-pill bg-info float-end"></span>
+            </a>
+        </li>
+
+        <li>
+            <a href="javascript:void(0);" class="has-arrow waves-effect">
                 <i class="uil-location-point"></i>
                 <span>Tanımlamalar</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="@Url.Action("Index","Status")">Durumlar</a></li>
-                <li><a href="@Url.Action("Index","Priority")">Öncelikler</a></li>
-                
+                <li><a href="@Url.Action("Index", "Status")">Durumlar</a></li>
+                <li><a href="@Url.Action("Index", "Priority")">Öncelikler</a></li>
             </ul>
         </li>
-
-
-
-
-
-
     </ul>
 </div>
+
+<script>
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7207/SignalRHub")
+        .build();
+
+    connection.start()
+        .then(() => {
+            setInterval(() => {
+                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.UserData)?.Value)
+                    .catch(err => console.error("Error invoking GetUserInformationCounts:", err));
+            }, 5000);
+        })
+        .catch((err) => {
+            console.error("Error starting SignalR connection:", err);
+        });
+
+    connection.on("CustomerInformationCounts", (value) => {
+        $("#userInformationCounts").empty();
+
+        $("#userInformationCounts").append(`
+                <span class="badge rounded-pill bg-info float-end">${value.taskCount}</span>
+            `);
+    });
+</script>
 <!-- Sidebar -->
