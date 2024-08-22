@@ -131,14 +131,24 @@ namespace IsEmirleri.Business.Concrete
         public UserCountDto GetCustomerInformationCounts(int userId)
         {
             var taskCount = _repository.GetAll()
-                .Include(x => x.Assignees)
                 .Where(x => x.Project.CustomerId == userId).Count();
 
             return new UserCountDto
             {
                 TaskCount = taskCount,
             };
+        }
 
+        public UserCountDto GetUserInformationCounts(int userId)
+        {
+            var taskCount = _repository.GetAll()
+                                .Include(m => m.Assignees) 
+                                .Where(m => m.Assignees.Any(a => a.Id == userId)) 
+                                .Count();
+            return new UserCountDto
+            {
+                TaskCount = taskCount
+            };
         }
 
         public bool UpdateMissionDescription(int missionId, string description)

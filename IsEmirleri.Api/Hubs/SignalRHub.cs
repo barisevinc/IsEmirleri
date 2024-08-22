@@ -25,8 +25,10 @@ namespace IsEmirleri.Api.Hubs
         }
         public async Task GetUserInformationCounts(int userId)
         {
-            var value = _missionService.GetCustomerInformationCounts(userId);
-            await Clients.All.SendAsync("UserInformationCounts", value);
+            var customerValue = _missionService.GetCustomerInformationCounts(userId);
+            await Clients.All.SendAsync("CustomerInformationCounts", customerValue);
+            var userValue = _missionService.GetUserInformationCounts(userId);
+            await Clients.All.SendAsync("UserInformationCounts", userValue);
         }
     }
 }

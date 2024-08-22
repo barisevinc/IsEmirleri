@@ -21,6 +21,7 @@ namespace IsEmirleri.Business.Abstract
 
         bool UpdateStatus(int missionId, int statusId);
         UserCountDto GetCustomerInformationCounts(int userId);
+        UserCountDto GetUserInformationCounts(int userId);
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IsEmirleri.Business.Shared.Abstract;
+using IsEmirleri.DTO.UserDTOs;
 using IsEmirleri.Models;
 using Microsoft.AspNetCore.Http;
 using System;

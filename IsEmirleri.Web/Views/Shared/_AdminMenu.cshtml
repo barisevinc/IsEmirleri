@@ -58,7 +58,7 @@
             console.error("Error starting SignalR connection:", err);
         });
 
-    connection.on("UserInformationCounts", (value) => {
+    connection.on("CustomerInformationCounts", (value) => {
         $("#userInformationCounts").empty();
 
         $("#userInformationCounts").append(`
