@@ -191,5 +191,20 @@ namespace IsEmirleri.Business.Concrete
             }
             return mission.TotalDuration;
         }
+        public bool StartMission(int missionId)
+        {
+            var mission = _repository.GetById(missionId);
+
+            if (mission.IsActive)
+            {
+                throw new Exception("Görev zaten başlatılmış.");
+            }
+
+            mission.StartDate = DateTime.Now;
+            mission.IsActive = true;
+
+            _repository.Update(mission);
+            return true;
+        }
     }
 }
