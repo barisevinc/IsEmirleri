@@ -95,6 +95,14 @@ namespace IsEmirleri.Web.Controllers
             }
         }
 
+        [HttpGet("{missionId}/duration")]
+        public ActionResult<TimeSpan> GetMissionDuration(int missionId)
+        {
+
+            return Ok(_missionService.GetMissionDuration(missionId));
+
+        }
+
         [HttpPost]
         public IActionResult StartMission(int missionId)
         {
