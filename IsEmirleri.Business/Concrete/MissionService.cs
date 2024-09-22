@@ -206,5 +206,15 @@ namespace IsEmirleri.Business.Concrete
             _repository.Update(mission);
             return true;
         }
+
+        private void UpdateTotalDuration(Mission mission)
+        {
+            if (mission.StartDate != null)
+            {
+                DateTime now = DateTime.Now;
+                TimeSpan elapsedTime = now - mission.StartDate.Value;
+                mission.TotalDuration += elapsedTime;
+            }
+        }
     }
 }
