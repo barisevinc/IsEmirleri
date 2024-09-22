@@ -178,5 +178,18 @@ namespace IsEmirleri.Business.Concrete
 
             return false; 
         }
+
+        public TimeSpan GetMissionDuration(int missionId)
+        {
+            var mission = _repository.GetById(missionId);
+            if (mission.IsActive && mission.StartDate != null)
+            {
+                DateTime now = DateTime.Now;
+                TimeSpan currentDuration = now - mission.StartDate.Value;
+
+                return mission.TotalDuration + currentDuration;
+            }
+            return mission.TotalDuration;
+        }
     }
 }
