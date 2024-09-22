@@ -206,6 +206,21 @@ namespace IsEmirleri.Business.Concrete
             _repository.Update(mission);
             return true;
         }
+        public bool StopMission(int missionId)
+        {
+            var mission = _repository.GetById(missionId);
+
+            if (!mission.IsActive)
+            {
+                throw new Exception("Görev zaten duraklatılmış veya bitirilmiş.");
+            }
+
+            UpdateTotalDuration(mission);
+
+            mission.IsActive = false;
+            _repository.Update(mission);
+            return true;
+        }
 
         private void UpdateTotalDuration(Mission mission)
         {
