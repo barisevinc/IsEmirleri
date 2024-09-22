@@ -222,6 +222,27 @@ namespace IsEmirleri.Business.Concrete
             return true;
         }
 
+        public bool CompleteMission(int missionId)
+        {
+            var mission = _repository.GetById(missionId);
+
+            if (mission.IsCompleted)
+            {
+                return false;
+            }
+
+            if (mission.IsActive && mission.StartDate != null)
+            {
+                UpdateTotalDuration(mission);
+            }
+
+            mission.IsActive = false;
+            mission.IsCompleted = true;
+            mission.EndDate = DateTime.Now;
+            _repository.Update(mission);
+            return true;
+        }
+
         private void UpdateTotalDuration(Mission mission)
         {
             if (mission.StartDate != null)
