@@ -95,5 +95,11 @@ namespace IsEmirleri.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult StartMission(int missionId)
+        {
+
+            return Ok(_missionService.StartMission(missionId));
+        }
     }
 }
