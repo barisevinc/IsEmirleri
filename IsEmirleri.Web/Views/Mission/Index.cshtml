@@ -84,7 +84,26 @@
                 <div class="row">
                     <div class="col-lg-8 left-panel">
                         <p><i class="bi bi-link"></i> İlişkili: <a href="/project/index" id="project"></a></p>
-                        <button class="btn btn-primary" id="start-timer"><i class="bi bi-play-circle"></i> Süre Başlat</button>
+                        <!-- Süre Başlat ve Geçen Süre Göstergesi -->
+                        <div class="mt-3">
+                            <p class="mdi mdi-timer-outline" id="logged-time">
+                                Geçen Süre: <span id="elapsed-time">00:00:00</span>
+                            </p>
+                            <button class="btn btn-primary" id="start-timer">
+                                <i class="bi bi-play-circle"></i> Süre Başlat
+                            </button>
+
+                            <!-- Dinamik olarak gösterilecek "Durdur" ve "Görevi Bitir" butonları -->
+                            <div id="timer-controls" style="display:none; margin-top: 10px;">
+                                <button class="btn btn-warning" id="stop-timer">
+                                    <i class="bi bi-pause-circle"></i> Durdur
+                                </button>
+                                <button class="btn btn-danger" id="complete-task">
+                                    <i class="bi bi-check-circle"></i> Görevi Bitir 
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Süre Başlat Kısmı Bitti -->
                         <div class="mt-3">
                             <h6>
                                 <i class="uil-info-circle"></i> Açıklama
@@ -189,12 +208,28 @@
             $("#edit-description").off("click");
             $("#save-description").off("click");
             $("#close-description").off("click");
+            $('#start-timer').off("click");
+            $('#stop-timer').off("click");
+            $('#complete-task').off("click");
+
+            
             $.ajax({
                 url: `/Mission/GetById/${missionId}`,
                 type: 'POST',
                 data: { id: missionId },
                 success: function (res) {
+                    //Görev süresi başlatılmış mı kontrolü
 
+                    if (res.isActive == false) {
+                        console.log("Görev aktif, süre başlatma gizleniyor.");
+                        $('#start-timer').hide();
+                        $('#timer-controls').show();
+                    } else {
+                        console.log("Görev pasif, süre başlatma gösteriliyor.");
+                        $('#start-timer').show();
+                        $('#timer-controls').hide();
+                    }
+                    console.log('Görev Detayları: ', res.isActive);
                     $("#modalDetail").modal("show");
                     $("#taskModalLabel").text(res.title);
                     $("#statuss").text(`Durum: ${res.statusName}`);
@@ -291,10 +326,78 @@
                     }
                 });
             });
+
             $("#close-description").click(function () {
                 $("#edit-description-container").hide();
                 $("#description-container").show();
             });
+
+            
+
+            $('#start-timer').click(() => {
+                $("#modalDetail").data('missionId', missionId);
+                $.ajax({
+                    url: `/Mission/StartMission/${missionId}`,
+                    type:'POST',
+                    data: { missionId: missionId},
+                    success: function (res) {
+                        if (res.success) {
+                            $('#start-timer').hide();
+                            $('#timer-controls').shows();
+                            toastr.success("Süre başarıyla başlatıldı.");
+                        }else{
+                            toastr.error('Süre Başlatılamadı:' + res.message);
+                        }
+                    },
+                    error: () =>
+                    {
+                        toastr.error('Süre başlatılırken hata oluştu.');
+                    }
+                });
+            });
+
+            $('#stop-timer').click(() => {
+                $("#modalDetail").data('missionId', missionId);
+                $.ajax({
+                    url: `/Mission/StopMission/${missionId}`,
+                    type: 'POST',
+                    data: { missionId: missionId },
+                    success: (res) => {
+                        if (res.success) {
+                            toastr.success('Süre Başarıyla Durduruldu.');
+                        } else {
+                            toastr.error("Süre Durdurulamadı:" + res.message);
+                        }
+
+                    },
+                    error: () => {
+                        toastr.error('Süre Durdurulurken  Hata Oluştu.');
+                    }
+                });
+            });
+
+            $('#complete-task').click(() => { 
+                $("#modalDetail").data('missionId', missionId);
+                $.ajax({
+                    url: `/Mission/CompleteMission/${missionId}`,
+                    type: 'POST',
+                    data: { missionId: missionId },
+                    success: (res) => {
+                        if (res.success) {
+                            toastr.success('Görev Başarıyla Tamamlandı.');
+                            $('#timer-controls').hide();
+                        } else {
+                            toastr.error('Görev Tamamlanamadı:' + res.message);
+                        }
+                    },
+                    error: () => {
+                        toastr.erros('Görev Tamamlanırken Hata oluştu');
+                    }
+                });
+            });
+
+
+
         };
         
         //tarih
@@ -322,6 +425,9 @@
         // function formatDuration(duration) {
         //     return duration; // Uygun formatlama ekleyin
         // }
+
+        
+
         $("#btnAddComment").off().click(function () {
             let missionId = $("#modalDetail").data('missionId'); 
             let comment = {

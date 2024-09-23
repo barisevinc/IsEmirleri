@@ -108,6 +108,8 @@ namespace IsEmirleri.Business.Concrete
            {
                Id = p.Id,
                Title = p.Title,
+               IsActive = p.IsActive,
+               IsCompleted = p.IsCompleted,
                Description = p.Description,
                StartDate = p.StartDate,
                EndDate = p.EndDate,
@@ -181,7 +183,7 @@ namespace IsEmirleri.Business.Concrete
 
         public TimeSpan GetMissionDuration(int missionId)
         {
-            var mission = _repository.GetById(missionId);
+            var mission = GetByMissionId(missionId);
             if (mission.IsActive && mission.StartDate != null)
             {
                 DateTime now = DateTime.Now;
@@ -193,43 +195,38 @@ namespace IsEmirleri.Business.Concrete
         }
         public bool StartMission(int missionId)
         {
-            var mission = _repository.GetById(missionId);
-
-            if (mission.IsActive)
-            {
-                throw new Exception("Görev zaten başlatılmış.");
-            }
+            var mission = GetByMissionId(missionId);
 
             mission.StartDate = DateTime.Now;
             mission.IsActive = true;
 
-            _repository.Update(mission);
+            _repository.Save();
             return true;
         }
         public bool StopMission(int missionId)
         {
-            var mission = _repository.GetById(missionId);
+            var mission = GetByMissionId(missionId);
 
-            if (!mission.IsActive)
-            {
-                throw new Exception("Görev zaten duraklatılmış veya bitirilmiş.");
-            }
+            //if (!mission.IsActive)
+            //{
+            //    throw new Exception("Görev zaten duraklatılmış veya bitirilmiş.");
+            //}
 
             UpdateTotalDuration(mission);
 
             mission.IsActive = false;
-            _repository.Update(mission);
+            _repository.Save();
             return true;
         }
 
         public bool CompleteMission(int missionId)
         {
-            var mission = _repository.GetById(missionId);
+            var mission = GetByMissionId(missionId);
 
-            if (mission.IsCompleted)
-            {
-                return false;
-            }
+            //if (mission.IsCompleted)
+            //{
+            //    return false;
+            //}
 
             if (mission.IsActive && mission.StartDate != null)
             {
@@ -239,11 +236,11 @@ namespace IsEmirleri.Business.Concrete
             mission.IsActive = false;
             mission.IsCompleted = true;
             mission.EndDate = DateTime.Now;
-            _repository.Update(mission);
+            _repository.Save();
             return true;
         }
 
-        private void UpdateTotalDuration(Mission mission)
+        private void UpdateTotalDuration(MissionGetByDto mission)
         {
             if (mission.StartDate != null)
             {
