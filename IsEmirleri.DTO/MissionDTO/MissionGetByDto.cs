@@ -13,6 +13,7 @@ namespace IsEmirleri.DTO.MissionDTO
         public string Title { get; set; }
         public bool IsActive { get; set; }
         public bool IsCompleted { get; set; }
+        public DateTime? EndTime { get; set; }
         public TimeSpan TotalDuration { get; set; } = TimeSpan.Zero;
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

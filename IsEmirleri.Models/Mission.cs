@@ -14,9 +14,10 @@ namespace IsEmirleri.Models
         public string? Title {  get; set; }
         public string? Description { get; set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? EndTime { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? StopWatch { get; set; }
-        public TimeSpan TotalDuration { get; set; }=TimeSpan.Zero;
+        public TimeSpan? TotalDuration { get; set; }=TimeSpan.Zero;
         public bool IsActive { get; set; } = false;
         public bool IsCompleted { get; set; } = false;
         public bool EmailNotification { get; set; } = false;

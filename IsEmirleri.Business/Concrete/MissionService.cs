@@ -113,6 +113,7 @@ namespace IsEmirleri.Business.Concrete
                Description = p.Description,
                StartDate = p.StartDate,
                EndDate = p.EndDate,
+               EndTime=p.EndTime,
                DateCreated = p.DateCreated,
                DateUpdated = p.DateUpdated,
                StatusName = p.Status.Name,
@@ -129,6 +130,8 @@ namespace IsEmirleri.Business.Concrete
 
             return mission;
         }
+
+        
 
         public UserCountDto GetCustomerInformationCounts(int userId)
         {
@@ -195,17 +198,16 @@ namespace IsEmirleri.Business.Concrete
         }
         public bool StartMission(int missionId)
         {
-            var mission = GetByMissionId(missionId);
+            var mission = GetById(missionId);
 
             mission.StartDate = DateTime.Now;
             mission.IsActive = true;
-
-            _repository.Save();
+            _repository.Update(mission);
             return true;
         }
         public bool StopMission(int missionId)
         {
-            var mission = GetByMissionId(missionId);
+            var mission = GetById(missionId);
 
             //if (!mission.IsActive)
             //{
@@ -221,12 +223,7 @@ namespace IsEmirleri.Business.Concrete
 
         public bool CompleteMission(int missionId)
         {
-            var mission = GetByMissionId(missionId);
-
-            //if (mission.IsCompleted)
-            //{
-            //    return false;
-            //}
+            var mission = GetById(missionId);
 
             if (mission.IsActive && mission.StartDate != null)
             {
@@ -235,19 +232,19 @@ namespace IsEmirleri.Business.Concrete
 
             mission.IsActive = false;
             mission.IsCompleted = true;
-            mission.EndDate = DateTime.Now;
+            mission.EndTime = DateTime.Now;
             _repository.Save();
             return true;
         }
 
-        private void UpdateTotalDuration(MissionGetByDto mission)
+        private void UpdateTotalDuration(Mission mission)
         {
-            if (mission.StartDate != null)
-            {
+            //if (mission.StartDate != null)
+            //{
                 DateTime now = DateTime.Now;
                 TimeSpan elapsedTime = now - mission.StartDate.Value;
                 mission.TotalDuration += elapsedTime;
-            }
+            //}
         }
     }
 }
