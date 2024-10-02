@@ -4,22 +4,22 @@
 }
 
 @using System.Security.Claims
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-soft-success text-dark text-center d-flex">
-                <div class="col-10 text-center fs-3 text-dark"><i class="fas fa-user-friends"></i>Kullanıcı Listesi</div>
-                <div class="col-2 fs-3">
-                    <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <table id="tblUsers" class="table table-bordered table-striped table-hover">
-                </table>
-            </div>
+<div class="card">
+    <div class="card-header bg-soft-success text-dark d-flex align-items-center justify-content-between">
+        <div class="flex-grow-1 text-center fs-3 text-dark">
+            <i class="fas fa-user-friends"></i>Kullanıcı Listesi
+        </div>
+        <div class="text-end">
+            <a href="#" id="btnAdd" class="btn btn-success">
+                <i class="uil uil-plus me-2"></i>Yeni Kayıt
+            </a>
         </div>
     </div>
+    <div class="card-body">
+        <table id="tblUsers" class="table table-bordered table-striped table-hover"></table>
+    </div>
 </div>
+
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">

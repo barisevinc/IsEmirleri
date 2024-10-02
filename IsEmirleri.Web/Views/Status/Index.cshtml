@@ -1,14 +1,19 @@
 ﻿<div class="card">
-    <div class="card-header bg-soft-success text-dark text-center d-flex">
-        <div class="col-11 text-center fs-3 text-dark">Durum Listesi</div>
-        <div class="col-1 fs-3">
-            <a href="#" id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</a>
+    <div class="card-header bg-soft-success text-dark d-flex align-items-center justify-content-between">
+        <div class="flex-grow-1 text-center fs-3 text-dark">
+            <i class="fas fa-exclamation-circle"></i>Durum Listesi
+        </div>
+        <div class="text-end">
+            <a href="#" id="btnAdd" class="btn btn-success">
+                <i class="uil uil-plus me-2"></i>Yeni Kayıt
+            </a>
         </div>
     </div>
     <div class="card-body">
         <table id="tblStatus" class="table table-bordered table-striped table-hover"></table>
     </div>
 </div>
+
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
