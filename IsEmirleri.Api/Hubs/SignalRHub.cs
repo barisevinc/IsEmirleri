@@ -30,5 +30,9 @@ namespace IsEmirleri.Api.Hubs
             var userValue = _missionService.GetUserInformationCounts(userId);
             await Clients.All.SendAsync("UserInformationCounts", userValue);
         }
+        public async Task NotifyTaskUpdated(string taskId, string newStatusId)
+        {
+            await Clients.All.SendAsync("TaskUpdated", taskId, newStatusId);
+        }
     }
 }

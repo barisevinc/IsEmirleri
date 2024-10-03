@@ -450,7 +450,10 @@
                     });
                 })
             })
-
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7207/SignalRHub") 
+                .build();
+            connection.start().catch(err => console.error(err.toString()));
             function fillCardMision() {
                 $.ajax({
                     url: "/Mission/GetAllCard",
@@ -507,6 +510,8 @@
                         },
                         success: function (res) {
                             toastr.success("Görev başarıyla güncellendi.");
+                            connection.invoke("NotifyTaskUpdated", data.split('-')[1], newStatusId)
+                                .catch(err => console.error(err));
                         }
                     });
                 }
