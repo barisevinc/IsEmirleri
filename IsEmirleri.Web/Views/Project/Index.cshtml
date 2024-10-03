@@ -19,40 +19,7 @@
 
     </div>
 </div>
-@* <div class="modal fade" id="modalEkle" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
-         role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                    Proje Güncelleme Formu
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
 
-                <div class="mb-3 row">
-                    <input type="text" id="txtName" placeholder="Proje Adı Giriniz" class="form-control" />
-                </div>
-                <div class="mb-3 row">
-                    <textarea id="txtDescription" rows="3" placeholder="Bir açıklama giriniz" class="form-control"></textarea>
-                </div>
-                <div class="mb-3 row">
-
-                    <select id="ddlKullanicilar" multiple class="form-select">
-                    </select>
-
-                </div>
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat </button>
-                <button type="button" id="btnKaydet" class="btn btn-primary">Kaydet</button>
-            </div>
-        </div>
-    </div>
-</div> *@
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -82,15 +49,15 @@
 
 <style>
     .select2-container--open {
-        z-index: 9999 !important; /* Select2 penceresi modal penceresi arkasında kalmasın diye eklendi */
+        z-index: 9999 !important; 
     }
 
     .select2-selection--multiple {
-        cursor: pointer !important; /* Pointer */
+        cursor: pointer !important; 
     }
 
         .select2-selection--multiple .select2-selection__placeholder {
-            cursor: default !important; /* Pointer */
+            cursor: default !important; 
         }
 
 </style>
@@ -247,10 +214,6 @@
                             for (let item of resUsers.data) {
                                 $("#txtUserSelect").append(new Option(item.email, item.id, false, res.users.find(u => u.id == item.id) != null))
                             }
-
-
-
-
 
                         }
                     });
