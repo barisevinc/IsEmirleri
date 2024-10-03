@@ -245,7 +245,7 @@
                     $("#total-time").text(`Girilen Toplam Süre: ${res.totalDuration}`);
 
                     let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
-                    let completedClass = res.isCompleted ? "text-danger" : "text-success"; // Stil sınıfı
+                    let completedClass = res.isCompleted ? "text-danger" : "text-success";
 
                     $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
                     let assigneesText = "";
@@ -256,7 +256,7 @@
                     } else {
                         assigneesText = "Atanan üye yok";
                     }
-                    $("#assigned-users").html(assigneesText); // .text yerine .html kullanıldı
+                    $("#assigned-users").html(assigneesText); 
                     $("#emailNotificationIcon").html(res.emailNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
                     $("#smsNotificationIcon").html(res.smsNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
                     let commentsText = "";
@@ -443,20 +443,35 @@
 
             $(document).off('click', '#complete-task').on('click', '#complete-task', function () {
                 const missionId = $("#modalDetail").data('missionId');
-                $.ajax({
-                    url: `/Mission/CompleteMission/${missionId}`,
-                    type: 'POST',
-                    data: { missionId: missionId },
-                    success: (res) => {
 
-                        clearInterval(timers[missionId]);
-                        delete timers[missionId];
-                        updateTimerControls(res);
-                        toastr.success('Görev başarıyla tamamlandı.');
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bitirilen göreve devam edilemez. Görevi bitirmek istediğinize emin misiniz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet, bitir!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        
+                        $.ajax({
+                            url: `/Mission/CompleteMission/${missionId}`,
+                            type: 'POST',
+                            data: { missionId: missionId },
+                            success: (res) => {
 
-                    },
-                    error: () => {
-                        toastr.error('Görev tamamlanırken hata oluştu.');
+                                clearInterval(timers[missionId]);
+                                delete timers[missionId];
+                                updateTimerControls(res);
+                                toastr.success('Görev başarıyla tamamlandı.');
+
+                            },
+                            error: () => {
+                                toastr.error('Görev tamamlanırken hata oluştu.');
+                            }
+                        });
                     }
                 });
             });
