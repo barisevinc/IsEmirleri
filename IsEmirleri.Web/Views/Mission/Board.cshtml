@@ -345,7 +345,9 @@
                             priorityId: $("#ddlPriorities").val(),
                             projectId: $("#ddlProjects").val(),
                             statusId: statusId,
-                            endDate: $("#txtEndDate").val()
+                            endDate: $("#txtEndDate").val(),
+                            smsNotification: $("#chkSmsNotification").is(":checked"),
+                            emailNotification: $("#chkMailNotification").is(":checked")
                         };
 
                         let selectedUserIds = $("#ddlUsers").val();
@@ -355,25 +357,29 @@
                             type: 'POST',
                             data: {
                                 mission: mission,
-                                userIds: selectedUserIds
+                                userIds: selectedUserIds,
+                                emailNotification: mission.emailNotification
+
                             },
                             success: function (res) {
                                 $("#modalAdd").modal("hide");
                                 let emails = res.assignees.map(user => user.email).join("<br/>");
 
-                                let newTask = `
-                                                                <div class="col-sm-12">
-                                                                    <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                                                        <div class="card-body">
-                                                                            <h5 class="card-title">#${res.id} ${res.title}</h5>
-                                                                            <p class="card-text">${res.description}</p>
-                                                                            <h6 class="card-text">${emails}</h6>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                let newTask = `<div class="col-sm-12">
+                                                <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                                  <div class="card-body">
+                                                   <h5 class="card-title">#${res.id} ${res.title}</h5>
+                                                   <p class="card-text">${res.description}</p>
+                                                   <h6 class="card-text">${emails}</h6>
+                                                  </div>
+                                                </div>
+                                             </div>
+                                `;
 
                                 $(`#tasks-${statusId}`).append(newTask);
+                                if (res.emailNotification) {
+                                    toastr.success("Görev E-Postası Başarıyla İletildi.")
+                                }
                                 toastr.success("Görev Başarıyla Oluşturuldu");
                             }
                         });
@@ -588,6 +594,7 @@
                     }
                 });
             }
+
             showMissionDetails = function (missionId, button) {
                 $("#edit-description").off("click");
                 $("#save-description").off("click");
@@ -598,6 +605,10 @@
                     data: { id: missionId },
                     success: function (res) {
 
+                        const isActive = res.isActive;
+                        updateTimerControls(isActive);
+                        $("#timer-container").html(`<div id="elapsed-time-${missionId}" class="elapsed-time-display">00:00:00</div>`);
+                        console.log(res.totalDuration);
                         $("#modalDetail").modal("show");
                         $("#taskModalLabel").text(res.title);
                         $("#statuss").text(`Durum: ${res.statusName}`);
@@ -607,9 +618,13 @@
                         $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
                         $("#start-date").text(res.startDate ? `Başlangıç Tarihi: ${formatDate(res.startDate)}` : 'Başlangıç Tarihi: Başlamadı');
                         $("#priority").text(`Öncelik: ${res.priorityName}`);
+                        $("#total-time").text(`Girilen Toplam Süre: ${res.totalDuration}`);
 
-                        //$("#logged-time").text(`Girilen Süre: ${formatDuration(res.loggedTime)}`);
-                        //$("#total-time").text(`Girilen Toplam Süre: ${formatDuration(res.totalTime)}`);
+                        let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
+                        let completedClass = res.isCompleted ? "text-danger" : "text-success"; 
+
+                        $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
+
                         let assigneesText = "";
                         if (res.assigneeEmails && res.assigneeEmails.length > 0) {
                             for (var email of res.assigneeEmails) {
@@ -618,7 +633,7 @@
                         } else {
                             assigneesText = "Atanan üye yok";
                         }
-                        $("#assigned-users").html(assigneesText); // .text yerine .html kullanıldı
+                        $("#assigned-users").html(assigneesText); 
                         $("#emailNotificationIcon").html(res.emailNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
                         $("#smsNotificationIcon").html(res.smsNotification ? '<i class="class=uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
                         let commentsText = "";
@@ -756,7 +771,164 @@
                     }
 
                 });
+
+                function updateTimerControls(isActive) {
+                    const timerControls = $('#timer-controls');
+                    timerControls.empty();
+
+                    if (isActive) {
+                        timerControls.append(`
+                                        <button class="btn btn-primary btn-sm" id="start-timer">
+                                            <i class="bi bi-play-circle"></i> Süre Başlat
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" id="complete-task">
+                                            <i class="bi bi-check-circle"></i> Görevi Bitir
+                                        </button>
+                                    `);
+                    } else {
+                        timerControls.append(`
+                                        <button class="btn btn-warning btn-sm" id="stop-timer">
+                                            <i class="bi bi-pause-circle"></i> Durdur
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" id="complete-task">
+                                            <i class="bi bi-check-circle"></i> Görevi Bitir
+                                        </button>
+                                    `);
+                    }
+                }
+
+                $(document).off('click', '#start-timer').on('click', '#start-timer', function () {
+                    const missionId = $("#modalDetail").data('missionId');
+                    console.log("Timer başlatılıyor ve missionId:", missionId);
+
+                    $.ajax({
+                        url: `/Mission/StartMission/${missionId}`,
+                        type: 'POST',
+                        data: { missionId: missionId },
+                        success: function (res) {
+                            console.log(res);
+                            startTimer(missionId);
+                            updateTimerControls(res.isActive);
+
+                            toastr.success("Süre başarıyla başlatıldı.");
+
+
+                        },
+                        error: () => {
+                            toastr.error('Süre başlatılırken hata oluştu.');
+                        }
+                    });
+                });
+
+                let timers = {};
+
+                function startTimer(missionId) {
+                    if (timers[missionId]) {
+                        clearInterval(timers[missionId]); 
+                    }
+
+                    let elapsedTime = 0;
+                    timers[missionId] = setInterval(function () {
+                        elapsedTime += 1000;
+
+                        const hours = Math.floor(elapsedTime / 1000 / 3600);
+                        const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+                        const seconds = Math.floor((elapsedTime / 1000) % 60);
+
+                        const formattedHours = String(hours).padStart(2, '0');
+                        const formattedMinutes = String(minutes).padStart(2, '0');
+                        const formattedSeconds = String(seconds).padStart(2, '0');
+
+
+                        $(`#elapsed-time-${missionId}`).text(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
+                    }, 1000);
+                }
+
+                $(document).off('click', '#stop-timer').on('click', '#stop-timer', function () {
+                    const missionId = $("#modalDetail").data('missionId');
+                    $.ajax({
+                        url: `/Mission/StopMission/${missionId}`,
+                        type: 'POST',
+                        data: { missionId: missionId },
+                        success: (res) => {
+                            console.log(res);
+                            updateTimerControls(res);
+                            
+                            console.log(`Durdurulan Timer ID: ${missionId}`);
+                            clearInterval(timers[missionId]);
+                            delete timers[missionId];
+
+                            
+                            if (!timers[missionId]) {
+                                console.log(`Timer başarıyla durduruldu: ${missionId}`);
+                            } else {
+                                console.error(`Timer durdurulamadı: ${missionId}`);
+                            }
+                            toastr.success('Süre başarıyla durduruldu.');
+                        },
+                        error: () => {
+                            toastr.error('Süre durdurulurken hata oluştu.');
+                        }
+                    });
+                });
+
+
+                $(document).off('click', '#complete-task').on('click', '#complete-task', function () {
+                    const missionId = $("#modalDetail").data('missionId');
+
+                    Swal.fire({
+                        title: 'Emin misiniz?',
+                        text: "Bitirilen göreve devam edilemez. Görevi bitirmek istediğinize emin misiniz?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Evet, bitir!',
+                        cancelButtonText: 'İptal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+                                url: `/Mission/CompleteMission/${missionId}`,
+                                type: 'POST',
+                                data: { missionId: missionId },
+                                success: (res) => {
+
+                                    clearInterval(timers[missionId]);
+                                    delete timers[missionId];
+                                    updateTimerControls(res);
+                                    toastr.success('Görev başarıyla tamamlandı.');
+
+                                },
+                                error: () => {
+                                    toastr.error('Görev tamamlanırken hata oluştu.');
+                                }
+                            });
+                        }
+                    });
+                });
+
+                function startTimerFromStartDate(missionId, startTime) {
+                    const currentTime = new Date();
+                    let elapsedTime = currentTime - startTime;
+
+                    if (timers[missionId]) {
+                        clearInterval(timers[missionId]);
+                    }
+
+                    timers[missionId] = setInterval(function () {
+                        elapsedTime += 1000;
+
+                        const hours = Math.floor(elapsedTime / 1000 / 3600);
+                        const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+                        const seconds = Math.floor((elapsedTime / 1000) % 60);
+
+                        $('#timer-display').text(`${hours} saat, ${minutes} dakika, ${seconds} saniye`);
+                    }, 1000);
+                }
             };
+
+           
 
             //tarih
             function formatDate(dateString) {
@@ -771,18 +943,7 @@
                     second: '2-digit'
                 });
             }
-            //saatisz
-            // function formatDate(dateString) {
-            //     if (!dateString) return "";
-            //     let date = new Date(dateString);
-            //     return date.toLocaleDateString();
-            // }
-
-
-            //sonra bakılcak
-            // function formatDuration(duration) {
-            //     return duration; // Uygun formatlama ekleyin
-            // }
+            
 
         </script>
     }
