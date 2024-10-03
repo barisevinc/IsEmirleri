@@ -516,7 +516,9 @@
                     });
                 }
             }
-
+            connection.on("TaskUpdated", (taskId, newStatusId) => {
+                console.log(`Görev ${taskId} yeni duruma alındı: ${newStatusId}`);
+            });
             function fillProjects() {
                 $.ajax({
                     url: '/Project/GetAll',
