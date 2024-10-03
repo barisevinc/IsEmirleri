@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using IsEmirleri.DTO.UserDTOs;
+using IsEmirleri.Utility;
 
 namespace IsEmirleri.Business.Concrete
 {
@@ -32,25 +33,34 @@ namespace IsEmirleri.Business.Concrete
             _userService = userService;
         }
 
-        public Mission AddMission(Mission mission, List<int> userIds)
+        public async Task<Mission> AddMission(Mission mission, List<int> userIds, bool emailNotification)
         {
             var addedMission = _repository.Add(mission);
-
 
             if (userIds != null && userIds.Count > 0)
             {
                 var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
 
-                foreach (var user in users)
-                {
-                    addedMission.Assignees = users;
-                }
+                addedMission.Assignees = users;
 
                 _repository.Update(addedMission);
+
+                if (emailNotification)
+                {
+                    var emailTasks = new List<Task>();
+
+                    foreach (var user in users)
+                    {
+                        emailTasks.Add(HelperMissionMail.SendMissionAssignedMailAsync(user.Email, mission.Title));
+                    }
+
+                    await Task.WhenAll(emailTasks);
+                }
             }
 
             return addedMission;
         }
+
 
         public IQueryable<Mission> GetAll()
         {
@@ -108,6 +118,7 @@ namespace IsEmirleri.Business.Concrete
            {
                Id = p.Id,
                Title = p.Title,
+               TotalDuration= (TimeSpan)p.TotalDuration,
                IsActive = p.IsActive,
                IsCompleted = p.IsCompleted,
                Description = p.Description,
@@ -186,65 +197,59 @@ namespace IsEmirleri.Business.Concrete
 
         public TimeSpan GetMissionDuration(int missionId)
         {
-            var mission = GetByMissionId(missionId);
+            var mission = GetById(missionId);
+
+            var totalDuration = mission.TotalDuration ?? TimeSpan.Zero;
+
             if (mission.IsActive && mission.StartDate != null)
             {
                 DateTime now = DateTime.Now;
                 TimeSpan currentDuration = now - mission.StartDate.Value;
-
-                return mission.TotalDuration + currentDuration;
+                return totalDuration + currentDuration;
             }
-            return mission.TotalDuration;
+            return totalDuration;
         }
         public bool StartMission(int missionId)
         {
             var mission = GetById(missionId);
-
-            mission.StartDate = DateTime.Now;
-            mission.IsActive = true;
-            _repository.Update(mission);
+            if (mission.IsCompleted == true && mission.IsActive==true)
+            {
+                mission.StartDate = DateTime.Now;
+                mission.IsActive = false;
+                _repository.Update(mission);
+            }
+            
             return true;
+
         }
         public bool StopMission(int missionId)
         {
             var mission = GetById(missionId);
 
-            //if (!mission.IsActive)
-            //{
-            //    throw new Exception("Görev zaten duraklatılmış veya bitirilmiş.");
-            //}
-
             UpdateTotalDuration(mission);
-
-            mission.IsActive = false;
-            _repository.Save();
+            mission.IsActive = true;
+           _repository.Update(mission);
             return true;
         }
 
         public bool CompleteMission(int missionId)
         {
             var mission = GetById(missionId);
-
-            if (mission.IsActive && mission.StartDate != null)
-            {
-                UpdateTotalDuration(mission);
-            }
-
-            mission.IsActive = false;
-            mission.IsCompleted = true;
-            mission.EndTime = DateTime.Now;
-            _repository.Save();
+            UpdateTotalDuration(mission);
+            mission.IsActive = true;
+            mission.IsCompleted = false;  
+            mission.EndTime = DateTime.Now; 
+            _repository.Update(mission);
             return true;
         }
 
         private void UpdateTotalDuration(Mission mission)
         {
-            //if (mission.StartDate != null)
-            //{
                 DateTime now = DateTime.Now;
                 TimeSpan elapsedTime = now - mission.StartDate.Value;
                 mission.TotalDuration += elapsedTime;
-            //}
+                //mission.StartDate = null;
+                _repository.Update(mission);
         }
     }
 }
