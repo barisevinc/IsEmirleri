@@ -172,7 +172,7 @@
                             <label for="ddlPriorities" class="form-label">Öncelik</label>
                             <select class="form-select" id="ddlPriorities"></select>
                         </div>
-                     
+
                         <div class="mb-3">
                             <label for="ddlProjects" class="form-label">Görevin Ait Olduğu Proje</label>
                             <select class="form-select" id="ddlProjects"></select>
@@ -185,7 +185,17 @@
                             <label for="txtEndDate" class="form-label">Görevin Bitmesi Gereken Tarihi</label>
                             <input type="date" class="form-control" id="txtEndDate">
                         </div>
+
                         <input type="hidden" id="hiddenStatusId" value="">
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chkSmsNotification">
+                            <label class="form-check-label" for="chkSmsNotification">Görev Sahiplerine SMS Gönderilsin mi?</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chkMailNotification">
+                            <label class="form-check-label" for="chkMailNotification">Görev Sahiplerine Mail Gönderilsin mi?</label>
+                        </div>
                     </form>
 
                 </div>
@@ -209,7 +219,14 @@
                     <div class="row">
                         <div class="col-lg-8 left-panel">
                             <p><i class="bi bi-link"></i> İlişkili: <a href="/project/index" id="project"></a></p>
-                            <button class="btn btn-primary" id="start-timer"><i class="bi bi-play-circle"></i> Süre Başlat</button>
+                            <div class="mt-3">
+
+                                <div id="timer-container">
+                                    <div id="elapsed-time" class="elapsed-time-display">00:00:00</div>
+                                </div>
+                                <div id="timer-controls" margin-top: 10px;">
+                                </div>
+                            </div>
                             <div class="mt-3">
                                 <h6>
                                     <i class="uil-info-circle"></i> Açıklama
@@ -248,9 +265,7 @@
                                     Bitiş Tarihi:
                                 </p>
                                 <p class="mdi mdi-priority-high" id="priority">Öncelik: </p>
-                                <p class="mdi mdi-timer-outline" id="logged-time">
-                                    Girilen Süre:
-                                </p>
+                               
                                 <p class="mdi mdi-timer-off-outline" id="total-time">
                                     Girilen Toplam Süre:
                                 </p>
@@ -272,7 +287,7 @@
             </div>
         </div>
     </div>
-  
+
     @section Scripts {
 
         <script>
@@ -285,26 +300,26 @@
 
                         groupedData.forEach(status => {
                             $("#content").append(`
-                                                <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
-                                                    <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <h5 class="mb-0 d-flex align-items-center">
-                                                                ${status.name}
-                                                                <span class="badge bg-secondary ms-2">${status.taskCount}</span>
-                                                            </h5>
-                                                                       <a onclick="updateStatus(${status.id},this);" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
-                                                                ⋮
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                            <div class="card col-3 me-2" id="status-card-${status.id}" style="background-color: #e9ecef;">
+                                                                <div class="card-header text-dark text-center position-relative p-3 border-bottom" style="background-color: #dee2e6;">
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <h5 class="mb-0 d-flex align-items-center">
+                                                                            ${status.name}
+                                                                            <span class="badge bg-secondary ms-2">${status.taskCount}</span>
+                                                                        </h5>
+                                                                                   <a onclick="updateStatus(${status.id},this);" class="btn btn-link position-absolute" style="top: 10px; right: 10px; font-size: 1.5rem; color: black; background: none; border: none; padding: 0; text-decoration: none;">
+                                                                            ⋮
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
 
-                                                    <div class="card-body" id="tasks-${status.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
-                                                    </div>
-                                                    <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
-                                                        <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
-                                                    </div>
-                                                </div>
-                                            `);
+                                                                <div class="card-body" id="tasks-${status.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                                                </div>
+                                                                <div class="card-footer text-start text-dark" id="taskAdd-${status.id}" style="background-color: #dee2e6; cursor: pointer;">
+                                                                    <a onclick="addMission(${status.id},this)" title="Görev Ekle" class="btn btn-hover"><i class="bx bx-plus"></i> Görev Ekle</a>
+                                                                </div>
+                                                            </div>
+                                                        `);
                         });
                         fillCardMision();
                     }
@@ -347,16 +362,16 @@
                                 let emails = res.assignees.map(user => user.email).join("<br/>");
 
                                 let newTask = `
-                                                    <div class="col-sm-12">
-                                                        <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
-                                                            <div class="card-body">
-                                                                <h5 class="card-title">#${res.id} ${res.title}</h5>
-                                                                <p class="card-text">${res.description}</p>
-                                                                <h6 class="card-text">${emails}</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `;
+                                                                <div class="col-sm-12">
+                                                                    <div class="card card-clickable" id="task-${res.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">#${res.id} ${res.title}</h5>
+                                                                            <p class="card-text">${res.description}</p>
+                                                                            <h6 class="card-text">${emails}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            `;
 
                                 $(`#tasks-${statusId}`).append(newTask);
                                 toastr.success("Görev Başarıyla Oluşturuldu");
@@ -390,7 +405,7 @@
                                 success: function (res1) {
                                     $("#modalStatus").modal("hide");
 
-                               
+
                                     $(`#status-card-${statusId} .card-header h5`).text(res1.name);
                                     $(`#badge-${status.taskCount}`).text(res1.taskCount); //count getirilmeye çalışıldı.
                                     toastr.success("Durum başarıyla güncellendi!");
@@ -447,27 +462,27 @@
                             }
 
                             $("#tasks-" + item.statusId).append(`
-                                                <div class="col-sm-12">
-                                                                            <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;" onclick="showMissionDetails(${item.id})">
-                                                        <div class="card-body">
-                                                            <div class="d-flex align-items-start justify-content-between">
-                                                                <h5 class="card-title">#${item.id} ${item.title}</h5>
-                                                                <div class="email-icons">
-                                                                    ${emails}
+                                                            <div class="col-sm-12">
+                                                                                        <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;" onclick="showMissionDetails(${item.id})">
+                                                                    <div class="card-body">
+                                                                        <div class="d-flex align-items-start justify-content-between">
+                                                                            <h5 class="card-title">#${item.id} ${item.title}</h5>
+                                                                            <div class="email-icons">
+                                                                                ${emails}
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="card-text">${item.description}</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <p class="card-text">${item.description}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `);
+                                                        `);
                         }
 
 
                     }
                 });
             }
-          
+
             function drag(ev) {
                 ev.dataTransfer.setData("text", ev.target.id);
             }
@@ -592,7 +607,7 @@
                         $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
                         $("#start-date").text(res.startDate ? `Başlangıç Tarihi: ${formatDate(res.startDate)}` : 'Başlangıç Tarihi: Başlamadı');
                         $("#priority").text(`Öncelik: ${res.priorityName}`);
-                       
+
                         //$("#logged-time").text(`Girilen Süre: ${formatDuration(res.loggedTime)}`);
                         //$("#total-time").text(`Girilen Toplam Süre: ${formatDuration(res.totalTime)}`);
                         let assigneesText = "";
@@ -610,38 +625,38 @@
                         if (res.comments && res.comments.length > 0) {
                             for (var comment of res.comments) {
                                 commentsText += `
-                                                <div class="mt-4">
-                                                   <div>
-                                                      <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
-                                                   </div>
-                                                <div class="border p-4 rounded">
-                                                  <div class="border-bottom pb-3">
-                                                    <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
-                                                    <div class="d-flex align-items-start">
-                                                      <div class="flex-grow-1 d-flex justify-content-between">
-                                                        <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
-                                                        <div class="text-end">
-                                                          <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                   </div>
-                                                  </div>
-                                                  </div>
-                                                  <style>
-                                                        .comment-description {
-                                                  word-break: break-word;
-                                                  overflow-wrap: break-word;
-                                                  white-space: pre-wrap;
-                                                  }
-                                                  </style>
-                                        `;
+                                                            <div class="mt-4">
+                                                               <div>
+                                                                  <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                                               </div>
+                                                            <div class="border p-4 rounded">
+                                                              <div class="border-bottom pb-3">
+                                                                <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                                                <div class="d-flex align-items-start">
+                                                                  <div class="flex-grow-1 d-flex justify-content-between">
+                                                                    <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                                    <div class="text-end">
+                                                                      <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                               </div>
+                                                              </div>
+                                                              </div>
+                                                              <style>
+                                                                    .comment-description {
+                                                              word-break: break-word;
+                                                              overflow-wrap: break-word;
+                                                              white-space: pre-wrap;
+                                                              }
+                                                              </style>
+                                                    `;
                             }
                         } else {
                             commentsText = "<p>Henüz yorum yapılmamış.</p>";
                         }
                         $("#comments").html(commentsText);
-                     
+
                         $("#modalDetail").data('missionId', missionId);
                     },
                     error: function (err) {
@@ -702,32 +717,32 @@
                                 let commentsText = "";
                                 for (var comment of res.comments) {
                                     commentsText += `
-                                                           <div class="mt-4">
-                                                             <div>
-                                                                <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
-                                                             </div>
-                                                                <div class="border p-4 rounded">
-                                                                  <div class="border-bottom pb-3">
-                                                                    <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
-                                                                      <div class="d-flex align-items-start">
-                                                                        <div class="flex-grow-1 d-flex justify-content-between">
-                                                                          <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
-                                                                          <div class="text-end">
-                                                                           <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                                                                          </div>
+                                                                       <div class="mt-4">
+                                                                         <div>
+                                                                            <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                                                         </div>
+                                                                            <div class="border p-4 rounded">
+                                                                              <div class="border-bottom pb-3">
+                                                                                <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                                                                  <div class="d-flex align-items-start">
+                                                                                    <div class="flex-grow-1 d-flex justify-content-between">
+                                                                                      <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                                                      <div class="text-end">
+                                                                                       <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                  </div>
+                                                                              </div>
+                                                                           </div>
                                                                         </div>
-                                                                      </div>
-                                                                  </div>
-                                                               </div>
-                                                            </div>
-                                                            <style>
-                                                                .comment-description {
-                                                            word-break: break-word;
-                                                            overflow-wrap: break-word;
-                                                            white-space: pre-wrap;
-                                                            }
-                                                            </style>
-                                                            `;
+                                                                        <style>
+                                                                            .comment-description {
+                                                                        word-break: break-word;
+                                                                        overflow-wrap: break-word;
+                                                                        white-space: pre-wrap;
+                                                                        }
+                                                                        </style>
+                                                                        `;
                                 }
                                 $("#comments").html(commentsText);
 
@@ -768,7 +783,7 @@
             // function formatDuration(duration) {
             //     return duration; // Uygun formatlama ekleyin
             // }
-          
+
         </script>
     }
 </body>

@@ -18,8 +18,8 @@ namespace IsEmirleri.Models
         public DateTime? EndDate { get; set; }
         public DateTime? StopWatch { get; set; }
         public TimeSpan? TotalDuration { get; set; }=TimeSpan.Zero;
-        public bool IsActive { get; set; } = false;
-        public bool IsCompleted { get; set; } = false;
+        public bool IsActive { get; set; } = true;
+        public bool IsCompleted { get; set; } = true;
         public bool EmailNotification { get; set; } = false;
         public bool SmsNotification {  get; set; } = false; 
         public int StatusId {  get; set; }

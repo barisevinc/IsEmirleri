@@ -37,10 +37,12 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Mission mission, List<int> userIds)
+        public async Task<IActionResult> Add(Mission mission, List<int> userIds, bool emailNotification)
         {
-            return Ok(_missionService.AddMission(mission, userIds));
+            var addedMission = await _missionService.AddMission(mission, userIds, emailNotification);
+            return Ok(addedMission);
         }
+
         [HttpPost]
         public IActionResult UpdateDescription(int missionId, string description)
         {

@@ -1,20 +1,33 @@
 ﻿<div class="row">
     <div class="col-12">
-        
-        <div class="card">
-            <div class="card-header bg-soft-success text-dark text-center d-flex">
-                <div><a class="btn btn-dark btn-sm" asp-controller="Mission" asp-action="Board"><i class="uil-clapper-board"></i><br />Board</a></div>
-                <div class="col-10 text-center fs-3 text-dark"><i class="dripicons-pencil"></i>   Görevler</div>
-                <div class="col-2 fs-3">
-                    <button id="btnAdd" class="btn btn-success"><i class="uil uil-plus me-2"></i>Yeni Kayıt</button>
-                    
+
+        <div class="container-fluid p-2">
+            <div class="card-header bg-soft-success text-dark text-center row align-items-center" style="padding: 10px 15px; height: 60px;">
+                <div class="col-12 col-md-2 text-md-start text-center mb-2 mb-md-0">
+                    <a class="btn btn-dark btn-sm w-100" asp-controller="Mission" asp-action="Board"
+                       style="max-width: 60px; padding: 4px 8px; line-height: 1;">
+                        <i class="uil uil-clapper-board"></i><br />Board
+                    </a>
+                </div>
+                <div class="col-12 col-md-8 text-center fs-4 text-dark">
+                    <i class="dripicons-pencil"></i> Görevler
+                </div>
+                <div class="col-12 col-md-2 text-md-end text-center">
+                    <button id="btnAdd" class="btn btn-success w-100" style="max-width: 110px; font-size: 14px;">
+                        <i class="uil uil-plus me-2"></i>Yeni Kayıt
+                    </button>
                 </div>
             </div>
-            <div class="card-body">
-                <table id="tblMission" class="table table-bordered table-striped table-hover"></table>
-            </div>
+        </div>
+
+
+
+
+        <div class="card-body">
+            <table id="tblMission" class="table table-bordered table-striped table-hover"></table>
         </div>
     </div>
+</div>
 </div>
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
@@ -32,17 +45,17 @@
                         <input type="text" class="form-control" id="txtTitle" placeholder="Lütfen Görev Başlığı Ekleyiniz">
                     </div>
                     <div class="mb-3">
-                        <label for="txtDescription" class="form-label" >Açıklama</label>
+                        <label for="txtDescription" class="form-label">Açıklama</label>
                         <textarea class="form-control" id="txtDescription" placeholder="Lütfen Görev Açıklaması Ekleyiniz"></textarea>
                     </div>
                     @* <div class="mb-3">
                     <label for="ddlFiles" class="form-label">Files</label>
                     <select class="form-select" id="ddlFiles" ></select>
                     </div> *@
-                   
+
                     <div class="mb-3">
                         <label for="ddlPriorities" class="form-label">Öncelik</label>
-                        <select class="form-select" id="ddlPriorities" ></select>
+                        <select class="form-select" id="ddlPriorities"></select>
                     </div>
                     <div class="mb-3">
                         <label for="ddlStatuses" class="form-label">Durum</label>
@@ -59,6 +72,14 @@
                     <div class="mb-3">
                         <label for="txtEndDate" class="form-label">Görevin Bitmesi Gereken Tarihi</label>
                         <input type="date" class="form-control" id="txtEndDate">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="chkSmsNotification">
+                        <label class="form-check-label" for="chkSmsNotification">Görev Sahiplerine SMS Gönderilsin mi?</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="chkMailNotification">
+                        <label class="form-check-label" for="chkMailNotification">Görev Sahiplerine Mail Gönderilsin mi?</label>
                     </div>
 
                 </form>
@@ -84,26 +105,16 @@
                 <div class="row">
                     <div class="col-lg-8 left-panel">
                         <p><i class="bi bi-link"></i> İlişkili: <a href="/project/index" id="project"></a></p>
-                        <!-- Süre Başlat ve Geçen Süre Göstergesi -->
-                        <div class="mt-3">
-                            <p class="mdi mdi-timer-outline" id="logged-time">
-                                Geçen Süre: <span id="elapsed-time">00:00:00</span>
-                            </p>
-                            <button class="btn btn-primary" id="start-timer">
-                                <i class="bi bi-play-circle"></i> Süre Başlat
-                            </button>
 
-                            <!-- Dinamik olarak gösterilecek "Durdur" ve "Görevi Bitir" butonları -->
-                            <div id="timer-controls" style="display:none; margin-top: 10px;">
-                                <button class="btn btn-warning" id="stop-timer">
-                                    <i class="bi bi-pause-circle"></i> Durdur
-                                </button>
-                                <button class="btn btn-danger" id="complete-task">
-                                    <i class="bi bi-check-circle"></i> Görevi Bitir 
-                                </button>
+                        <div class="mt-3">
+                           
+                            <div id="timer-container">
+                                <div id="elapsed-time" class="elapsed-time-display">00:00:00</div>
+                            </div>
+                            <div id="timer-controls" margin-top: 10px;">
                             </div>
                         </div>
-                        <!-- Süre Başlat Kısmı Bitti -->
+                       
                         <div class="mt-3">
                             <h6>
                                 <i class="uil-info-circle"></i> Açıklama
@@ -120,12 +131,12 @@
                         </div>
                         <div class="mt-3">
                             <h6><i class="bx bx-chat"></i> Yorumlar</h6>
-                                <p id="comments" ></p>
+                            <p id="comments"></p>
                             <textarea class="form-control" id="newComment" placeholder="Yorum Yazınız" required></textarea>
                             <div class="card border border-primary">
                             </div>
                             <div class="text-end">
-                                <button class="btn btn-primary btn-sm " id="btnAddComment" >Yorum Ekle</button>
+                                <button class="btn btn-primary btn-sm " id="btnAddComment">Yorum Ekle</button>
                             </div>
 
                         </div>
@@ -136,18 +147,17 @@
                             <p id="created-date">
                                 Oluşturuldu:
                             </p>
-                            <p class="uil-clipboard-notes" id="statuss"> Durum</p>
+                            <p class="uil-clipboard-notes" id="statuss"> Durum: </p>
+                            <p id="completed-status"> Görev Bitti mi?: </p>
                             <p class="uil-calendar-alt" id="start-date"> Başlangıç Tarihi: </p>
                             <p class="uil-calendar-slash" id="end-date">
-                               Bitiş Tarihi:
+                                Bitiş Tarihi:
                             </p>
                             <p class="mdi mdi-priority-high" id="priority">Öncelik: </p>
-                            <p class="mdi mdi-timer-outline" id="logged-time">
-                                Girilen Süre:
-                            </p>
-                            <p class="mdi mdi-timer-off-outline" id="total-time">
+                            <p class="mdi mdi-timer-outline" id="total-time">
                                 Girilen Toplam Süre:
                             </p>
+
                             <p id="emailNotification">
                                 <i class="uil-fast-mail"></i> E-posta Bildirimi: <span id="emailNotificationIcon"></span>
                             </p>
@@ -198,50 +208,46 @@
                         render: (data) => {
 
                             return `
-                                    <button onclick="showMissionDetails(${data},this)" class="btn uil-eye fs-6 btn-info" ></button > `;
+                                                    <button onclick="showMissionDetails(${data},this)" class="btn uil-eye fs-6 btn-info" ></button > `;
                         }
                     }
                 ],
             });
         });
+
+        let timerInterval;
+        let elapsedSeconds = 0;
+
         showMissionDetails = function (missionId, button) {
             $("#edit-description").off("click");
             $("#save-description").off("click");
             $("#close-description").off("click");
-            $('#start-timer').off("click");
-            $('#stop-timer').off("click");
-            $('#complete-task').off("click");
 
-            
             $.ajax({
                 url: `/Mission/GetById/${missionId}`,
                 type: 'POST',
                 data: { id: missionId },
                 success: function (res) {
-                    //Görev süresi başlatılmış mı kontrolü
 
-                    if (res.isActive == false) {
-                        console.log("Görev aktif, süre başlatma gizleniyor.");
-                        $('#start-timer').hide();
-                        $('#timer-controls').show();
-                    } else {
-                        console.log("Görev pasif, süre başlatma gösteriliyor.");
-                        $('#start-timer').show();
-                        $('#timer-controls').hide();
-                    }
-                    console.log('Görev Detayları: ', res.isActive);
+                    const isActive = res.isActive;
+                    updateTimerControls(isActive);
+                    $("#timer-container").html(`<div id="elapsed-time-${missionId}" class="elapsed-time-display">00:00:00</div>`);
+                    console.log(res.totalDuration);
                     $("#modalDetail").modal("show");
                     $("#taskModalLabel").text(res.title);
                     $("#statuss").text(`Durum: ${res.statusName}`);
                     $("#description").text(res.description);
                     $("#project").text(`#${res.projectId} - ${res.projectName}`);
                     $("#created-date").text(`Oluşturuldu: ${formatDate(res.dateCreated)}`);
-                    $("#end-date").text(`Bitiş Tarihi: ${formatDate(res.endDate)}`);
+                    $("#end-date").text(`Bitmesi Gereken Tarih: ${formatDate(res.endDate)}`);
                     $("#start-date").text(res.startDate ? `Başlangıç Tarihi: ${formatDate(res.startDate)}` : 'Başlangıç Tarihi: Başlamadı');
                     $("#priority").text(`Öncelik: ${res.priorityName}`);
-                    
-                    //$("#logged-time").text(`Girilen Süre: ${formatDuration(res.loggedTime)}`);
-                     //$("#total-time").text(`Girilen Toplam Süre: ${formatDuration(res.totalTime)}`);
+                    $("#total-time").text(`Girilen Toplam Süre: ${res.totalDuration}`);
+
+                    let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
+                    let completedClass = res.isCompleted ? "text-danger" : "text-success"; // Stil sınıfı
+
+                    $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
                     let assigneesText = "";
                     if (res.assigneeEmails && res.assigneeEmails.length > 0) {
                         for (var email of res.assigneeEmails) {
@@ -252,37 +258,37 @@
                     }
                     $("#assigned-users").html(assigneesText); // .text yerine .html kullanıldı
                     $("#emailNotificationIcon").html(res.emailNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
-                    $("#smsNotificationIcon").html(res.smsNotification ? '<i class="class=uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
+                    $("#smsNotificationIcon").html(res.smsNotification ? '<i class="uil-check text-success"></i>' : '<i class="uil-times text-danger"></i>');
                     let commentsText = "";
                     if (res.comments && res.comments.length > 0) {
                         for (var comment of res.comments) {
                             commentsText += `
-                                    <div class="mt-4">
-                                       <div>
-                                          <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
-                                       </div>
-                                    <div class="border p-4 rounded">
-                                      <div class="border-bottom pb-3">     
-                                        <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
-                                        <div class="d-flex align-items-start">
-                                          <div class="flex-grow-1 d-flex justify-content-between">
-                                            <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
-                                            <div class="text-end">
-                                              <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                       </div>
-                                      </div>
-                                      </div>
-                                      <style>
-                                            .comment-description {
-                                      word-break: break-word;
-                                      overflow-wrap: break-word;
-                                      white-space: pre-wrap;
-                                      }
-                                      </style>
-                            `;
+                                                    <div class="mt-4">
+                                                       <div>
+                                                          <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                                       </div>
+                                                    <div class="border p-4 rounded">
+                                                      <div class="border-bottom pb-3">
+                                                        <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                                        <div class="d-flex align-items-start">
+                                                          <div class="flex-grow-1 d-flex justify-content-between">
+                                                            <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                            <div class="text-end">
+                                                              <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                       </div>
+                                                      </div>
+                                                      </div>
+                                                      <style>
+                                                            .comment-description {
+                                                      word-break: break-word;
+                                                      overflow-wrap: break-word;
+                                                      white-space: pre-wrap;
+                                                      }
+                                                      </style>
+                                            `;
                         }
                     } else {
                         commentsText = "<p>Henüz yorum yapılmamış.</p>";
@@ -292,7 +298,7 @@
                 },
                 error: function (err) {
                     console.error("Görev detayları yüklenirken hata oluştu:", err);
-                }   
+                }
             });
             $("#edit-description").click(function () {
                 $("#description-container").hide();
@@ -304,7 +310,7 @@
                 const updatedDescription = $("#edit-description-text").val().trim();
                 if (updatedDescription === "") {
                     toastr.error('Açıklama boş olamaz. Lütfen bir açıklama girin.');
-                    return; // İşlem yapılmadan çıkış yap
+                    return;// İşlem yapılmadan çıkış yap
                 }
                 $.ajax({
                     url: `/Mission/UpdateDescription/${missionId}`,
@@ -332,74 +338,151 @@
                 $("#description-container").show();
             });
 
-            
 
-            $('#start-timer').click(() => {
-                $("#modalDetail").data('missionId', missionId);
+
+            function updateTimerControls(isActive) {
+                const timerControls = $('#timer-controls');
+                timerControls.empty();
+
+                if (isActive) {
+                    timerControls.append(`
+                            <button class="btn btn-primary btn-sm" id="start-timer">
+                                <i class="bi bi-play-circle"></i> Süre Başlat
+                            </button>
+                            <button class="btn btn-danger btn-sm" id="complete-task">
+                                <i class="bi bi-check-circle"></i> Görevi Bitir
+                            </button>
+                        `);
+                } else {
+                    timerControls.append(`
+                            <button class="btn btn-warning btn-sm" id="stop-timer">
+                                <i class="bi bi-pause-circle"></i> Durdur
+                            </button>
+                            <button class="btn btn-danger btn-sm" id="complete-task">
+                                <i class="bi bi-check-circle"></i> Görevi Bitir
+                            </button>
+                        `);
+                }
+            }
+
+            $(document).off('click', '#start-timer').on('click', '#start-timer', function () {
+                const missionId = $("#modalDetail").data('missionId');
+                console.log("Timer başlatılıyor ve missionId:", missionId);
+
                 $.ajax({
                     url: `/Mission/StartMission/${missionId}`,
-                    type:'POST',
-                    data: { missionId: missionId},
+                    type: 'POST',
+                    data: { missionId: missionId },
                     success: function (res) {
-                        if (res.success) {
-                            $('#start-timer').hide();
-                            $('#timer-controls').shows();
-                            toastr.success("Süre başarıyla başlatıldı.");
-                        }else{
-                            toastr.error('Süre Başlatılamadı:' + res.message);
-                        }
+                        console.log(res);
+                        startTimer(missionId);
+                        updateTimerControls(res.isActive);
+
+                        toastr.success("Süre başarıyla başlatıldı.");
+
+
                     },
-                    error: () =>
-                    {
+                    error: () => {
                         toastr.error('Süre başlatılırken hata oluştu.');
                     }
                 });
             });
 
-            $('#stop-timer').click(() => {
-                $("#modalDetail").data('missionId', missionId);
+            let timers = {};
+
+            function startTimer(missionId) {
+                if (timers[missionId]) {
+                    clearInterval(timers[missionId]); // Eski timer'ı durdur
+                }
+
+                let elapsedTime = 0;
+                timers[missionId] = setInterval(function () {
+                    elapsedTime += 1000;
+
+                    const hours = Math.floor(elapsedTime / 1000 / 3600);
+                    const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+                    const seconds = Math.floor((elapsedTime / 1000) % 60);
+
+                    const formattedHours = String(hours).padStart(2, '0');
+                    const formattedMinutes = String(minutes).padStart(2, '0');
+                    const formattedSeconds = String(seconds).padStart(2, '0');
+
+                    
+                    $(`#elapsed-time-${missionId}`).text(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
+                }, 1000);
+            }
+
+
+            $(document).off('click', '#stop-timer').on('click', '#stop-timer', function () {
+                const missionId = $("#modalDetail").data('missionId');
                 $.ajax({
                     url: `/Mission/StopMission/${missionId}`,
                     type: 'POST',
                     data: { missionId: missionId },
                     success: (res) => {
-                        if (res.success) {
-                            toastr.success('Süre Başarıyla Durduruldu.');
-                        } else {
-                            toastr.error("Süre Durdurulamadı:" + res.message);
-                        }
+                        console.log(res);
+                        updateTimerControls(res);
+                        // Timer'ı durdur
+                        console.log(`Durdurulan Timer ID: ${missionId}`);
+                        clearInterval(timers[missionId]);
+                        delete timers[missionId];
 
+                        // Timer'ın durdurulup durdurulmadığını kontrol et
+                        if (!timers[missionId]) {
+                            console.log(`Timer başarıyla durduruldu: ${missionId}`);
+                        } else {
+                            console.error(`Timer durdurulamadı: ${missionId}`);
+                        }
+                        toastr.success('Süre başarıyla durduruldu.');
                     },
                     error: () => {
-                        toastr.error('Süre Durdurulurken  Hata Oluştu.');
+                        toastr.error('Süre durdurulurken hata oluştu.');
                     }
                 });
             });
 
-            $('#complete-task').click(() => { 
-                $("#modalDetail").data('missionId', missionId);
+            $(document).off('click', '#complete-task').on('click', '#complete-task', function () {
+                const missionId = $("#modalDetail").data('missionId');
                 $.ajax({
                     url: `/Mission/CompleteMission/${missionId}`,
                     type: 'POST',
                     data: { missionId: missionId },
                     success: (res) => {
-                        if (res.success) {
-                            toastr.success('Görev Başarıyla Tamamlandı.');
-                            $('#timer-controls').hide();
-                        } else {
-                            toastr.error('Görev Tamamlanamadı:' + res.message);
-                        }
+
+                        clearInterval(timers[missionId]);
+                        delete timers[missionId];
+                        updateTimerControls(res);
+                        toastr.success('Görev başarıyla tamamlandı.');
+
                     },
                     error: () => {
-                        toastr.erros('Görev Tamamlanırken Hata oluştu');
+                        toastr.error('Görev tamamlanırken hata oluştu.');
                     }
                 });
             });
 
+            function startTimerFromStartDate(missionId, startTime) {
+                const currentTime = new Date();
+                let elapsedTime = currentTime - startTime;
+
+                if (timers[missionId]) {
+                    clearInterval(timers[missionId]);
+                }
+
+                timers[missionId] = setInterval(function () {
+                    elapsedTime += 1000;
+
+                    const hours = Math.floor(elapsedTime / 1000 / 3600);
+                    const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+                    const seconds = Math.floor((elapsedTime / 1000) % 60);
+
+                    $('#timer-display').text(`${hours} saat, ${minutes} dakika, ${seconds} saniye`);
+                }, 1000);
+            }
 
 
         };
-        
+
         //tarih
         function formatDate(dateString) {
             if (!dateString) return "";
@@ -413,77 +496,63 @@
                 second: '2-digit'
             });
         }
-         //saatisz
-        // function formatDate(dateString) {
-        //     if (!dateString) return "";
-        //     let date = new Date(dateString);
-        //     return date.toLocaleDateString();
-        // }
-
-
-        //sonra bakılcak
-        // function formatDuration(duration) {
-        //     return duration; // Uygun formatlama ekleyin
-        // }
-
-        
 
         $("#btnAddComment").off().click(function () {
-            let missionId = $("#modalDetail").data('missionId'); 
+            let missionId = $("#modalDetail").data('missionId');
             let comment = {
                 description: $("#newComment").val(),
                 taskId: missionId,
             }
-            if($("#newComment").val().length>0){
+            if ($("#newComment").val().length > 0) {
                 $.ajax({
-                url: '/Comment/Add',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(comment),
-                success: function (res) {
-                    $("#newComment").val("");
-                    let commentsText = "";
+                    url: '/Comment/Add',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(comment),
+                    success: function (res) {
+                        $("#newComment").val("");
+                        let commentsText = "";
                         for (var comment of res.comments) {
                             commentsText += `
-                                   <div class="mt-4">
-                                     <div>
-                                        <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
-                                     </div>
-                                        <div class="border p-4 rounded">
-                                          <div class="border-bottom pb-3">
-                                            <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
-                                              <div class="d-flex align-items-start">
-                                                <div class="flex-grow-1 d-flex justify-content-between">
-                                                  <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
-                                                  <div class="text-end">
-                                                   <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    <style>
-                                        .comment-description {
-                                    word-break: break-word; 
-                                    overflow-wrap: break-word; 
-                                    white-space: pre-wrap; 
-                                    }
-                                    </style>
-                                    `;
+                                                   <div class="mt-4">
+                                                     <div>
+                                                        <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                                     </div>
+                                                        <div class="border p-4 rounded">
+                                                          <div class="border-bottom pb-3">
+                                                            <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                                              <div class="d-flex align-items-start">
+                                                                <div class="flex-grow-1 d-flex justify-content-between">
+                                                                  <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                                  <div class="text-end">
+                                                                   <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <style>
+                                                        .comment-description {
+                                                    word-break: break-word;
+                                                    overflow-wrap: break-word;
+                                                    white-space: pre-wrap;
+                                                    }
+                                                    </style>
+                                                    `;
                         }
                         $("#comments").html(commentsText);
-                    
-                },
-                error: function (err) {
-                    console.error("Yorum eklenirken hata oluştu:", err);
-                }
-            });
-            }else{
+
+                    },
+                    error: function (err) {
+                        console.error("Yorum eklenirken hata oluştu:", err);
+                    }
+                });
+            } else {
                 toastr.error("Lütfen yorum yazınız.")
             }
-            
+
         });
         $("#btnAdd").click(function () {
             $("#modalAdd").modal("show");
@@ -496,27 +565,31 @@
             fillProjects();
             fillStatuses();
 
-            $("#btnSave").text("Kaydet").off().click(()=> {
+            $("#btnSave").text("Kaydet").off().click(() => {
                 let mission = {
-                        
-                        title: $("#txtTitle").val(),
-                        description: $("#txtDescription").val(),
-                        // fileId: $("#ddlFiles").val(),
-                        priorityId: $("#ddlPriorities").val(),
-                        statusId: $("#ddlStatuses").val(),
-                        projectId: $("#ddlProjects").val(),
-                        endDate:$("#txtEndDate").val()
 
-                    }
-               
+                    title: $("#txtTitle").val(),
+                    description: $("#txtDescription").val(),
+                    // fileId: $("#ddlFiles").val(),
+                    priorityId: $("#ddlPriorities").val(),
+                    statusId: $("#ddlStatuses").val(),
+                    projectId: $("#ddlProjects").val(),
+                    endDate: $("#txtEndDate").val(),
+                    smsNotification: $("#chkSmsNotification").is(":checked"),
+                    emailNotification: $("#chkMailNotification").is(":checked")
+
+                }
+
                 let selectedUserIds = $("#ddlUsers").val();
+
 
                 $.ajax({
                     url: '/Mission/Add',
                     type: 'POST',
                     data: {
                         mission: mission,
-                        userIds:selectedUserIds
+                        userIds: selectedUserIds,
+                        emailNotification: mission.emailNotification
                     },
                     success: function (res) {
                         $("#modalAdd").modal("hide");
@@ -524,8 +597,11 @@
                         res.status = { name: $("#ddlStatuses option:selected").text() };
                         res.priority = { name: $("#ddlPriorities option:selected").text() };
                         DataTable.row.add(res).draw();
+                        if(res.emailNotification){
+                            toastr.success("Görev E-Postası Başarıyla İletildi.")
+                        }
                         toastr.success("Görev Başarıyla Oluşturuldu");
-
+                        
                     },
                     error: function (res) {
                         Swal.fire({
@@ -539,7 +615,7 @@
             });
         });
 
-        
+
 
         function formatCommentDate(dateString) {
             if (!dateString) return "";
@@ -556,7 +632,7 @@
                 url: '/Status/GetAll',
                 type: 'GET',
                 success: (res) => {
-                    $("#ddlStatuses").empty(); 
+                    $("#ddlStatuses").empty();
                     $("#ddlStatuses").append(new Option("Lütfen Görev Durumu Seçiniz", "", true, true));
                     for (var item of res.data) {
                         $("#ddlStatuses").append(new Option(item.name, item.id));
@@ -565,7 +641,7 @@
                         dropdownParent: $('#modalAdd'),
                         placeholder: "Lütfen Görev Durumu Seçiniz",
                         allowClear: true,
-                        width: "100%"  
+                        width: "100%"
                     });
                     $("#ddlStatuses").val(null).trigger('change');
                 }
@@ -630,10 +706,10 @@
 
         function fillPriorities() {
             $.ajax({
-                url: '/Priority/GetAll',  
+                url: '/Priority/GetAll',
                 type: 'GET',
                 success: (res) => {
-                    $("#ddlPriorities").empty(); 
+                    $("#ddlPriorities").empty();
                     $("#ddlPriorities").append(new Option("Lütfen Öncelik Seçiniz", "", true, true));
                     for (var item of res.data) {
                         $("#ddlPriorities").append(new Option(item.name, item.id));
