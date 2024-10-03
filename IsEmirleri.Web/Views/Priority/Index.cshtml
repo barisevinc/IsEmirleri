@@ -69,19 +69,14 @@
                 $("#frmPriority").parsley().reset();
                 $("#frmPriority").removeClass("was-validated");
                 $("#frmPriority").trigger("reset");
-          
+
                 $("#modalTitle").text("Yeni Öncelik Kaydı");
 
                 $("#btnSave").text("Kaydet").off().click(function () {
-                  
-
                     if ($("#frmPriority").parsley().validate()) {
-
                         let data = {
                             priority: {
                                 name: $("#txtPriorityname").val()
-
-
                             }
                         }
 
@@ -90,24 +85,25 @@
                             type: 'POST',
                             data: data,
                             success: function (res) {
+                                res.taskCount = res.taskCount !== null && res.taskCount !== undefined
+                                    ? res.taskCount
+                                    : 0;
 
                                 $("#modalAdd").modal("hide");
                                 DataTable.row.add(res).draw();
+                            },
+                            error: function () {
+                                toastr.error('Öncelik kaydedilirken bir hata oluştu.');
                             }
                         });
+
                         $("#frmPriority").removeClass("was-validated");
-
-
-                    }
-                    else {
+                    } else {
                         $("#frmPriority").addClass("was-validated");
-                    
                     }
+                });
+            });
 
-
-                   
-                })
-            })
 
 
 
@@ -126,29 +122,38 @@
             });
         });
 
-      
+
         function deletePriority(priorityId, button) {
-          
 
-            if (confirm("Silmek istediğinize emin misiniz ?")) {
+            Swal.fire({
+                title: 'Silmek istediğinize emin misiniz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Vazgeç',
+                reverseButtons: false 
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let satir = $(button).parent().parent();
 
-                let satir = $(button).parent().parent();
-                $.ajax({
-                    url: '/Priority/Delete',
-                    type: 'POST',
-                    data: {
-                       
+                    $.ajax({
+                        url: '/Priority/Delete',
+                        type: 'POST',
+                        data: {
                             id: priorityId
-                       
-                    },
-                    success: function () {
-                        DataTable.row(satir).remove().draw();
-                        toastr.success("İşlem Başarılı", "Öncelik Silindi !");
-                    }
-                });
-            }
-
+                        },
+                        success: function () {
+                            DataTable.row(satir).remove().draw();
+                            toastr.success("İşlem Başarılı");
+                        },
+                        error: function () {
+                            toastr.error("Bir hata oluştu.", "Silme işlemi başarısız!");
+                        }
+                    });
+                }
+            });
         }
+
 
         function updatePriority(priorityId, button) {
 
@@ -161,7 +166,6 @@
                     $("#modalAdd").modal("show");
                     $("#modalTitle").text("Öncelik Düzenle");
                     $("#txtPriorityname").val(res.name);
-
 
                     $("#btnSave").text("Düzenle").off().click(function () {
 
@@ -177,20 +181,25 @@
                                 $("#modalAdd").modal("hide");
 
                                 let satir = $(button).parent().parent();
+
+                                updatedPriority.taskCount = updatedPriority.taskCount != null ? updatedPriority.taskCount : 0;
+
                                 DataTable.row(satir).data(updatedPriority).draw();
-
-
+                            },
+                            error: function () {
+                                toastr.error('Öncelik güncellenirken bir hata oluştu.');
                             }
                         });
 
-
                     });
 
+                },
+                error: function () {
+                    toastr.error('Öncelik bilgisi alınırken bir hata oluştu.');
                 }
-
             });
-
         }
+
 
 
     </script>
