@@ -260,6 +260,7 @@
                                     Oluşturuldu:
                                 </p>
                                 <p class="uil-clipboard-notes" id="statuss"> Durum</p>
+                                <p id="completed-status" data-is-completed="false">Görev Bitti mi?:</p>
                                 <p class="uil-calendar-alt" id="start-date"> Başlangıç Tarihi: </p>
                                 <p class="uil-calendar-slash" id="end-date">
                                     Bitiş Tarihi:
@@ -620,10 +621,11 @@
                         $("#priority").text(`Öncelik: ${res.priorityName}`);
                         $("#total-time").text(`Girilen Toplam Süre: ${res.totalDuration}`);
 
-                        let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
-                        let completedClass = res.isCompleted ? "text-danger" : "text-success"; 
+                       let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
+                       let completedClass = res.isCompleted ? "text-danger" : "text-success";
 
-                        $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
+                       $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
+                       $("#completed-status").data('is-completed', res.isCompleted); 
 
                         let assigneesText = "";
                         if (res.assigneeEmails && res.assigneeEmails.length > 0) {
@@ -688,7 +690,7 @@
                     const updatedDescription = $("#edit-description-text").val().trim();
                     if (updatedDescription === "") {
                         toastr.error('Açıklama boş olamaz. Lütfen bir açıklama girin.');
-                        return; // İşlem yapılmadan çıkış yap
+                        return;
                     }
                     $.ajax({
                         url: `/Mission/UpdateDescription/${missionId}`,
@@ -800,7 +802,12 @@
                 $(document).off('click', '#start-timer').on('click', '#start-timer', function () {
                     const missionId = $("#modalDetail").data('missionId');
                     console.log("Timer başlatılıyor ve missionId:", missionId);
-
+                    const isCompleted = $("#completed-status").data('is-completed');
+                    console.log(isCompleted);
+                    if (isCompleted==false) {
+                      toastr.info('Bu görev zaten tamamlandı! Tamamlanan bir göreve tekrar başlanamaz.', 'Bilgi');
+                      return; 
+                    }
                     $.ajax({
                         url: `/Mission/StartMission/${missionId}`,
                         type: 'POST',
@@ -875,7 +882,12 @@
 
                 $(document).off('click', '#complete-task').on('click', '#complete-task', function () {
                     const missionId = $("#modalDetail").data('missionId');
-
+                    const isCompleted = $("#completed-status").data('is-completed');
+                     console.log(isCompleted);
+                     if(isCompleted==false){
+                         toastr.info('Bu görev zaten tamamlandı! Tamamlanan bir görev tekrar bitirilemez.', 'Bilgi');
+                      return; 
+                     }
                     Swal.fire({
                         title: 'Emin misiniz?',
                         text: "Bitirilen göreve devam edilemez. Görevi bitirmek istediğinize emin misiniz?",

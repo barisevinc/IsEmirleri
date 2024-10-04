@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.DTO.UserDTOs
 {
-    public class UserCountDto : BaseModel
+    public class UserCountDto : AppUser
     {
         public int ProjectCount { get; set; }
         public int TaskCount { get; set; }
+        public string CustomerName { get; set; }
     }
 }
 

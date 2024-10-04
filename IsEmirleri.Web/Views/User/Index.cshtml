@@ -64,10 +64,9 @@
                     },
                     { data: 'email', title: 'Kullanıcı Maili' },
                     { data: 'password', title: 'Kullanıcı Şifre' },
-                    { data: 'customerId', title: 'Customer Id' },
-                    {
-                        data: 'id', title: 'Task Sayısı'
-                    },
+                    { data: 'customerName', title: 'Şirket Adı' },
+                    {data: 'taskCount', title: 'Task Sayısı'},
+                    {data: 'projectCount', title: 'Proje Sayısı'},
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>
