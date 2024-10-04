@@ -20,21 +20,12 @@ namespace IsEmirleri.Business.Concrete
         private readonly IRepository<MissionStatus> _repository;
         private readonly IRepository<Mission>  _repositoryMission;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-
-
         public StatusService(IRepository<MissionStatus> repo, IHttpContextAccessor httpContextAccessor, IRepository<Mission> repositoryMission) : base(repo)
         {
             _repository = repo;
             _httpContextAccessor = httpContextAccessor;
             _repositoryMission = repositoryMission;
         }
-
-
-
-
-
-
         public MissionStatus Add(MissionStatus status)
         {
             var customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
@@ -53,7 +44,6 @@ namespace IsEmirleri.Business.Concrete
                 TaskCount = _repositoryMission.GetAll().Where(x => x.StatusId == s.Id).Count()
             }).ToList();
         }
-
         public IQueryable<MissionStatus> GetAllLoginStatus()
         {
             var customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);

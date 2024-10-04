@@ -101,39 +101,77 @@
         });
 
         function deleteStatus(statusId, button) {
-         
-            if (confirm("Silmek istediğinize emin misiniz ?")) {
-                let satir = $(button).parent().parent();
-                $.ajax({
-                    url: '/Status/Delete',
-                    type: 'POST',
-                    data: {
-                        missionStatus: {
+
+            Swal.fire({
+                title: 'Silmek istediğinize emin misiniz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Vazgeç',
+                reverseButtons: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let satir = $(button).parent().parent();
+
+                    $.ajax({
+                        url: '/Status/Delete',
+                        type: 'POST',
+                        data: {
                             id: statusId
+                        },
+                        success: function () {
+                            DataTable.row(satir).remove().draw();
+                            toastr.success("İşlem Başarılı");
+                        },
+                        error: function () {
+                            toastr.error("Bir hata oluştu.", "Silme işlemi başarısız!");
                         }
-                    },
-                    success: function () {
-                        DataTable.row(satir).remove().draw();
-                        toastr.success("İşlem Başarılı", "Kullanıcı Silindi !");
-                    }
-                });
-            }
+                    });
+                }
+            });
         }
 
         function updateStatus(statusId, button) {
+
             $.ajax({
                 url: '/Status/GetById',
                 type: 'POST',
                 data: { id: statusId },
                 success: function (res) {
+
                     $("#modalAdd").modal("show");
-                    $("#modalTitle").text("Durum Düzenle");
+                    $("#modalTitle").text("Öncelik Düzenle");
                     $("#txtStatusname").val(res.name);
-                    $("#modalAdd").data("row", $(button).parent().parent());
-                    $("#statusNameValidation").hide();
+
                     $("#btnSave").text("Düzenle").off().click(function () {
-                        $("#statusForm").submit();
+
+                        res.name = $("#txtStatusname").val();
+
+                        $.ajax({
+                            url: '/Status/Update',
+                            type: 'POST',
+                            data: {
+                                status: res
+                            },
+                            success: function (updatedStatus) {
+                                $("#modalAdd").modal("hide");
+
+                                let satir = $(button).parent().parent();
+
+                                updatedStatus.taskCount = updatedStatus.taskCount != null ? updatedStatus.taskCount : 0;
+
+                                DataTable.row(satir).data(updatedStatus).draw();
+                            },
+                            error: function () {
+                                toastr.error('Öncelik güncellenirken bir hata oluştu.');
+                            }
+                        });
+
                     });
+
+                },
+                error: function () {
+                    toastr.error('Öncelik bilgisi alınırken bir hata oluştu.');
                 }
             });
         }

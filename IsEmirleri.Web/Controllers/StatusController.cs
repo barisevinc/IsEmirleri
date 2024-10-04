@@ -53,17 +53,17 @@ namespace IsEmirleri.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(MissionStatus missionStatus)
+        public IActionResult Delete(int id)
         {
-            return Ok(_status.HardDelete(missionStatus.Id));
+            return Ok(_status.Delete(id));
 
         }
 
         [HttpPost]
-        public IActionResult Update(MissionStatus missionStatus)
+        public IActionResult Update(MissionStatus status)
         {
 
-            return Ok(_status.Update(missionStatus));
+            return Ok(_status.Update(status));
         }
 
         [HttpPost]

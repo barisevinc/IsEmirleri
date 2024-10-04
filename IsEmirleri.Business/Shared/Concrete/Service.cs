@@ -56,7 +56,7 @@ namespace IsEmirleri.Business.Shared.Concrete
 
         public bool HardDelete(int id)
         {
-            return _repo.HardDelete (id);
+            return _repo.HardDelete(id);
         }
 
         public T Update(T entity)
