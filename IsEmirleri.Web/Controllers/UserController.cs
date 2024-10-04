@@ -92,14 +92,22 @@ namespace IsEmirleri.Web.Controllers
         [HttpPost]
         public IActionResult Add(AppUser user)
         {
+            var addedUser = _userService.Add(user);
 
-
-            if (_userService.Add(user) != null)
-                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur.", userId = user.Id });
+            if (addedUser != null)
+            {
+                return Ok(new
+                {
+                    result = true,
+                    message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur.",
+                    userId = addedUser.Id,
+                    customerName = addedUser.Customer.Name 
+                });
+            }
 
             return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
-
         }
+       
         [HttpPost]
         public IActionResult AddCustomerUser(AppUser user)
         {

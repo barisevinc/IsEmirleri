@@ -40,10 +40,8 @@ namespace IsEmirleri.Business.Concrete
 
         public AppUser Add(AppUser user)
         {
-            //int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
             var customer = _customerRepository.GetById(user.CustomerId.Value);
 
-            //limit kontrol usertype vermezsek admin dahil limit tutuyor
             int userCount = _repository.GetAll(u => u.CustomerId == customer.Id && !u.IsDeleted && u.UserTypeId == 3).Count();
 
             if (userCount >= customer.UserLimit)
@@ -54,6 +52,7 @@ namespace IsEmirleri.Business.Concrete
             user.CustomerId = customer.Id;
             user.UserTypeId = 3;
             _repository.Add(user);
+            user.Customer = customer;
             return user;
         }
 
