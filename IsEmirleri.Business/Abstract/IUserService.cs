@@ -14,7 +14,7 @@ namespace IsEmirleri.Business.Abstract
     public interface IUserService:IService<AppUser>
     {
        
-        IQueryable<AppUser> GetAll();
+        IQueryable<UserCountDto> GetAll();
         AppUser CheckLogin(AppUser user);
         AppUser? Add(AppUser user);
 

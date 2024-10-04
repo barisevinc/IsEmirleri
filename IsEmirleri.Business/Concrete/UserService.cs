@@ -1,5 +1,6 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
+using IsEmirleri.DTO.UserDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using IsEmirleri.Utility;
@@ -53,18 +54,25 @@ namespace IsEmirleri.Business.Concrete
             _repository.Add(user);
             return user;
         }
-        public IQueryable<AppUser> GetAll()
-        {
-            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value) && u.IsDeleted == false && u.UserTypeId == 3).Select(x => new AppUser
-            {
-                Id = x.Id,
-                Email = x.Email,
-                Password = x.Password,
-                UserType = x.UserType,               
-                CustomerId = x.CustomerId,
-                Tasks = x.Tasks
 
-            });
+        public IQueryable<UserCountDto> GetAll()
+        {
+            return _repository.GetAll(u => u.CustomerId == int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value) && u.IsDeleted == false && u.UserTypeId == 3)
+                .Include(u => u.Tasks)
+                .Include(u => u.Projects)
+                .Include(u => u.Customer)
+                .Select(x => new UserCountDto {
+
+                    Id = x.Id,
+                    Picture=x.Picture,
+                    Email = x.Email,
+                    Password = x.Password,
+                    UserType = x.UserType,
+                    CustomerName = x.Customer.Name,
+                    TaskCount = x.Tasks.Count(),
+                    ProjectCount = x.Projects.Count()
+                });
+          
         }
         public AppUser Profile()
         {

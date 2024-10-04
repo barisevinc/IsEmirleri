@@ -247,9 +247,9 @@
                      let isCompletedText = res.isCompleted ? "Görev henüz tamamlanmadı." : "Görev tamamlandı.";
                      let completedClass = res.isCompleted ? "text-danger" : "text-success";
 
-                     // Tamamlanma durumu bilgisi ve data attribute'u güncelle
+                   
                     $("#completed-status").html(`<span class="${completedClass}">${isCompletedText}</span>`);
-                    $("#completed-status").data('is-completed', res.isCompleted); // data-is-completed güncelle
+                    $("#completed-status").data('is-completed', res.isCompleted); 
                     let assigneesText = "";
                     if (res.assigneeEmails && res.assigneeEmails.length > 0) {
                         for (var email of res.assigneeEmails) {
@@ -373,7 +373,7 @@
                 const isCompleted = $("#completed-status").data('is-completed');
                 console.log(isCompleted);
                  if (isCompleted==false) {
-                   toastr.info('Bu görev zaten tamamlandı! Tamamlanan bir göreve tekrar başlanamaz.', 'Bilgi');
+                   toastr.info('Bu görev zaten tamamlandı! Tamamlanan bir görev tekrar başlanamaz.', 'Bilgi');
                   return; 
                   }
                 $.ajax({
