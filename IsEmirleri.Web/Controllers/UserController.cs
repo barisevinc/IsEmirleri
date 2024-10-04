@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using IsEmirleri.Utility;
 using Microsoft.IdentityModel.Tokens;
+using IsEmirleri.DTO;
 
 namespace IsEmirleri.Web.Controllers
 {
@@ -37,14 +38,14 @@ namespace IsEmirleri.Web.Controllers
             if (user != null)
             {
                 AppUser appUser = _userService.CheckLogin(user);
-               // var item = appUser.Picture.Length;
+                // var item = appUser.Picture.Length;
                 if (appUser != null)
                 {
 
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Email, appUser.Email));
-                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture==null ?"null.png"  : appUser.Picture.ToString()));
+                    claims.Add(new Claim(ClaimTypes.Actor, appUser.Picture == null ? "null.png" : appUser.Picture.ToString()));
                     claims.Add(new Claim(ClaimTypes.Role, appUser.UserType.Name));
                     claims.Add(new Claim(ClaimTypes.UserData, appUser.CustomerId.ToString()));
                     claims.Add(new Claim("CustomerId", appUser.CustomerId.ToString()));
@@ -56,10 +57,12 @@ namespace IsEmirleri.Web.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties { IsPersistent = true });
 
                     if (appUser.UserType.Name == "Admin")
-                    { TempData["success"] = $"Hoşgeldiniz";
-                    return RedirectToAction("Index", "User");
+                    {
+                        TempData["success"] = $"Hoşgeldiniz";
+                        return RedirectToAction("Index", "User");
                     }
-                    if(appUser.UserType.Name == "Superadmin"){
+                    if (appUser.UserType.Name == "Superadmin")
+                    {
                         TempData["success"] = $"Hoşgeldiniz";
                         return RedirectToAction("Index", "Customer");
                     }
@@ -67,7 +70,7 @@ namespace IsEmirleri.Web.Controllers
                     else
                         TempData["success"] = $"Hoşgeldiniz";
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Mission");
                 }
             }
             TempData["error"] = "Kullanıcı Adı ya da Şifreniz Yanlıştır!";
@@ -91,11 +94,11 @@ namespace IsEmirleri.Web.Controllers
         {
 
 
-            if (_userService.Add(user)!=null)
-                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur." ,userId=user.Id});
-       
-                return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
-           
+            if (_userService.Add(user) != null)
+                return Ok(new { result = true, message = "Kullanıcı Başarılı Bir Şekilde Oluşturulmuştur.", userId = user.Id });
+
+            return Ok(new { result = false, message = "Kullanıcı Limitiniz Dolmuştur. Lütfen Ürün Yöneticiniz İle Görüşünüz." });
+
         }
         [HttpPost]
         public IActionResult AddCustomerUser(AppUser user)
@@ -137,8 +140,12 @@ namespace IsEmirleri.Web.Controllers
         {
             if (await _userService.NewUserPassword(email))
             {
-                TempData["success"] = "Şifreniz Mail Adresinize Gönderilmiştir.";
-                return RedirectToAction("index");
+                var appUser = _userService.GetFirstOrDefault(u => u.Email == email);
+
+                Guid userGuid = appUser.Guid;
+
+                TempData["success"] = "Onay Kodu Mail Adresinize Gönderilmiştir.";
+                return RedirectToAction("ResetPassword", "User", new { guid = userGuid });
 
             }
             else
@@ -146,22 +153,76 @@ namespace IsEmirleri.Web.Controllers
                 TempData["error"] = "Şifre Yenileme İşlemi Başarısızdır.";
                 return RedirectToAction("password");
             }
-           
+
         }
+
+
+
+        [AllowAnonymous]
+        public IActionResult ResetPassword(Guid guid)
+        {
+            var user = _userService.GetByGuid(guid);
+            if (user == null)
+            {
+                TempData["error"] = "Kullanıcı bulunamadı.";
+                return RedirectToAction("Login");
+            }
+
+
+            var model = new ResetPasswordViewModel { UserGuid = guid };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirm(ResetPasswordViewModel model)
+        {
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                TempData["error"] = "Şifreler uyuşmuyor!";
+                return View("ResetPassword", model);
+            }
+
+            var user = _userService.GetByGuid(model.UserGuid);
+            if (user == null)
+            {
+                TempData["error"] = "Kullanıcı bulunamadı.";
+                return View("ResetPassword", model);
+            }
+
+
+            if (user.Password != model.Password)
+            {
+                TempData["error"] = "Onay kodu yanlış.";
+                return View("ResetPassword", model);
+            }
+
+
+            user.Password = model.NewPassword;
+            _userService.Update(user);
+
+            TempData["success"] = "Şifreniz başarıyla yenilendi.";
+            return RedirectToAction("Login");
+        }
+
+
+
+        [AllowAnonymous]
         public IActionResult Profile()
         {
             return View(_userService.Profile());
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(AppUser user)
         {
-           
-                
+
+
             await _userService.UpdateWithPhoto(user);
-          
-          
-                return RedirectToAction("Profile", "User");
-           
+
+
+            return RedirectToAction("Profile", "User");
+
 
 
 

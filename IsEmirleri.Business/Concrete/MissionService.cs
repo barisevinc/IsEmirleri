@@ -24,15 +24,16 @@ namespace IsEmirleri.Business.Concrete
         private readonly IService<AppUser> _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStatusService _statusService;
+        private readonly ITaskHistoryService _taskHistoryService;
 
-        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor, IStatusService statusService, IUserService userService) : base(repository)
+        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor, IStatusService statusService, ITaskHistoryService taskHistoryService, IUserService userService) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _statusService = statusService;
             _userService = userService;
+            _taskHistoryService = taskHistoryService;
         }
-
         public async Task<Mission> AddMission(Mission mission, List<int> userIds, bool emailNotification)
         {
             var addedMission = _repository.Add(mission);
@@ -42,6 +43,7 @@ namespace IsEmirleri.Business.Concrete
                 var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
 
                 addedMission.Assignees = users;
+
 
                 _repository.Update(addedMission);
 
@@ -56,10 +58,25 @@ namespace IsEmirleri.Business.Concrete
 
                     await Task.WhenAll(emailTasks);
                 }
+                foreach (var userId in userIds)
+                {
+                    TaskHistory taskHistory = new TaskHistory
+                    {
+                        TaskId = addedMission.Id,
+                        Description = mission.Description,
+                        UserId = userId,
+                        // DateCreated = DateTime.Now          
+                    };
+
+                    // TaskHistory kaydını kaydedin
+                    _taskHistoryService.Add(taskHistory);
+                }
             }
 
             return addedMission;
         }
+
+
 
 
         public IQueryable<Mission> GetAll()
