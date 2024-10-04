@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace IsEmirleri.Web.Controllers
 {
-    [Authorize (Roles = "Admin,Superadmin")]
+    [Authorize (Roles = "Admin,Superadmin,User")]
     public class PriorityController : Controller
     {
         private readonly IPriorityService _priorityService;

@@ -527,36 +527,38 @@
                     data: JSON.stringify(comment),
                     success: function (res) {
                         $("#newComment").val("");
+
                         let commentsText = "";
-                        for (var comment of res.comments) {
+                        for (var comment of res) {
                             commentsText += `
-                                                   <div class="mt-4">
-                                                     <div>
-                                                        <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
-                                                     </div>
-                                                        <div class="border p-4 rounded">
-                                                          <div class="border-bottom pb-3">
-                                                            <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
-                                                              <div class="d-flex align-items-start">
-                                                                <div class="flex-grow-1 d-flex justify-content-between">
-                                                                  <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
-                                                                  <div class="text-end">
-                                                                   <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                                                          </div>
-                                                       </div>
+                                <div class="mt-4">
+                                    <div>
+                                        <p class="float-sm-end text-muted font-size-13">${formatCommentDate(comment.dateCreated)}</p>
+                                    </div>
+                                    <div class="border p-4 rounded">
+                                        <div class="border-bottom pb-3">
+                                            <p class="text-muted mb-4 font-size-15 comment-description">${comment.description}</p>
+                                            <div class="d-flex align-items-start">
+                                                <div class="flex-grow-1 d-flex justify-content-between">
+                                                    <h5 class="font-size-13 mb-0">${comment.user.email}</h5>
+                                                    <div class="text-end">
+                                                        <button onclick="addCommentParent(${comment.id}, this)" class="btn btn-sm">Yanıtla</button>
                                                     </div>
-                                                    <style>
-                                                        .comment-description {
-                                                    word-break: break-word;
-                                                    overflow-wrap: break-word;
-                                                    white-space: pre-wrap;
-                                                    }
-                                                    </style>
-                                                    `;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <style>
+                                    .comment-description {
+                                        word-break: break-word;
+                                        overflow-wrap: break-word;
+                                        white-space: pre-wrap;
+                                    }
+                                </style>
+                            `;
                         }
+
                         $("#comments").html(commentsText);
 
                     },

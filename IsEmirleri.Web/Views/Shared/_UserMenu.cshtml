@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
  <!--- Sidemenu -->
 <div id="sidebar-menu">
     <!-- Left Menu Start -->
@@ -29,7 +30,7 @@
     connection.start()
         .then(() => {
             setInterval(() => {
-                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.UserData)?.Value)
                     .catch(err => console.error("Error invoking GetUserInformationCounts:", err));
             }, 5000);
         })
@@ -37,7 +38,7 @@
             console.error("Error starting SignalR connection:", err);
         });
 
-    connection.on("UserInformationCounts", (value) => {
+    connection.on("CustomerInformationCounts", (value) => {
         $("#userInformationCounts").empty();
 
         $("#userInformationCounts").append(`

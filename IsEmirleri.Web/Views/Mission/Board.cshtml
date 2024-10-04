@@ -715,7 +715,7 @@
                     $("#description-container").show();
                 });
                 $("#btnAddComment").off().click(function () {
-                    // let missionId = $("#modalDetail").data('missionId');
+                    let missionId = $("#modalDetail").data('missionId');
                     let comment = {
                         description: $("#newComment").val(),
                         taskId: missionId,
