@@ -198,18 +198,18 @@
                             <div class="col-md-6">
                                 <div class="info-item" data-aos="fade" data-aos-delay="300">
                                     <i class="bi bi-telephone"></i>
-                                    <h3>Call Us</h3>
-                                    <p>+1 5589 55488 55</p>
-                                    <p>+1 6678 254445 41</p>
+                                    <h3>Bizi Arayın</h3>
+                                    <p>+90 555 333 22 11</p>
+
                                 </div>
                             </div><!-- End Info Item -->
 
                             <div class="col-md-6">
                                 <div class="info-item" data-aos="fade" data-aos-delay="400">
                                     <i class="bi bi-envelope"></i>
-                                    <h3>Email Us</h3>
-                                    <p>info@example.com</p>
-                                    <p>contact@example.com</p>
+                                    <h3>Mail İle Ulaşın</h3>
+                                    <p>isemridestek@gmail.com</p>
+
                                 </div>
                             </div><!-- End Info Item -->
 
@@ -223,7 +223,7 @@
                         <form asp-action="Index" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                             <div class="row gy-4">
 
-                            
+
 
                                 <div class="col-md-6 ">
                                     <input asp-for="Mail" type="email" class="form-control" name="mail" placeholder="Email Adresiniz" required="">
@@ -315,15 +315,17 @@
     }
 
     @if (TempData["error"] != null)
+
     {
         <text>
-            toastr["error"]("@TempData["error"].ToString()");
+                toastr["error"]("@TempData["error"].ToString()");
         </text>
     }
     @if (TempData["success"] != null)
+
     {
         <text>
-            toastr["success"]("@TempData["success"].ToString()");
+                toastr["success"]("@TempData["success"].ToString()");
         </text>
     }
 

@@ -20,14 +20,16 @@ namespace IsEmirleri.Business.Concrete
     public class UserService : Service<AppUser>, IUserService
     {
         private readonly IRepository<AppUser> _repository;
+        private readonly IRepository<TaskHistory> _taskHistoryRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IRepository<AppUser> repo, IRepository<Customer> customerRepo, IHttpContextAccessor httpContextAccessor) : base(repo)
+        public UserService(IRepository<AppUser> repo, IRepository<Customer> customerRepo, IRepository<TaskHistory> hsitoryRepo, IHttpContextAccessor httpContextAccessor) : base(repo)
         {
             _repository = repo;
             _customerRepository = customerRepo;
             _httpContextAccessor = httpContextAccessor;
+            _taskHistoryRepository = hsitoryRepo;
         }
 
         public AppUser CheckLogin(AppUser user)
@@ -60,7 +62,7 @@ namespace IsEmirleri.Business.Concrete
                 Id = x.Id,
                 Email = x.Email,
                 Password = x.Password,
-                UserType = x.UserType,               
+                UserType = x.UserType,
                 CustomerId = x.CustomerId,
                 Tasks = x.Tasks
 
@@ -68,8 +70,14 @@ namespace IsEmirleri.Business.Concrete
         }
         public AppUser Profile()
         {
+            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = _repository.GetById(userId);
 
-            return _repository.GetById(int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            user.TaskHistories = _taskHistoryRepository.GetAll()
+                        .Where(th => th.UserId == userId && !th.IsDeleted) // Silinmemiş geçmişleri al
+                        .ToList();
+
+            return user;
 
         }
 
@@ -97,11 +105,12 @@ namespace IsEmirleri.Business.Concrete
                     appUser.Picture = dosyaAdi;
 
                 }
-                
-            }
-            catch (Exception ex) {
 
-            return new Response<AppUser> { SuccessMessage = "Kayıt güncellenemedi", ErrorMessage = ex.Message };
+            }
+            catch (Exception ex)
+            {
+
+                return new Response<AppUser> { SuccessMessage = "Kayıt güncellenemedi", ErrorMessage = ex.Message };
 
                 //try kısmında bir hata ile karşılaşıldığında catch devreye ve burdaki işlemler yürütülür.
             }
@@ -111,9 +120,9 @@ namespace IsEmirleri.Business.Concrete
                 appUser.Password = user.Password;
                 Update(appUser);
             }
-           
+
             return new Response<AppUser> { SuccessMessage = "Kayıt başarıyla Güncellendi", ErrorMessage = "" };
-           
+
 
 
 
@@ -134,23 +143,24 @@ namespace IsEmirleri.Business.Concrete
             _repository.Add(user);
             return user;
 
-           
+
         }
 
         public async Task<bool> NewUserPassword(string mail)
         {
+
             var appUser = GetFirstOrDefault(u => u.Email == mail);
-            if(appUser is not null)
+            if (appUser is not null)
             {
                 string newPassword = Helper.RandomPassword();
                 appUser.Password = newPassword;
                 string message = "Merhaba,<br>" +
-                    "Şifreniz yenilenmiştir.<br>" +
-                   $"Şifreniz: {newPassword}";
+                    "Şifrenizi yenilemek için onay kodunuz gönderilmiştir.<br>" +
+                   $"Onay Kodunuz: {newPassword}";
                 _repository.Update(appUser);
                 if (await HelperMail.SendMail(appUser.Email, "Şifre Yenileme", message))
                 {
-                    
+
                     return true;
 
                 }
@@ -161,6 +171,11 @@ namespace IsEmirleri.Business.Concrete
             {
                 return false;
             }
-         
+
         }
-    } }
+
+
+
+    }
+}
+
