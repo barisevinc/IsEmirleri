@@ -25,14 +25,16 @@ namespace IsEmirleri.Business.Concrete
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStatusService _statusService;
         private readonly ITaskHistoryService _taskHistoryService;
+        private readonly INotificationService notificationService;
 
-        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor, IStatusService statusService, ITaskHistoryService taskHistoryService, IUserService userService) : base(repository)
+        public MissionService(IRepository<Mission> repository, IHttpContextAccessor httpContextAccessor, IStatusService statusService, ITaskHistoryService taskHistoryService, IUserService userService, INotificationService notificationService) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _statusService = statusService;
             _userService = userService;
             _taskHistoryService = taskHistoryService;
+            this.notificationService = notificationService;
         }
         public async Task<Mission> AddMission(Mission mission, List<int> userIds, bool emailNotification)
         {
@@ -54,6 +56,7 @@ namespace IsEmirleri.Business.Concrete
                     foreach (var user in users)
                     {
                         emailTasks.Add(HelperMissionMail.SendMissionAssignedMailAsync(user.Email, mission.Title));
+                        notificationService.NewNotificationMission(user.Id);
                     }
 
                     await Task.WhenAll(emailTasks);
