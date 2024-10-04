@@ -140,7 +140,7 @@
                 success: function (res) {
 
                     $("#modalAdd").modal("show");
-                    $("#modalTitle").text("Öncelik Düzenle");
+                    $("#modalTitle").text("Durum Düzenle");
                     $("#txtStatusname").val(res.name);
 
                     $("#btnSave").text("Düzenle").off().click(function () {
@@ -163,7 +163,7 @@
                                 DataTable.row(satir).data(updatedStatus).draw();
                             },
                             error: function () {
-                                toastr.error('Öncelik güncellenirken bir hata oluştu.');
+                                toastr.error('Durum güncellenirken bir hata oluştu.');
                             }
                         });
 
@@ -171,7 +171,7 @@
 
                 },
                 error: function () {
-                    toastr.error('Öncelik bilgisi alınırken bir hata oluştu.');
+                    toastr.error('Durum bilgisi alınırken bir hata oluştu.');
                 }
             });
         }

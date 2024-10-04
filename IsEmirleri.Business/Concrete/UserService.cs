@@ -78,8 +78,12 @@ namespace IsEmirleri.Business.Concrete
         }
         public AppUser Profile()
         {
+            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = _repository.GetById(userId);
 
-            return _repository.GetById(int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            user.TaskHistories = _taskHistoryRepository.GetAll()
+                        .Where(th => th.UserId == userId && !th.IsDeleted) // Silinmemiş geçmişleri al
+                        .ToList();
 
             return user;
 
