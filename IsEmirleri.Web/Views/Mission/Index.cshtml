@@ -476,6 +476,7 @@
                            delete timers[missionId];
                            updateTimerControls(res);
                            toastr.success('Görev başarıyla tamamlandı.');
+                                $("#modalDetail").modal("hide");
                            },
                          error: () => {
                               toastr.error('Görev tamamlanırken hata oluştu.');

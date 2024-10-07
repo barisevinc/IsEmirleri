@@ -470,7 +470,7 @@
 
                             $("#tasks-" + item.statusId).append(`
                                                             <div class="col-sm-12">
-                                                                                        <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;" onclick="showMissionDetails(${item.id})">
+                                                                                                                <div class="card card-clickable" id="task-${item.id}" draggable="true" ondragstart="drag(event)" ondrop="preventDrop(event)" ondragover="preventDragOver(event)"  style="cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s;" onclick="showMissionDetails(${item.id})">
                                                                     <div class="card-body">
                                                                         <div class="d-flex align-items-start justify-content-between">
                                                                             <h5 class="card-title">#${item.id} ${item.title}</h5>
@@ -518,7 +518,16 @@
                     });
                 }
             }
+            function preventDrop(event) {
+                // Bu fonksiyon, drop olayını engellemek için kullanılır
+                event.preventDefault();
+                event.stopPropagation();
+            }
 
+            function preventDragOver(event) {
+                // Bu fonksiyon, task üzerinde sürükleme olayını engellemek için kullanılır
+                event.preventDefault();
+            }
             function fillProjects() {
                 $.ajax({
                     url: '/Project/GetAll',
