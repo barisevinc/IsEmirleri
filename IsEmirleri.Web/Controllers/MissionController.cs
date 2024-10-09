@@ -27,6 +27,10 @@ namespace IsEmirleri.Web.Controllers
             return Json(new { data = _missionService.GetAll() });
 
         }
+        public IActionResult Raports()
+        {
+            return View();
+        } 
 
         public IActionResult GetAllCard()
         {

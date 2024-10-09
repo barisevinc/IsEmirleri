@@ -56,7 +56,7 @@ namespace IsEmirleri.Web.Controllers
         {
             return View(id);
         }
-
+        
         [HttpPost]
         public IActionResult GetAllUsersById (int customerId)
         {
