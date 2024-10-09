@@ -30,14 +30,29 @@
 
         <li>
             <a href="javascript:void(0);" class="has-arrow waves-effect">
+                <i class="fas fa-file-alt"></i>
+                
+                <span>Raporlar</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a href="@Url.Action("Index", "Status")"><b>Zaman Takibi Raporları</b></a></li>
+                <li><a href="@Url.Action("Index", "Priority")"><b>Proje İlerleme Raporları</b></a></li>
+                <li><a href="@Url.Action("Index", "Priority")"><b>Görev Durumu Raporları</b></a></li>
+                <li><a href="@Url.Action("Index", "Priority")"><b>Görev Süre Analizi</b></a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0);" class="has-arrow waves-effect">
                 <i class="uil-location-point"></i>
                 <span>Tanımlamalar</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                <li><a href="@Url.Action("Index", "Status")">Durumlar</a></li>
-                <li><a href="@Url.Action("Index", "Priority")">Öncelikler</a></li>
+                <li><a href="@Url.Action("Index", "Status")"><b>Durumlar</b></a></li>
+                <li><a href="@Url.Action("Index", "Priority")"><b>Öncelikler</b></a></li>
             </ul>
         </li>
+
     </ul>
 </div>
 
@@ -62,8 +77,8 @@
         $("#userInformationCounts").empty();
 
         $("#userInformationCounts").append(`
-                <span class="badge rounded-pill bg-info float-end">${value.taskCount}</span>
-            `);
+                        <span class="badge rounded-pill bg-info float-end">${value.taskCount}</span>
+                    `);
     });
 </script>
 <!-- Sidebar -->

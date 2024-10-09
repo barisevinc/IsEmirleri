@@ -144,6 +144,7 @@ namespace IsEmirleri.Business.Concrete
                Description = p.Description,
                StartDate = p.StartDate,
                EndDate = p.EndDate,
+               MissionStartDate=p.MissionStartdate,
                EndTime=p.EndTime,
                DateCreated = p.DateCreated,
                DateUpdated = p.DateUpdated,
@@ -232,6 +233,10 @@ namespace IsEmirleri.Business.Concrete
         public bool StartMission(int missionId)
         {
             var mission = GetById(missionId);
+            if (mission.MissionStartdate == null)
+            {
+                mission.MissionStartdate = DateTime.Now; 
+            }
             if (mission.IsCompleted == true && mission.IsActive==true)
             {
                 mission.StartDate = DateTime.Now;

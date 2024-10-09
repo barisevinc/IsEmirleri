@@ -16,7 +16,8 @@ namespace IsEmirleri.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndTime { get; set; }
         public DateTime? EndDate { get; set; }
-        public DateTime? StopWatch { get; set; }
+        public DateTime? MissionStartdate { get; set; }
+        public DateTime? CompletedDate { get; set; }
         public TimeSpan? TotalDuration { get; set; }=TimeSpan.Zero;
         public bool IsActive { get; set; } = true;
         public bool IsCompleted { get; set; } = true;
