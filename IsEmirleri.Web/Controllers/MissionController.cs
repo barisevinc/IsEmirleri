@@ -129,5 +129,22 @@ namespace IsEmirleri.Web.Controllers
 
             return Ok(_missionService.CompleteMission(missionId));
         }
+        [HttpGet("Mission/CompletionTime/{userId}")]
+        public IActionResult CompletionTime(int userId)
+        {
+            return View(userId);
+        }
+        [HttpGet]
+        public IActionResult CompletionTimes(int userId)
+        {
+            var completionTimes = _missionService.GetMissionCompletionTimes(userId);
+            return Json(new { data = completionTimes });
+        }
+        [HttpGet("GetAverageCompletionTime")]
+        public IActionResult GetAverageCompletionTime(int userId)
+        {
+            var avgTime = _missionService.GetAverageCompletionTime(userId);
+            return Ok(new { AverageCompletionTime = avgTime.ToString() });
+        }
     }
 }

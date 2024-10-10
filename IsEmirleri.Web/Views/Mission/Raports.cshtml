@@ -51,8 +51,12 @@
                         }
                     },
                             {
-                        data: 'id', title: 'Rapor 3', render: function (data, type, row) {
-                            return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>`;
+                        data: 'id',
+                        title: 'Verimlilik',
+                        render: function (data, type, row) {
+                            return `<a href="/Mission/CompletionTime/${data}" title="Verimlilik Analizi" class="btn uil-users-alt fs-6 btn-light">
+                            <i class="uil uil-chart-pie"></i>
+                        </a>`;
                         }
                     },
                             {
