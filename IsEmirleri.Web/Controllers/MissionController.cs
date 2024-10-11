@@ -146,5 +146,15 @@ namespace IsEmirleri.Web.Controllers
             var avgTime = _missionService.GetAverageCompletionTime(userId);
             return Ok(new { AverageCompletionTime = avgTime.ToString() });
         }
+        public IActionResult TaskDistribution()
+        {
+            return View();
+        }
+        [HttpGet("GetTaskStatusDistribution")]
+        public IActionResult GetTaskStatusDistribution()
+        {
+            var report = _missionService.GetTaskStatusDistribution();
+            return Ok(report);
+        }
     }
 }

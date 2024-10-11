@@ -341,5 +341,37 @@ namespace IsEmirleri.Business.Concrete
             // Ortalama süreyi hesapla
             return TimeSpan.FromTicks(totalTime.Ticks / tasks.Count);
         }
+
+        public List<TaskStatusDto> GetTaskStatusDistribution()
+        {
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            var users = _userService.GetAll()
+        .Where(u => u.CustomerId == customerId && u.UserTypeId == 3) // Müşteri ile ilişkilendirilmiş kullanıcıları filtreliyoruz
+        .ToList();
+            var taskStatusDistributions = new List<TaskStatusDto>();
+
+            foreach (var user in users)
+            {
+                var userTaskDistributions = _repository.GetAll().Include(m=>m.Assignees)
+                    .Where(m => m.Assignees.Any(a => a.Id == user.Id))
+                    .ToList();
+
+                var completedTasks = userTaskDistributions.Count(m => m.IsCompleted);
+                var ongoingTasks = userTaskDistributions.Count(m => !m.IsCompleted && m.EndDate >= DateTime.Now);
+                var delayedTasks = userTaskDistributions.Count(m => !m.IsCompleted && m.EndDate < DateTime.Now);
+
+                var distributionDto = new TaskStatusDto
+                {
+                    Email = user.Email,
+                    CompletedTasks = completedTasks,
+                    OngoingTasks = ongoingTasks,
+                    DelayedTasks = delayedTasks
+                };
+
+                taskStatusDistributions.Add(distributionDto);
+            }
+
+            return taskStatusDistributions;
+        }
     }
 }

@@ -1,0 +1,60 @@
+﻿<canvas id="taskStatusChart" width="400" height="200"></canvas>
+@section Scripts {
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    $(document).ready(() => {
+        $.ajax({
+            url: '/GetTaskStatusDistribution', 
+            type: 'GET',
+            success: (data) => {
+                var emails = data.map(d => d.email);
+                var completedTasks = data.map(d => d.completedTasks);
+                var ongoingTasks = data.map(d => d.ongoingTasks);
+                var delayedTasks = data.map(d => d.delayedTasks);
+
+                
+                var ctx = document.getElementById('taskStatusChart').getContext('2d');
+                var taskStatusChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: emails, 
+                        datasets: [{
+                            label: 'Completed Tasks', 
+                            data: completedTasks,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Ongoing Tasks',
+                            data: ongoingTasks,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Delayed Tasks',
+                            data: delayedTasks,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true 
+                            }
+                        }
+                    }
+                });
+            },
+            error: (xhr, status, error) => {
+                
+                console.error("AJAX isteği başarısız oldu: ", status, error);
+            }
+        });
+    });
+</script>
+}

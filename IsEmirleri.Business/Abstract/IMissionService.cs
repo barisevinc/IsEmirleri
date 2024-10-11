@@ -28,5 +28,6 @@ namespace IsEmirleri.Business.Abstract
         TimeSpan GetMissionDuration(int missionId);
         List<MissionCompletionTimeDto> GetMissionCompletionTimes(int userId);
         TimeSpan GetAverageCompletionTime(int userId);
+        List<TaskStatusDto> GetTaskStatusDistribution();
     }
 }
