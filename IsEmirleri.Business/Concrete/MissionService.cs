@@ -324,6 +324,6 @@ namespace IsEmirleri.Business.Concrete
                 _repository.Update(mission);
         }
 
-       
+
     }
 }

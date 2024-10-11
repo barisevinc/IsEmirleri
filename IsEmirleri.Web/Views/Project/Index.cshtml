@@ -90,10 +90,21 @@
                         }
                     },
                     {
-                        data: 'id', title: 'İşlemler', render: (data) => {
-                            return `<a title="Sil" onclick="deleteProject(${data}, this)" class="btn uil-trash-alt fs-6 btn-danger"></a> <a onclick="updateProject(${data}, this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>`;
+                        data: 'id', title: 'İşlemler', render: (data, type, row) => {
+                            
+                            return `<a title="Sil" onclick="deleteProject(${data}, this)" class="btn uil-trash-alt fs-6 btn-danger"></a>
+                        <a onclick="updateProject(${data}, this)" title="Düzenle" class="btn uil-pen fs-6 btn-success"></a>
+                        `;
+                        }
+                    },
+                    {
+                        data: 'id', title: 'İlerleme', render: (data) => {
+                            console.log(data);
+                            return `<a href="Project/Progress/${data}" title="Proje İlerlemesi" class="btn uil-chart-bar fs-6 btn-light"></a>
+                                `;
                         }
                     }
+
                 ]
             });
 
