@@ -1,5 +1,6 @@
 ﻿using IsEmirleri.Business.Shared.Abstract;
 using IsEmirleri.DTO.CustomerDTOs;
+using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace IsEmirleri.Business.Abstract
         Project Update(Project project, List<int> userIds);
 
         Project GetByProjectId(int id);
-
+        ProjectProgressDto GetProjectProgress(int projectId);
 
 
 
