@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IsEmirleri.DTO.UserDTOs;
 using IsEmirleri.Utility;
+using System.Diagnostics.Metrics;
 
 namespace IsEmirleri.Business.Concrete
 {
@@ -324,6 +325,12 @@ namespace IsEmirleri.Business.Concrete
                 _repository.Update(mission);
         }
 
+        public IEnumerable<Mission> GetAllMissionsByProjectId(int id)
+        {
+            return _repository.GetAll()
+                .Where(m => m.ProjectId == id)
+                .ToList();
 
+        }
     }
 }
