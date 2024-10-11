@@ -2,6 +2,7 @@
 using IsEmirleri.DTO.CustomerDTOs;
 using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace IsEmirleri.Business.Abstract
         //select2 ddl'yi ilgili userlar ile doldurma
         IQueryable<AppUser> FillUsers();
 
-        Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification);
+        Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification, IFormFile file);
 
         bool Delete(int id);
 

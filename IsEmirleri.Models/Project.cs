@@ -11,7 +11,7 @@ namespace IsEmirleri.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int CustomerId {  get; set; }
-      
+        public string? FilePath { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual ICollection<AppUser> Users { get; set; } = [];
 

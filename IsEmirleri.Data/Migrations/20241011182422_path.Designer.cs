@@ -4,6 +4,7 @@ using IsEmirleri.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IsEmirleri.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241011182422_path")]
+    partial class path
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,30 +141,30 @@ namespace IsEmirleri.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8522),
-                            DateDeleted = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8535),
-                            DateUpdated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8534),
-                            Guid = new Guid("03294a67-1bce-4fe2-be87-bb226a58e32b"),
+                            DateCreated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9122),
+                            DateDeleted = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9137),
+                            DateUpdated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9137),
+                            Guid = new Guid("9d6c3443-da2c-4dd0-b25f-729d1e7b0d28"),
                             IsDeleted = false,
                             Name = "Superadmin"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8536),
-                            DateDeleted = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8537),
-                            DateUpdated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8537),
-                            Guid = new Guid("b7d490c0-f797-42e2-9531-1cdeb86af37d"),
+                            DateCreated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9139),
+                            DateDeleted = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9139),
+                            DateUpdated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9139),
+                            Guid = new Guid("dac49681-58c4-4afe-be46-517d584691d3"),
                             IsDeleted = false,
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8554),
-                            DateDeleted = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8555),
-                            DateUpdated = new DateTime(2024, 10, 11, 21, 34, 55, 159, DateTimeKind.Local).AddTicks(8555),
-                            Guid = new Guid("477fb0d8-164d-4bd5-91a4-a544cd908797"),
+                            DateCreated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9141),
+                            DateDeleted = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9141),
+                            DateUpdated = new DateTime(2024, 10, 11, 21, 24, 22, 37, DateTimeKind.Local).AddTicks(9141),
+                            Guid = new Guid("5a102b46-7124-4d5d-aa91-641e0e1608db"),
                             IsDeleted = false,
                             Name = "User"
                         });

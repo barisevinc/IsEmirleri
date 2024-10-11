@@ -71,41 +71,55 @@ namespace IsEmirleri.Business.Concrete
 
 
 
-        public async Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification)
+        public async Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification, IFormFile file)
         {
-            //var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            // Müşteri ID'sini al
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
-
             project.CustomerId = currentCustomerId;
-            var addedProject = _repository.Add(project);
-           // Console.WriteLine(userIds.Count);
 
+            // Projeyi ekle
+            var addedProject = _repository.Add(project);
+            var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
+            // Dosya yükleme
+            if (file != null && file.Length > 0)
+            {
+                var filePath = Path.Combine("wwwroot/files", file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                project.FilePath = file.FileName; // Yalnızca dosya adını saklıyoruz
+            }
+
+            // Kullanıcıları ekle
             if (userIds != null && userIds.Count > 0)
             {
-                var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
+                
 
                 foreach (var user in users)
                 {
                     notificationService.NewNotificationProject(user.Id);
-                    addedProject.Users = users;
+                    addedProject.Users.Add(user); // Kullanıcıları projeye ekle
                 }
 
-                _repository.Update(addedProject);
-                if (emailNotification)
-                {
-                    var emailTasks = new List<Task>();
-
-                    foreach (var user in users)
-                    {
-                        emailTasks.Add(HelperProjectMail.SendProjectAssignedMailAsync(user.Email, project.Name));
-                        notificationService.NewNotificationMission(user.Id);
-                    }
-
-                    await Task.WhenAll(emailTasks);
-                }
+                _repository.Update(addedProject); // Projeyi güncelle
             }
 
-            return addedProject;
+            // E-posta bildirimleri gönder
+            if (emailNotification && users.Count > 0)
+            {
+                var emailTasks = new List<Task>();
+
+                foreach (var user in users)
+                {
+                    emailTasks.Add(HelperProjectMail.SendProjectAssignedMailAsync(user.Email, project.Name));
+                    notificationService.NewNotificationMission(user.Id);
+                }
+
+                await Task.WhenAll(emailTasks); // Tüm e-posta gönderme görevlerini bekle
+            }
+
+            return addedProject; // Eklenen projeyi döndür
         }
 
 

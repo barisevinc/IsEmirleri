@@ -34,9 +34,9 @@ namespace IsEmirleri.Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(Project project,List<int> userIds, bool emailNotification)
+        public async Task<IActionResult> Add(Project project,List<int> userIds, bool emailNotification, IFormFile file)
         {
-            var projects = await _projectService.AddProject(project, userIds, emailNotification);
+            var projects = await _projectService.AddProject(project, userIds, emailNotification, file);
           return Ok(project);
         }
 

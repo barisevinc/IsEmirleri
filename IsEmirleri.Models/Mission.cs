@@ -22,7 +22,8 @@ namespace IsEmirleri.Models
         public bool IsActive { get; set; } = true;
         public bool IsCompleted { get; set; } = true;
         public bool EmailNotification { get; set; } = false;
-        public bool SmsNotification {  get; set; } = false; 
+        public bool SmsNotification {  get; set; } = false;
+        public string? FilePath { get; set; }
         public int StatusId {  get; set; }
         public virtual MissionStatus Status { get; set; }
         public int ProjectId {  get; set; }

@@ -39,10 +39,14 @@
                 <div class="mb-3 row">
                     <select id="txtUserSelect" class="js-example-basic-multiple" name="users[]" multiple="multiple"></select>
                 </div>
+                <div class="mb-3 row">
+                    <input type="file" class="form-control" id="fileUpload" placeholder="Dosya Yükleyin">
+                </div>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" id="chkMailNotification">
                     <label class="form-check-label" for="chkMailNotification">Proje Sahiplerine Mail Gönderilsin mi?</label>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -87,10 +91,11 @@
                                 emails += item.email + '<br>';
 
                             return emails;
-
-
-
-
+                        }
+                    },
+                    {
+                        data: 'filePath', title: 'Dosya', render: function (data) {
+                            return data ? `<a href="/files/${data}" target="_blank">Dosyayı Aç</a>` : 'Dosya Yüklenmedi';
                         }
                     },
                     {
@@ -101,6 +106,7 @@
                         `;
                         }
                     },
+                    
                     {
                         data: 'id', title: 'İlerleme', render: (data) => {
                             console.log(data);
@@ -129,21 +135,21 @@
                 let selectedUserIds = $("#txtUserSelect").val();
 
 
-                let project = {
-                    name: $("#txtName").val(),
-                    description: $("#txtDescription").val(),
-                    emailNotification: $("#chkMailNotification").is(":checked")
-                };
+                let formData = new FormData();
+                formData.append("name", $("#txtName").val());
+                formData.append("description", $("#txtDescription").val());
+                formData.append("emailNotification", $("#chkMailNotification").is(":checked"));
+                formData.append("file", $("#fileUpload")[0].files[0]);  // Dosya ekleme
+                formData.append("userIds", selectedUserIds);
 
 
                 $.ajax({
                     url: '/Project/Add',
                     type: 'POST',
-                    data: {
-                        project: project,
-                        userIds: selectedUserIds,
-                        emailNotification: project.emailNotification
-                    },
+                    data: formData,
+                      contentType: false,
+                      processData: false,
+                   
                     success: (res) => {
                         $("#modalAdd").modal("hide");
                         DataTable.row.add(res).draw();
