@@ -129,5 +129,20 @@ namespace IsEmirleri.Web.Controllers
 
             return Ok(_missionService.CompleteMission(missionId));
         }
+
+        [HttpGet]
+        public IActionResult UserEfficiency(int userId)
+        {
+         var efficiency = _missionService.GetUserMissionEfficiency(userId);
+            return Json(efficiency);
+        }
+
+      
+        public IActionResult Productivity(int id)
+        {
+           
+            return View(id);
+        }
+
     }
 }
