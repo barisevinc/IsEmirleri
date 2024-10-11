@@ -1,6 +1,7 @@
 ﻿using IsEmirleri.Business.Abstract;
 using IsEmirleri.Business.Shared.Concrete;
 using IsEmirleri.DTO.CustomerDTOs;
+using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -23,14 +24,15 @@ namespace IsEmirleri.Business.Concrete
         private readonly IRepository<Project> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INotificationService notificationService;
+        private readonly IMissionService _missionService;
 
-
-        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService, INotificationService notificationService) : base(repository)
+        public ProjectService(IRepository<Project> repository, IHttpContextAccessor httpContextAccessor, IUserService userService, INotificationService notificationService, IMissionService missionService) : base(repository)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
             this.notificationService = notificationService;
+            _missionService = missionService;
         }
 
 
@@ -123,9 +125,25 @@ namespace IsEmirleri.Business.Concrete
             return true;
         }
 
+        public ProjectProgressDto GetProjectProgress(int id)
+        {
+            var missions = _missionService.GetAllMissionsByProjectId(id);
 
+            var totalMissions = missions.Count();
+            var completedMissions = missions.Count(m => m.IsCompleted);
+            var ongoingMissions = missions.Count(m => !m.IsCompleted && m.EndDate >= DateTime.Now);
+            var delayedMissions = missions.Count(m => !m.IsCompleted && m.EndDate < DateTime.Now);
 
+            var progressDto = new ProjectProgressDto
+            {
+                ProjectName = _repository.GetAll().FirstOrDefault(p => p.Id == id)?.Name, 
+                TotalMissions = totalMissions,
+                CompletedMissions = completedMissions,
+                OngoingMissions = ongoingMissions,
+                DelayedMissions = delayedMissions
+            };
 
-
+            return progressDto;
+        }
     }
 }

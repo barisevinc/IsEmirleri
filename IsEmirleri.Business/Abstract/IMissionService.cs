@@ -26,5 +26,6 @@ namespace IsEmirleri.Business.Abstract
         bool StopMission(int missionId);
         bool CompleteMission(int missionId);
         TimeSpan GetMissionDuration(int missionId);
+        IEnumerable<Mission> GetAllMissionsByProjectId(int id);
     }
 }
