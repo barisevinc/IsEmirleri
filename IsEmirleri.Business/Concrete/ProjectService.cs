@@ -4,6 +4,7 @@ using IsEmirleri.DTO.CustomerDTOs;
 using IsEmirleri.DTO.ProjectDTOs;
 using IsEmirleri.Models;
 using IsEmirleri.Repository.Shared.Abstract;
+using IsEmirleri.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +71,7 @@ namespace IsEmirleri.Business.Concrete
 
 
 
-        public Project AddProject(Project project, List<int> userIds)
+        public async Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification)
         {
             //var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
@@ -89,6 +91,18 @@ namespace IsEmirleri.Business.Concrete
                 }
 
                 _repository.Update(addedProject);
+                if (emailNotification)
+                {
+                    var emailTasks = new List<Task>();
+
+                    foreach (var user in users)
+                    {
+                        emailTasks.Add(HelperProjectMail.SendProjectAssignedMailAsync(user.Email, project.Name));
+                        notificationService.NewNotificationMission(user.Id);
+                    }
+
+                    await Task.WhenAll(emailTasks);
+                }
             }
 
             return addedProject;

@@ -21,7 +21,7 @@ namespace IsEmirleri.Business.Abstract
         //select2 ddl'yi ilgili userlar ile doldurma
         IQueryable<AppUser> FillUsers();
 
-        Project AddProject(Project project, List<int> userIds);
+        Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification);
 
         bool Delete(int id);
 

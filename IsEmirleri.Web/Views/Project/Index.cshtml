@@ -39,6 +39,10 @@
                 <div class="mb-3 row">
                     <select id="txtUserSelect" class="js-example-basic-multiple" name="users[]" multiple="multiple"></select>
                 </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="chkMailNotification">
+                    <label class="form-check-label" for="chkMailNotification">Proje Sahiplerine Mail Gönderilsin mi?</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -113,6 +117,7 @@
                 $("#modalAdd .form-control").val('');
                 $("#modalTitle").text("Yeni Proje Ekle");
 
+
                 fillUserData();
 
 
@@ -127,6 +132,7 @@
                 let project = {
                     name: $("#txtName").val(),
                     description: $("#txtDescription").val(),
+                    emailNotification: $("#chkMailNotification").is(":checked")
                 };
 
 
@@ -135,17 +141,17 @@
                     type: 'POST',
                     data: {
                         project: project,
-                        userIds: selectedUserIds
+                        userIds: selectedUserIds,
+                        emailNotification: project.emailNotification
                     },
                     success: (res) => {
-                        // $('#tblProject').DataTable().ajax.reload();
-                        //   DataTable.ajax.reload(false);
-
-                        DataTable.row.add(res).draw(false);
-
-
-                        toastr.success("Proje Kaydı Başarılı");
                         $("#modalAdd").modal("hide");
+                        DataTable.row.add(res).draw();
+                        if (res.emailNotification) {
+                            toastr.success("Görev E-Postası Başarıyla İletildi.");
+                        }
+                        toastr.success("Proje Kaydı Başarılı");
+                        
                     }
                 });
             });

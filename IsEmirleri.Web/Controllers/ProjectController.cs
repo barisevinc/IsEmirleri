@@ -34,9 +34,10 @@ namespace IsEmirleri.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Add(Project project,List<int> userIds)
+        public async Task<IActionResult> Add(Project project,List<int> userIds, bool emailNotification)
         {
-          return Ok(_projectService.AddProject(project, userIds));
+            var projects = await _projectService.AddProject(project, userIds, emailNotification);
+          return Ok(project);
         }
 
 
