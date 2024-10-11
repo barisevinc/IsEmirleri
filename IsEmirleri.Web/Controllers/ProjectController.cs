@@ -61,7 +61,18 @@ namespace IsEmirleri.Web.Controllers
             return Ok(_projectService.GetByProjectId(id));
         }
 
+        public IActionResult Progress(int projectId)
+        {
+            return View(projectId);
+        }
 
+        public IActionResult GetProjectProgress(int projectId)
+        {
+                var projectProgress = _projectService.GetProjectProgress(projectId);
 
+                return Json(projectProgress);
+            
+           
+        }
     }
 }
