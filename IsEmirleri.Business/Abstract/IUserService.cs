@@ -23,6 +23,7 @@ namespace IsEmirleri.Business.Abstract
         AppUser Profile();
         Task<Response<AppUser>> UpdateWithPhoto(AppUser user);
        Task<bool> NewUserPassword(string mail);
+    
 
     }
 }

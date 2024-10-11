@@ -325,11 +325,109 @@ namespace IsEmirleri.Business.Concrete
                 _repository.Update(mission);
         }
 
+
+        public List<MissionCompletionTimeDto> GetMissionCompletionTimes(int userId)
+        {
+            var userTasks = _repository.GetAll()
+                   .Where(m => m.Assignees.Any(a => a.Id == userId))
+                   .ToList();
+
+            var taskCompletionTimes = new List<MissionCompletionTimeDto>();
+
+            foreach (var task in userTasks)
+            {
+                // Planlanan süre (EndTime - StartDate)
+                TimeSpan plannedDuration = TimeSpan.Zero;
+                if (task.StartDate.HasValue && task.EndTime.HasValue)
+                {
+                    plannedDuration = task.EndTime.Value - task.StartDate.Value;
+                }
+
+                // Gerçekleşen süre (EndDate - StartDate)
+                TimeSpan actualDuration = TimeSpan.Zero;
+                if (task.StartDate.HasValue && task.EndDate.HasValue)
+                {
+                    actualDuration = task.EndDate.Value - task.StartDate.Value;
+                }
+
+                // Geç tamamlanma kontrolü
+                bool isLate = task.EndDate.HasValue && task.EndDate > task.EndTime;
+
+                // DTO'yu doldur
+                var dto = new MissionCompletionTimeDto
+                {
+                    TaskTitle = task.Title,
+                    PlannedDuration = plannedDuration,
+                    ActualDuration = actualDuration,
+                    IsLate = isLate
+                };
+
+                taskCompletionTimes.Add(dto);
+            }
+
+            return taskCompletionTimes;
+        }
+
+        public TimeSpan GetAverageCompletionTime(int userId)
+        {
+            var tasks = _repository.GetAll()
+                  .Where(m => m.IsCompleted && m.Assignees.Any(a => a.Id == userId))
+                  .ToList();
+
+            if (tasks.Count == 0)
+                return TimeSpan.Zero;
+
+            TimeSpan totalTime = TimeSpan.Zero;
+
+            foreach (var task in tasks)
+            {
+                if (task.StartDate.HasValue && task.EndDate.HasValue)
+                {
+                    totalTime += task.EndDate.Value - task.StartDate.Value;
+                }
+            }
+
+            // Ortalama süreyi hesapla
+            return TimeSpan.FromTicks(totalTime.Ticks / tasks.Count);
+        }
+
+        public List<TaskStatusDto> GetTaskStatusDistribution()
+        {
+            int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+            var users = _userService.GetAll()
+        .Where(u => u.CustomerId == customerId && u.UserTypeId == 3) // Müşteri ile ilişkilendirilmiş kullanıcıları filtreliyoruz
+        .ToList();
+            var taskStatusDistributions = new List<TaskStatusDto>();
+
+            foreach (var user in users)
+            {
+                var userTaskDistributions = _repository.GetAll().Include(m=>m.Assignees)
+                    .Where(m => m.Assignees.Any(a => a.Id == user.Id))
+                    .ToList();
+
+                var completedTasks = userTaskDistributions.Count(m => m.IsCompleted);
+                var ongoingTasks = userTaskDistributions.Count(m => !m.IsCompleted && m.EndDate >= DateTime.Now);
+                var delayedTasks = userTaskDistributions.Count(m => !m.IsCompleted && m.EndDate < DateTime.Now);
+
+                var distributionDto = new TaskStatusDto
+                {
+                    Email = user.Email,
+                    CompletedTasks = completedTasks,
+                    OngoingTasks = ongoingTasks,
+                    DelayedTasks = delayedTasks
+                };
+
+                taskStatusDistributions.Add(distributionDto);
+            }
+
+            return taskStatusDistributions;
+
         public IEnumerable<Mission> GetAllMissionsByProjectId(int id)
         {
             return _repository.GetAll()
                 .Where(m => m.ProjectId == id)
                 .ToList();
+
 
         }
     }
