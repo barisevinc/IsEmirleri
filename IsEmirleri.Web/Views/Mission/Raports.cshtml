@@ -36,7 +36,7 @@
                         data: 'picture', title: 'Fotoğraf', render: function (data) {
                             return data ? `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px; border-radius:50%" />`
                                 : `<div class="rounded-circle header-profile-user" style="width:50px; height:50px; background-color:#ccc; display:flex; align-items:center; justify-content:center;">
-                                         <i class="fa fa-user" style="color:#fff;"></i> </div>`;
+                                                 <i class="fa fa-user" style="color:#fff;"></i> </div>`;
                         }
                     },
                     { data: 'email', title: 'Kullanıcı Maili' },
@@ -45,17 +45,17 @@
                             return `<a href="/Mission/Productivity/${data}" title="Verimlilik Analizi" class="btn uil-users-alt fs-6 btn-light"><i class="uil uil-chart-pie"></i></a>`;
                         }
                     },
-                            {
+                    {
                         data: 'id', title: 'Rapor 2', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>`;
                         }
                     },
-                            {
+                    {
                         data: 'id', title: 'Rapor 3', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>`;
                         }
                     },
-                            {
+                    {
                         data: 'id', title: 'Rapor 4', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>`;
                         }
@@ -64,4 +64,4 @@
             });
         });
     </script>
-    }
+}
