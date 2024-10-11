@@ -145,6 +145,15 @@ namespace IsEmirleri.Business.Concrete
 
             return progressDto;
         }
-        
+
+        public ProjectCountDto ProjectCount(int customerId)
+        {
+            var projectCount = GetAll().Where(c => c.CustomerId == customerId).Count();
+            return new ProjectCountDto
+            {
+                ProjectCount = projectCount
+
+            };
+        }
     }
 }

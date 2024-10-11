@@ -17,6 +17,7 @@
             <a asp-controller="Project" asp-action="Index">
                 <i class="fas fa-project-diagram"></i>
                 <span>Projeler</span>
+                <span id="projectCount" class="badge rounded-pill bg-info float-end"></span>
             </a>
         </li>
 
@@ -64,8 +65,10 @@
     connection.start()
         .then(() => {
             setInterval(() => {
-                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.UserData)?.Value)
-                    .catch(err => console.error("Error invoking GetUserInformationCounts:", err));
+                connection.invoke("GetUserInformationCounts", @User.FindFirst(ClaimTypes.UserData)?.Value).catch(err => console.error("Error invoking GetUserInformationCounts:", err));
+
+                connection.invoke("GetProjectCount", @User.FindFirst(ClaimTypes.UserData)?.Value)
+                    .catch(err => console.error("Error invoking GetProjectCount:", err));
             }, 5000);
         })
         .catch((err) => {
@@ -78,6 +81,13 @@
         $("#userInformationCounts").append(`
                         <span class="badge rounded-pill bg-info float-end">${value.taskCount}</span>
                     `);
+    });
+    connection.on("ProjectCount", (value) => {
+        $("#projectCount").empty();
+
+        $("#projectCount").append(`
+                            <span class="badge rounded-pill bg-info float-end">${value.projectCount}</span>
+                        `);
     });
 </script>
 <!-- Sidebar -->

@@ -30,7 +30,7 @@ namespace IsEmirleri.Business.Abstract
         Project GetByProjectId(int id);
         ProjectProgressDto GetProjectProgress(int id);
 
-
+        ProjectCountDto ProjectCount(int customerId);
 
 
 

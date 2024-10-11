@@ -8,11 +8,13 @@ namespace IsEmirleri.Api.Hubs
         private readonly INotificationService _notificationService;
         private readonly IUserService _userService;
         private readonly IMissionService _missionService;
-        public SignalRHub(INotificationService notificationService, IUserService userService, IMissionService missionService)
+        private readonly IProjectService _projectService;
+        public SignalRHub(INotificationService notificationService, IUserService userService, IMissionService missionService, IProjectService projectService)
         {
             _notificationService = notificationService;
             _userService = userService;
             _missionService = missionService;
+            _projectService = projectService;
         }
 
         public async Task SendNotification(int id)
@@ -29,6 +31,11 @@ namespace IsEmirleri.Api.Hubs
             await Clients.All.SendAsync("CustomerInformationCounts", customerValue);
             var userValue = _missionService.GetUserInformationCounts(userId);
             await Clients.All.SendAsync("UserInformationCounts", userValue);
+        }
+        public async Task GetProjectCount(int customerId)
+        {
+            var projectValue= _projectService.ProjectCount(customerId);
+            await Clients.All.SendAsync("ProjectCount", projectValue);
         }
     }
 }
