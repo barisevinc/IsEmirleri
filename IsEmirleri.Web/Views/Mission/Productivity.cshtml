@@ -1,0 +1,118 @@
+﻿@model int 
+
+<div class="container">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <!-- Kullanıcı resmi -->
+        <img id="userPicture" src="" alt="Kullanıcı Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+        <!-- Kullanıcı e-postası -->
+        <h4 id="userEmail" style="font-size: 18px; color: #4a4a4a; font-weight: 500; margin-bottom: 20px; text-align: center;"></h4>
+    </div>
+    <canvas id="efficiencyChart" width="400" height="200"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var userId = '@Model';
+            console.log(userId);
+
+            $.ajax({
+                url: '/User/GetById/' + userId,  
+                type: 'POST',
+                success: function (data) {
+
+                    console.log("Kullanıcı Bilgileri:", data);
+
+                    $('#userEmail').text(data.email + " Kullanıcısının Verimlilik Grafiği");
+                    // Kullanıcı fotoğrafını kontrol et ve göster
+                    if (data.picture) {
+                        $('#userPicture').attr('src', '/Files/UserPhotos/' + data.picture);
+                    } else {
+                        // Eğer picture null ise, varsayılan bir profil resmi kullan
+                        $('#userPicture').attr('src', '/Files/UserPhotos/null.png'); // Varsayılan profil resminin yolu
+                    }
+
+                    getEfficiencyData(userId);
+                },
+                error: function (xhr, status, error) {
+                    alert('Kullanıcı bilgileri alınamadı.');
+                    console.log("Hata:", error);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("UserEfficiency", "Mission")',
+                type: 'GET',
+                data: { userId: userId },
+                success: function (data) {
+                    console.log(data); // Gelen veriyi kontrol et
+                    if (data) {
+                        renderEfficiencyChart(data);
+                    } else {
+                        console.error('Veri boş veya yanlış formatta.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Verimlilik verileri alınamadı.');
+                    console.log("Hata:", error);
+                }
+            });
+
+
+            function renderEfficiencyChart(data) {
+                var ctx = document.getElementById('efficiencyChart').getContext('2d');
+
+                var timeEfficiencyValue = Math.min(data.timeEfficiency, 100); // %100'ü aşmaması için sınırlandır
+
+                var chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tamamlanan Görevler', 'Toplam Görevler', 'Zaman Verimliliği (%)'],
+                        datasets: [{
+                            label: 'Görev Verimliliği',
+                            data: [
+                                data.completedTasks,   // Tamamlanan görev sayısı
+                                data.totalTasks,       // Toplam görev sayısı
+                                timeEfficiencyValue     // Zaman verimliliği
+                            ],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            barThickness: 50 // Çubuk genişliği için ayarlama yapın (px cinsinden)
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        return value + '%'; // Y ekseninde yüzde olarak göster
+                                    }
+                                }
+                            },
+                            x: {
+                                // X eksenindeki çubukların genişliğini daha iyi kontrol etmek için
+                                grid: {
+                                    display: false // Izgarayı gizlemek isteyebilirsiniz
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+        });
+    </script>
+}

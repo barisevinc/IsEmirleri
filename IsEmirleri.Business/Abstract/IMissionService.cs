@@ -18,7 +18,7 @@ namespace IsEmirleri.Business.Abstract
         bool UpdateMissionDescription(int missionId, string description);
         List<MissionDto> GetAllMission();
         Task<Mission> AddMission(Mission mission, List<int> userIds, bool emailNotification);
-
+        MissionEfficiencyDto GetUserMissionEfficiency(int userId);
         bool UpdateStatus(int missionId, int statusId);
         UserCountDto GetCustomerInformationCounts(int userId);
         UserCountDto GetUserInformationCounts(int userId);
@@ -29,5 +29,7 @@ namespace IsEmirleri.Business.Abstract
         List<MissionCompletionTimeDto> GetMissionCompletionTimes(int userId);
         TimeSpan GetAverageCompletionTime(int userId);
         List<TaskStatusDto> GetTaskStatusDistribution();
+        IEnumerable<Mission> GetAllMissionsByProjectId(int id);
+
     }
 }

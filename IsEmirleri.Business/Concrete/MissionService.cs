@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IsEmirleri.DTO.UserDTOs;
 using IsEmirleri.Utility;
+using System.Diagnostics.Metrics;
 
 namespace IsEmirleri.Business.Concrete
 {
@@ -215,7 +216,54 @@ namespace IsEmirleri.Business.Concrete
 
             return false; 
         }
+        public MissionEfficiencyDto GetUserMissionEfficiency(int userId)
+        {
+            var userTasks = _repository.GetAll()
+                              .Where(m => m.Assignees.Any(a => a.Id == userId))
+                              .ToList();
 
+            int completedTasks = userTasks.Count(m => m.IsCompleted);
+
+            int totalTasks = userTasks.Count;
+
+            TimeSpan plannedTime = TimeSpan.Zero;
+            foreach (var task in userTasks)
+            {
+                if (task.EndDate.HasValue && task.MissionStartdate.HasValue)
+                {
+                    plannedTime += task.EndDate.Value - task.MissionStartdate.Value;
+                }
+            }
+
+
+            TimeSpan actualTime = userTasks
+                .Where(m => m.TotalDuration.HasValue)
+                .Select(m => m.TotalDuration.Value)
+                .Aggregate(TimeSpan.Zero, (total, next) => total.Add(next));
+
+
+            double taskCompletionRate = totalTasks > 0
+                ? (double)completedTasks / totalTasks * 100
+                : 0;
+
+
+            double timeEfficiency = actualTime.TotalMinutes > 0
+                ? plannedTime.TotalMinutes / actualTime.TotalMinutes * 100
+                : 0;
+
+
+            var missionEfficiencyDto = new MissionEfficiencyDto
+            {
+                CompletedTasks = completedTasks,
+                TotalTasks = totalTasks,
+                PlannedTime = plannedTime,
+                ActualTime = actualTime,
+                TaskCompletionRate = taskCompletionRate,
+                TimeEfficiency = timeEfficiency
+            };
+
+            return missionEfficiencyDto;
+        }
         public TimeSpan GetMissionDuration(int missionId)
         {
             var mission = GetById(missionId);
@@ -276,6 +324,7 @@ namespace IsEmirleri.Business.Concrete
                 //mission.StartDate = null;
                 _repository.Update(mission);
         }
+
 
         public List<MissionCompletionTimeDto> GetMissionCompletionTimes(int userId)
         {
@@ -372,6 +421,14 @@ namespace IsEmirleri.Business.Concrete
             }
 
             return taskStatusDistributions;
+
+        public IEnumerable<Mission> GetAllMissionsByProjectId(int id)
+        {
+            return _repository.GetAll()
+                .Where(m => m.ProjectId == id)
+                .ToList();
+
+
         }
     }
 }

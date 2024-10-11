@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace IsEmirleri.DTO.MissionDTO
 {
-    class MissionEfficiencyDto
+    public class MissionEfficiencyDto
     {
+        public int CompletedTasks { get; set; }
+        public int TotalTasks { get; set; }
+        public TimeSpan PlannedTime { get; set; }
+        public TimeSpan ActualTime { get; set; }
+        public double TaskCompletionRate { get; set; }
+        public double TimeEfficiency { get; set; }
     }
 }

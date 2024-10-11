@@ -129,6 +129,7 @@ namespace IsEmirleri.Web.Controllers
 
             return Ok(_missionService.CompleteMission(missionId));
         }
+
         [HttpGet("Mission/CompletionTime/{userId}")]
         public IActionResult CompletionTime(int userId)
         {
@@ -156,5 +157,22 @@ namespace IsEmirleri.Web.Controllers
             var report = _missionService.GetTaskStatusDistribution();
             return Ok(report);
         }
+
+
+        [HttpGet]
+        public IActionResult UserEfficiency(int userId)
+        {
+         var efficiency = _missionService.GetUserMissionEfficiency(userId);
+            return Json(efficiency);
+        }
+
+      
+        public IActionResult Productivity(int id)
+        {
+           
+            return View(id);
+        }
+
+
     }
 }
