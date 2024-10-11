@@ -145,5 +145,6 @@ namespace IsEmirleri.Business.Concrete
 
             return progressDto;
         }
+        
     }
 }
