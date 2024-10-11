@@ -125,10 +125,9 @@ namespace IsEmirleri.Business.Concrete
             return true;
         }
 
-        public ProjectProgressDto GetProjectProgress(int projectId)
+        public ProjectProgressDto GetProjectProgress(int id)
         {
-            // MissionService kullanarak projeye ait görevleri alıyoruz
-            var missions = _missionService.GetAllMissionsByProjectId(projectId);
+            var missions = _missionService.GetAllMissionsByProjectId(id);
 
             var totalMissions = missions.Count();
             var completedMissions = missions.Count(m => m.IsCompleted);
@@ -137,7 +136,7 @@ namespace IsEmirleri.Business.Concrete
 
             var progressDto = new ProjectProgressDto
             {
-                ProjectName = _repository.GetAll().FirstOrDefault(p => p.Id == projectId)?.Name, // Proje adını alıyoruz
+                ProjectName = _repository.GetAll().FirstOrDefault(p => p.Id == id)?.Name, 
                 TotalMissions = totalMissions,
                 CompletedMissions = completedMissions,
                 OngoingMissions = ongoingMissions,

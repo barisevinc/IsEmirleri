@@ -277,10 +277,10 @@ namespace IsEmirleri.Business.Concrete
                 _repository.Update(mission);
         }
 
-        public IEnumerable<Mission> GetAllMissionsByProjectId(int projectId)
+        public IEnumerable<Mission> GetAllMissionsByProjectId(int id)
         {
             return _repository.GetAll()
-                .Where(m => m.ProjectId == projectId)
+                .Where(m => m.ProjectId == id)
                 .ToList();
         }
     }

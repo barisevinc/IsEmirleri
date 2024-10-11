@@ -28,7 +28,7 @@ namespace IsEmirleri.Business.Abstract
         Project Update(Project project, List<int> userIds);
 
         Project GetByProjectId(int id);
-        ProjectProgressDto GetProjectProgress(int projectId);
+        ProjectProgressDto GetProjectProgress(int id);
 
 
 
