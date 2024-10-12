@@ -58,7 +58,7 @@
                         data: 'picture', title: 'Fotoğraf', render: function (data) {
                             return data ? `<img src="/Files/UserPhotos/${data}" style="width:50px; height:50px; border-radius:50%" />`
                                 : `<div class="rounded-circle header-profile-user" style="width:50px; height:50px; background-color:#ccc; display:flex; align-items:center; justify-content:center;">
-                                                 <i class="fa fa-user" style="color:#fff;"></i> </div>`;
+                                                         <i class="fa fa-user" style="color:#fff;"></i> </div>`;
                         }
                     },
                     { data: 'email', title: 'Kullanıcı Maili' },
@@ -69,7 +69,7 @@
                     {
                         data: 'id', title: 'İşlemler', render: function (data, type, row) {
                             return `<button onclick="deleteUser(${data}, this)" class="btn btn-danger"><i class="uil uil-trash-alt"></i></button>
-                                                    <button onclick="updateUser(${data}, this)" class="btn btn-success"><i class="uil uil-pen"></i></button>`;
+                                                            <button onclick="updateUser(${data}, this)" class="btn btn-success"><i class="uil uil-pen"></i></button>`;
                         }
                     }
                 ]
@@ -217,7 +217,12 @@
                                 success: function (updatedUser) {
                                     $("#modalAdd").modal("hide");
                                     let row = $(button).closest('tr');
-                                    DataTable.row(row).data(updatedUser).draw();
+                                    let rowData = DataTable.row(row).data();
+                                    //DataTable.row(row).data(updatedUser).draw();
+                                    rowData.email = updatedUser.email;
+                                    rowData.password = updatedUser.password;
+                                    DataTable.row(row).data(rowData).draw();
+
                                     toastr.success('Kullanıcı başarıyla güncellendi.');
                                 },
                                 error: function () {
