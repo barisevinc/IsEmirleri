@@ -109,9 +109,20 @@
                     
                     {
                         data: 'id', title: 'İlerleme', render: (data) => {
-                            console.log(data);
+                            
                             return `<a href="Project/Progress/${data}" title="Proje İlerlemesi" class="btn uil-chart-bar fs-6 btn-light"></a>
                                 `;
+                        }
+                    },
+
+                    {
+                        data: 'id', title: 'Canban', render: (data) => {
+                            console.log("projeid" + data);
+                            return `<a href="Mission/Board/${data}" class="btn btn-dark btn-sm w-100" 
+                               style="max-width: 70px; padding: 4px 8px; line-height: 1;">
+                                <i class="uil uil-clapper-board"></i><br />Canban
+                            </a>
+                                        `;
                         }
                     }
 
