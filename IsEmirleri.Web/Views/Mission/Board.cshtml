@@ -1,6 +1,7 @@
-﻿<html>
+﻿@model int
+<html>
 <head>
-    <title>Görev Yönetim Sayfası</title>
+    <title >Görev Yönetim Sayfası</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,7 +105,7 @@
 
     <div class="card col-12 p-3" style="background-color: #f8f9fa; position: relative;">
         <div class="card-header d-flex align-items-center" style="background-color: #e9ecef; position: relative;">
-            <h4 class="mb-0 mx-auto">Görev Yönetim Sayfası</h4>
+            <h4 id="title" class="mb-0 mx-auto"></h4>
         </div>
         <div class="d-flex ">
             <div id="content" class="d-flex flex-wrap p-2 col-12" style="background-color: #f8f9fa;">
@@ -173,10 +174,10 @@
                             <select class="form-select" id="ddlPriorities"></select>
                         </div>
 
-                        <div class="mb-3">
+                       @*  <div class="mb-3">
                             <label for="ddlProjects" class="form-label">Görevin Ait Olduğu Proje</label>
                             <select class="form-select" id="ddlProjects"></select>
-                        </div>
+                        </div> *@
                         <div class="mb-3">
                             <label for="ddlUsers" class="form-label">Kullanıcılar</label>
                             <select class="form-select" id="ddlUsers" multiple></select>
@@ -293,6 +294,9 @@
 
         <script>
             $(document).ready(function () {
+                
+                var id = @Model
+                
                 $.ajax({
                     url: '/Status/GetAll',
                     type: 'POST',
@@ -322,7 +326,8 @@
                                                             </div>
                                                         `);
                         });
-                        fillCardMision();
+                        fillCardMision(id);
+                        fillProjectName(id);
                     }
                 });
 
@@ -344,7 +349,7 @@
                             title: $("#txtTitle").val(),
                             description: $("#txtDescription").val(),
                             priorityId: $("#ddlPriorities").val(),
-                            projectId: $("#ddlProjects").val(),
+                            projectId: id,
                             statusId: statusId,
                             endDate: $("#txtEndDate").val(),
                             smsNotification: $("#chkSmsNotification").is(":checked"),
@@ -457,10 +462,22 @@
                     });
                 })
             })
-
-            function fillCardMision() {
+            function fillProjectName(id) {
+                $.ajax({
+                    url:'/Project/GetById',
+                    type:'GET',
+                    data: { id: id },
+                    success: (res) => {
+                        let name = res.name;
+                        $("#title").append(name);
+                    }
+                });
+            }
+            function fillCardMision(id) {
                 $.ajax({
                     url: "/Mission/GetAllCard",
+                    type:'GET',
+                    data: { id: id },
                     success: (data) => {
                         for (var item of data) {
                             let emails = "";
