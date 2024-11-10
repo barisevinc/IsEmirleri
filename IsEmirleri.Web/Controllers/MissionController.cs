@@ -32,9 +32,9 @@ namespace IsEmirleri.Web.Controllers
             return View();
         } 
 
-        public IActionResult GetAllCard()
+        public IActionResult GetAllCard(int id)
         {
-            var item = _missionService.GetAllMission();
+            var item = _missionService.GetAllMission(id);
 
             return Json(item);
 
@@ -82,10 +82,10 @@ namespace IsEmirleri.Web.Controllers
             return Ok(_missionService.Delete(id));
         }
 
-        public IActionResult Board()
+        public IActionResult Board(int id)
         {
 
-            return View();
+            return View(id);
         }
         [HttpPost]
         public IActionResult UpdateStatus(int taskId, int statusId)
