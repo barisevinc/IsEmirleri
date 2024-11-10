@@ -105,13 +105,14 @@ namespace IsEmirleri.Business.Concrete
         }
 
 
-        public List<MissionDto> GetAllMission()
+        public List<MissionDto> GetAllMission(int id)
         {
+
             int customerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
             return _repository.GetAll()
                 .Include(x => x.Assignees)
-                .Where(x => x.Project.CustomerId == customerId)
+                .Where(x => x.Project.CustomerId == customerId && x.ProjectId==id)
                 .Select(x => new MissionDto
                 {
                     Id = x.Id,

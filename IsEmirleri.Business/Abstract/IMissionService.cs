@@ -16,7 +16,7 @@ namespace IsEmirleri.Business.Abstract
     {
         MissionGetByDto GetByMissionId(int missionId);
         bool UpdateMissionDescription(int missionId, string description);
-        List<MissionDto> GetAllMission();
+        List<MissionDto> GetAllMission(int id);
         Task<Mission> AddMission(Mission mission, List<int> userIds, bool emailNotification);
         MissionEfficiencyDto GetUserMissionEfficiency(int userId);
         bool UpdateStatus(int missionId, int statusId);
