@@ -14,6 +14,7 @@ namespace IsEmirleri.DTO.MissionDTOs
         public string Description { get; set; }
         public virtual ICollection<AppUser> Assignees { get; set; }
         public int StatusId { get; set; }
+        public int ProjectId { get; set; }
 
     }
 }
