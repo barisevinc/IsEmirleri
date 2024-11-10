@@ -1,33 +1,25 @@
-﻿<div class="row">
+﻿
+<div class="row">
     <div class="col-12">
-
-        <div class="container-fluid p-2">
-            <div class="card-header bg-soft-success text-dark text-center row align-items-center" style="padding: 10px 15px; height: 60px;">
-                <div class="col-12 col-md-2 text-md-start text-center mb-2 mb-md-0">
-                    <a class="btn btn-dark btn-sm w-100" asp-controller="Mission" asp-action="Board"
-                       style="max-width: 60px; padding: 4px 8px; line-height: 1;">
-                        <i class="uil uil-clapper-board"></i><br />Board
+        <div class="card">
+            <div class="card-header bg-soft-success text-dark d-flex align-items-center justify-content-between">
+                <div class="flex-grow-1 text-center fs-3 text-dark">
+                    <i class="dripicons-pencil"></i>Görevler
+                </div>
+                <div class="text-end">
+                    <a href="#" id="btnAdd" class="btn btn-success">
+                        <i class="uil uil-plus me-2"></i>Yeni Kayıt
                     </a>
                 </div>
-                <div class="col-12 col-md-8 text-center fs-4 text-dark">
-                    <i class="dripicons-pencil"></i> Görevler
-                </div>
-                <div class="col-12 col-md-2 text-md-end text-center">
-                    <button id="btnAdd" class="btn btn-success w-100" style="max-width: 110px; font-size: 14px;">
-                        <i class="uil uil-plus me-2"></i>Yeni Kayıt
-                    </button>
-                </div>
+            </div>
+
+
+            <div class="card-body">
+                <table id="tblMission" class="table table-bordered table-striped table-hover"></table>
             </div>
         </div>
 
-
-
-
-        <div class="card-body">
-            <table id="tblMission" class="table table-bordered table-striped table-hover"></table>
-        </div>
     </div>
-</div>
 </div>
 
 <div class="modal fade" id="modalAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
