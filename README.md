@@ -35,6 +35,10 @@ The following technologies and architectural patterns were used in this project:
 ### Home Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Homepage.png)
 
+### Login Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Login.png)
+
+
 ### Canban Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Canban.png)
 
