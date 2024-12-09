@@ -26,3 +26,10 @@ The following technologies and architectural patterns were used in this project:
   
 - **REST API**:
   - Developed for external and internal communication.
+    
+## Project Screenshots
+
+### Database Diagram
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/diagram.png)
+
+
