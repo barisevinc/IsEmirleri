@@ -45,4 +45,15 @@ The following technologies and architectural patterns were used in this project:
 ### Add Task Modal
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addtaskmodal.png)
 
+### Projects Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Project.png)
+
+### Add Project Modal
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addprojectmodal.png)
+
+### Users Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Users.png)
+
+
+
 
