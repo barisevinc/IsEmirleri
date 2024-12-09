@@ -30,6 +30,9 @@ The following technologies and architectural patterns were used in this project:
 ## Project Screenshots
 
 ### Database Diagram
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/diagram.png)
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/diagram.PNG)
+
+### Home Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Homepage.png)
 
 
