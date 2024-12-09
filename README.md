@@ -39,7 +39,7 @@ The following technologies and architectural patterns were used in this project:
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Login.png)
 
 
-### Canban Page
+### Canban Page & Drag and Drop
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Canban.png)
 
 ### Add Task Modal
