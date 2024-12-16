@@ -2,6 +2,9 @@
 ## Overview
 This project is a task tracking system designed for project management. It allows users to efficiently track and manage their projects.
 
+## Project Link
+You can visit the project's main page here: [isemirleri.com.tr](https://isemirleri.com.tr)
+
 ## Technologies and Architectures Used
 
 The following technologies and architectural patterns were used in this project:
@@ -26,7 +29,15 @@ The following technologies and architectural patterns were used in this project:
   
 - **REST API**:
   - Developed for external and internal communication.
+
     
+## Discover Our Project
+
+To learn more about the details of our project, please watch our video:
+
+[Watch the Video](https://www.loom.com/share/76542971ef1e46068bf593f80437376e)
+
+
 ## Project Screenshots
 
 ### Database Diagram
@@ -35,10 +46,25 @@ The following technologies and architectural patterns were used in this project:
 ### Home Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Homepage.png)
 
-### Canban Page
+### Login Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Login.png)
+
+
+### Canban Page & Drag and Drop
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Canban.png)
 
 ### Add Task Modal
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addtaskmodal.png)
+
+### Projects Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Project.png)
+
+### Add Project Modal
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addprojectmodal.png)
+
+### Users Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Users.png)
+
+
 
 
