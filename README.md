@@ -49,30 +49,14 @@ To learn more about the details of our project, please watch our video:
 ### Login Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Login.png)
 
-
 ### Canban Page & Drag and Drop
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Canban.png)
-
-### Add Task Modal
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addtaskmodal.png)
 
 ### Projects Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Project.png)
 
-### Add Project Modal
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addprojectmodal.png)
-
 ### Users Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Users.png)
-
-### Sweet Alert
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal1.png)
-
-### Task Modal Detail
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal2.png)
-
-### Customers Page
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/sirketler.png)
 
 ### Customer => Users Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/sirketleruser.png)
@@ -83,6 +67,17 @@ To learn more about the details of our project, please watch our video:
 ### Task History and User Profile Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/taskhistory.jpg)
 
+### Add Task Modal
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addtaskmodal.png)
+
+### Add Project Modal
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/addprojectmodal.png)
+
+### Sweet Alert
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal1.png)
+
+### Task Modal Detail
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal2.png)
 
 
 
