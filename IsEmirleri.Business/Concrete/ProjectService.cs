@@ -37,29 +37,39 @@ namespace IsEmirleri.Business.Concrete
             _missionService = missionService;
         }
 
-
-        //düzenlemeye basınca
         public Project GetByProjectId(int id)
         {
             return _repository.GetAll().Include(p => p.Users).FirstOrDefault(p => p.Id == id);
 
          
         }
-
-
-        //her admin sadece bağlı olduğu firmanın proje listesini görebilsin
         public IQueryable<Project> GetAllByCustomerId()
         {
-
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
 
-            return _repository.GetAll(p => p.CustomerId == currentCustomerId).Include(p => p.Users);
-        
+            return _repository.GetAll(p => p.CustomerId == currentCustomerId)
+                              .Include(p => p.Users) 
+                              .Select(p => new Project
+                              {
+                                  Id = p.Id,
+                                  Name = p.Name,
+                                  Description = p.Description,
+                                  CustomerId = p.CustomerId,
+                                  Users = p.Users.ToList(),
+                                  FilePath = p.FilePath
+                              });
         }
 
+        //public IQueryable<Project> GetAllByCustomerId()
+        //{
+
+        //    var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
+
+        //    return _repository.GetAll(p => p.CustomerId == currentCustomerId).Include(p => p.Users);
+        
+        //}
 
 
-        //select2 ddl'yi ilgili userlar ile doldurma
         public IQueryable<AppUser> FillUsers()
         {
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("CustomerId").Value);
@@ -73,14 +83,12 @@ namespace IsEmirleri.Business.Concrete
 
         public async Task<Project> AddProject(Project project, List<int> userIds, bool emailNotification, IFormFile file)
         {
-            // Müşteri ID'sini al
             var currentCustomerId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
             project.CustomerId = currentCustomerId;
 
-            // Projeyi ekle
             var addedProject = _repository.Add(project);
             var users = _userService.GetAll(u => userIds.Contains(u.Id)).ToList();
-            // Dosya yükleme
+            
             if (file != null && file.Length > 0)
             {
                 var filePath = Path.Combine("wwwroot/files", file.FileName);
@@ -88,10 +96,9 @@ namespace IsEmirleri.Business.Concrete
                 {
                     await file.CopyToAsync(stream);
                 }
-                project.FilePath = file.FileName; // Yalnızca dosya adını saklıyoruz
+                project.FilePath = file.FileName; 
             }
 
-            // Kullanıcıları ekle
             if (userIds != null && userIds.Count > 0)
             {
                 
@@ -99,13 +106,12 @@ namespace IsEmirleri.Business.Concrete
                 foreach (var user in users)
                 {
                     notificationService.NewNotificationProject(user.Id);
-                    addedProject.Users.Add(user); // Kullanıcıları projeye ekle
+                    addedProject.Users.Add(user); 
                 }
 
-                _repository.Update(addedProject); // Projeyi güncelle
+                _repository.Update(addedProject); 
             }
 
-            // E-posta bildirimleri gönder
             if (emailNotification && users.Count > 0)
             {
                 var emailTasks = new List<Task>();
@@ -116,10 +122,10 @@ namespace IsEmirleri.Business.Concrete
                     notificationService.NewNotificationMission(user.Id);
                 }
 
-                await Task.WhenAll(emailTasks); // Tüm e-posta gönderme görevlerini bekle
+                await Task.WhenAll(emailTasks);
             }
 
-            return addedProject; // Eklenen projeyi döndür
+            return addedProject; 
         }
 
 

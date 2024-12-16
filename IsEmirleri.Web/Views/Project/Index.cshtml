@@ -84,13 +84,13 @@
                     { data: 'description', title: 'Açıklama' },
                     { data: 'customerId', title: 'Müşteri ID' },
                     {
-                        data: 'users', title: 'Tanımlanmış Kullanıcılar', render: function (data) {
-
-                            let emails = "";
-                            for (let item of data)
-                                emails += item.email + '<br>';
-
-                            return emails;
+                        data: 'users', title: 'Tanımlanmış Kullanıcılar', render: (data) => {
+                            console.log(data)
+                            let users = "";
+                            for (var item of data) {
+                                users += item.email + "<br/>"
+                            }
+                            return users;
                         }
                     },
                     {
@@ -117,7 +117,6 @@
 
                     {
                         data: 'id', title: 'Canban', render: (data) => {
-                            console.log("projeid" + data);
                             return `<a href="Mission/Board/${data}" class="btn btn-dark btn-sm w-100" 
                                style="max-width: 70px; padding: 4px 8px; line-height: 1;">
                                 <i class="uil uil-clapper-board"></i><br />Canban
