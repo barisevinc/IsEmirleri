@@ -65,6 +65,23 @@ To learn more about the details of our project, please watch our video:
 ### Users Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/Users.png)
 
+### Sweet Alert
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal1.png)
+
+### Task Modal Detail
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal2.png)
+
+### Customers Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/sirketler.png)
+
+### Customer => Users Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/sirketleruser.png)
+
+### Customer => Users Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/status.png)
+
+
+
 
 
 
