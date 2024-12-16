@@ -80,7 +80,7 @@ To learn more about the details of our project, please watch our video:
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/modal2.png)
 
 ### Task E-Mail Detail
-![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/mail.png)
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/mail.PNG)
 
 
 
