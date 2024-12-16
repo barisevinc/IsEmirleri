@@ -29,7 +29,15 @@ The following technologies and architectural patterns were used in this project:
   
 - **REST API**:
   - Developed for external and internal communication.
+
     
+## Discover Our Project
+
+To learn more about the details of our project, please watch our video:
+
+[Watch the Video](https://www.loom.com/share/76542971ef1e46068bf593f80437376e)
+
+
 ## Project Screenshots
 
 ### Database Diagram
