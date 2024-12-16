@@ -77,9 +77,11 @@ To learn more about the details of our project, please watch our video:
 ### Customer => Users Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/sirketleruser.png)
 
-### Customer => Users Page
+### Status Page
 ![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/status.png)
 
+### Task History and User Profile Page
+![Database Diagram Photo](./IsEmirleri.Web/wwwroot/assets/images/taskhistory.jpg)
 
 
 
